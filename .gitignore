@@ -1,12 +1,18 @@
 # See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # compiled output
-dist
-tmp
-out-tsc
+dist/
+apps/**/dist
+libs/**/dist
+tmp/
+out-tsc/
+coverage
+e2e/test-output
 
 # dependencies
 node_modules
+package-lock.json
+yarn.lock
 
 # IDEs and editors
 /.idea
@@ -18,19 +24,16 @@ node_modules
 *.sublime-workspace
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode/
 
 # misc
 /.sass-cache
 /connect.lock
 /coverage
 /libpeerconnection.log
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
 testem.log
 /typings
 
@@ -44,3 +47,18 @@ Thumbs.db
 .github/instructions/nx.instructions.md
 
 .angular
+/.angular/
+
+# Environment files
+/.env
+.env.local
+
+# Angular CLI and build artefacts
+/.angular-cli.json
+/.ng/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Log files
+error.log
