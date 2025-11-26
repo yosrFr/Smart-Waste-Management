@@ -5,9 +5,11 @@ import { Disponibilite, Role } from "../enums";
  */
 export interface Utilisateur {
     id: string;
+    /** Nom de famille */
     nom: string;
     prenom: string;
     email: string;
+    /** Numèro de téléphone */
     tel: string;
     /** Date de naissance */
     dateNais: string;
