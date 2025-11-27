@@ -8,8 +8,11 @@
     "lib": ["es2020", "dom"],
     "baseUrl": ".",
     "paths": {
-      "@smart-waste-management-workspace/models": [
+      "@smart-waste-management/shared/data-access": [
         "libs/shared/data-access/src/index.ts"
+      ],
+      "@smart-waste-management/shared/ui": [
+        "libs/shared/ui/src/index.ts"
       ]
     }
   },
