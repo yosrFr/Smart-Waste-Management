@@ -53,7 +53,6 @@ export interface NotificationConteneurEndommage extends NotificationBase {
 export interface NotificationVehiculeEnPanneDetails {
   matricule: string;
   typeDechet: TypeDechet;
-  localisation: GeoPoint;
 }
 
 /**
@@ -94,7 +93,7 @@ export interface NotificationNouvelleTacheDetails {
  * Notification de nouvelle tâche/tournée
  */
 export interface NotificationNouvelleTache extends NotificationBase {
-  type: TypeNotif.TACHE;
+  type: TypeNotif.NOUVELLE_TACHE;
   details: NotificationNouvelleTacheDetails;
 }
 

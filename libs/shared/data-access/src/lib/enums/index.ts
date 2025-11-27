@@ -61,5 +61,5 @@ export enum TypeNotif {
     PANNE = 'PANNE',
     INCIDENT = 'INCIDENT',
     PLEIN = 'PLEIN',
-    TACHE = 'TACHE'
+    NOUVELLE_TACHE = 'NOUVELLE_TACHE'
 }

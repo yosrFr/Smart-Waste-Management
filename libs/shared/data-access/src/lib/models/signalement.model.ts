@@ -15,7 +15,6 @@ export interface SignalerEndommageDto {
 export interface SignalerVehiculePanneDto {
   matricule: string;
   typeDechet: TypeDechet;
-  localisation: GeoPoint;
 }
 
 /**
