@@ -1,0 +1,40 @@
+.stat-card {
+    height: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: linear-gradient(135deg, #2e7d32 0%, #388e3c 100%);
+    color: white;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.stat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.8;
+}
+
+.stat-body {
+    margin-bottom: 1rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-label {
+    font-size: 1rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+}
+
+.stat-subtitle {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
