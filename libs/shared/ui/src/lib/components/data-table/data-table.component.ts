@@ -2,8 +2,6 @@
 import {
   Component,
   Input,
-  Output,
-  EventEmitter,
   ViewChild,
   OnInit,
 } from '@angular/core';
@@ -13,7 +11,6 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -57,7 +54,6 @@ export interface TableAction<T = any> {
     MatSortModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule,
     MatInputModule,
     MatFormFieldModule,
   ],
