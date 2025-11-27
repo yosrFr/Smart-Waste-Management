@@ -1,0 +1,20 @@
+.data-table-container {
+    width: 100%;
+}
+
+.search-field {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+}
+
+tr.mat-mdc-row:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
