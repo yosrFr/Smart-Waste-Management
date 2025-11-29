@@ -106,3 +106,18 @@ export type Notification =
   | NotificationVehiculeEnPanne
   | NotificationIncident
   | NotificationNouvelleTache;
+
+/**
+ * DTO pour créer une notification
+ */
+export interface CreateNotificationDto {
+  type: TypeNotif;
+  date: string;
+  description: string;
+  details: 
+    | NotificationConteneurPleinDetails
+    | NotificationConteneurEndommageDetails
+    | NotificationVehiculeEnPanneDetails
+    | NotificationIncidentDetails
+    | NotificationNouvelleTacheDetails;
+}
