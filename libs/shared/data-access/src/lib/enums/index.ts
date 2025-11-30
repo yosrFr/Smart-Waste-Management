@@ -33,7 +33,8 @@ export enum TypeDechet {
 export enum EtatConteneur {
     NORMAL = 'NORMAL',
     ENDOMMAGE = 'ENDOMMAGE',
-    PLEIN = 'PLEIN'
+    PLEIN = 'PLEIN',
+    SUPPRIME = 'SUPPRIME'
 }
 
 /**
