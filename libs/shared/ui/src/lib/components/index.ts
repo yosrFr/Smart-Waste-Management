@@ -3,4 +3,5 @@ export * from './data-table/data-table.component';
 export * from './layout';
 export * from './leaflet-map/leaflet-map';
 export * from './stat-card/stat-card.component';
-export * from './page-header/page-header.component'
+export * from './page-header/page-header.component';
+export * from './loading-spinner/loading-spinner.component';
