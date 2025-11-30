@@ -11,8 +11,9 @@
       "@smart-waste-management/shared/data-access": [
         "libs/shared/data-access/src/index.ts"
       ],
-      "@smart-waste-management/shared/ui": [
-        "libs/shared/ui/src/index.ts"
+      "@smart-waste-management/shared/ui": ["libs/shared/ui/src/index.ts"],
+      "@smart-waste-management-workspace/login": [
+        "libs/pages/auth/src/index.ts"
       ]
     }
   },
