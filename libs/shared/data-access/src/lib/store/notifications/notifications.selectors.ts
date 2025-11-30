@@ -62,3 +62,11 @@ export const selectNotificationTotalPages = createSelector(
   selectNotificationPageSize,
   (notifications, pageSize) => Math.ceil(notifications.length / pageSize)
 );
+
+/**
+ * Sélectionne l'état de chargement
+ */
+export const selectNotificationsLoading = createSelector(
+  selectNotificationState,
+  (state) => state.loading
+);
