@@ -14,7 +14,26 @@ export class NotificationEffects {
   private actions$ = inject(Actions);
   private notificationService = inject(NotificationService);
 
-    /**
+  /**
+   * Charge toutes les notifications
+   */
+  loadNotifications$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(NotificationActions.loadNotifications),
+      switchMap(() =>
+        this.notificationService.getAll().pipe(
+          map((notifications) =>
+            NotificationActions.loadNotificationsSuccess({ notifications })
+          ),
+          catchError((error) =>
+            of(NotificationActions.loadNotificationsFailure({ error: error.message }))
+          )
+        )
+      )
+    )
+  );
+
+  /**
    * Crée une nouvelle notification
    */
   createNotification$ = createEffect(() =>

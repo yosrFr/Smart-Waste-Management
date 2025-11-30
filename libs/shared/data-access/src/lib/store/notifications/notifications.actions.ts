@@ -5,9 +5,16 @@ import { CreateNotificationDto, Notification } from '../../models';
 /**
  * Actions pour les notifications
  */
-export const setNotifications = createAction(
-  '[Notifications] Set Notifications',
+export const loadNotifications = createAction('[Notifications] Load Notifications');
+
+export const loadNotificationsSuccess = createAction(
+  '[Notifications] Load Notifications Success',
   props<{ notifications: Notification[] }>()
+);
+
+export const loadNotificationsFailure = createAction(
+  '[Notifications] Load Notifications Failure',
+  props<{ error: string }>()
 );
 
 // Pour la simulation de reception des notification

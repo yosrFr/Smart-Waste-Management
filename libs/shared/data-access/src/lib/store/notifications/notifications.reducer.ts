@@ -9,6 +9,10 @@ import * as NotificationActions from './notifications.actions';
 export interface NotificationState {
   /** Liste de toutes les notifications */
   notifications: Notification[];
+  /** Indique si un chargement est en cours */
+  loading: boolean;
+  /** Message d'erreur */
+  error: string | null;
   /** Index de la page actuelle (pour pagination) */
   pageIndex: number;
   /** Nombre d'éléments par page */
@@ -20,6 +24,8 @@ export interface NotificationState {
  */
 export const initialNotifState: NotificationState = {
   notifications: [],
+  loading: false,
+  error: null,
   pageIndex: 0,
   pageSize: 20,
 };
@@ -29,9 +35,21 @@ export const initialNotifState: NotificationState = {
  */
 export const notificationReducer = createReducer(
   initialNotifState,
-  on(NotificationActions.setNotifications, (state, { notifications }) => ({
+  // Load
+  on(NotificationActions.loadNotifications, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(NotificationActions.loadNotificationsSuccess, (state, { notifications }) => ({
     ...state,
     notifications,
+    loading: false,
+  })),
+  on(NotificationActions.loadNotificationsFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
   })),
   // Add (utilisé par le simulateur)
   on(NotificationActions.addNotification, (state, { notification }) => ({
