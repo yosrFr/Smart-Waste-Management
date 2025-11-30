@@ -6,5 +6,5 @@
     "types": []
   },
   "exclude": ["src/**/*.spec.ts", "jest.config.ts", "src/**/*.test.ts"],
-  "include": ["src/**/*.ts", "../ui/src/lib/components/services/theme.service.ts"]
+  "include": ["src/**/*.ts", "../ui/src/lib/services/theme.service.ts"]
 }
