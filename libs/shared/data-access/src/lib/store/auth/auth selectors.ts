@@ -16,14 +16,6 @@ export const selectCurrentUser = createSelector(
 );
 
 /**
- * Sélectionne le token
- */
-export const selectToken = createSelector(
-  selectAuthState,
-  (state) => state.token
-);
-
-/**
  * Sélectionne si l'utilisateur est authentifié
  */
 export const selectIsAuthenticated = createSelector(
