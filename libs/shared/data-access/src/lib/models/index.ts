@@ -1,4 +1,4 @@
-export * from './Notification.model';
+export * from './notification.model';
 export * from './auth.model';
 export * from './dashboard.model';
 export * from './point-de-collecte.model';
