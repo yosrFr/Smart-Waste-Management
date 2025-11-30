@@ -7,4 +7,5 @@ export * from './lib/interfaces';
 export * from './lib/enums';
 export * from './lib/services';
 export * from './lib/store';
-
+export * from './lib/store/auth';
+export * from './lib/store/notifications';

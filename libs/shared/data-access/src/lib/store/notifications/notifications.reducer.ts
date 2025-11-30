@@ -18,7 +18,7 @@ export interface NotificationState {
 /**
  * État initial
  */
-export const initialState: NotificationState = {
+export const initialNotifState: NotificationState = {
   notifications: [],
   pageIndex: 0,
   pageSize: 20,
@@ -28,7 +28,7 @@ export const initialState: NotificationState = {
  * Reducer pour les notifications
  */
 export const notificationReducer = createReducer(
-  initialState,
+  initialNotifState,
   on(NotificationActions.setNotifications, (state, { notifications }) => ({
     ...state,
     notifications,

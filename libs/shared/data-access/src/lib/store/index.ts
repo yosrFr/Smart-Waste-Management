@@ -26,9 +26,3 @@ export const effects = [
   fromAuth.AuthEffects,
   fromNotifications.NotificationEffects,
 ];
-
-/**
- * Export de tous les selectors
- */
-export * from './auth/auth selectors';
-export * from './notifications/notifications.selectors';

@@ -20,7 +20,7 @@ export interface AuthState {
 /**
  * État initial
  */
-export const initialState: AuthState = {
+export const initialAuthState: AuthState = {
   user: null,
   loading: false,
   error: null,
@@ -31,7 +31,7 @@ export const initialState: AuthState = {
  * Reducer pour l'authentification
  */
 export const authReducer = createReducer(
-  initialState,
+  initialAuthState,
   // Login
   on(AuthActions.login, (state) => ({
     ...state,
@@ -52,7 +52,7 @@ export const authReducer = createReducer(
     isAuthenticated: false,
   })),
   // Logout
-  on(AuthActions.logout, () => initialState),
+  on(AuthActions.logout, () => initialAuthState),
   // Change Password
   on(AuthActions.changePassword, (state) => ({
     ...state,
