@@ -13,7 +13,6 @@ import { AuthService } from '../../services/auth.service';
  */
 @Injectable()
 export class AuthEffects {
-
   private actions$ = inject(Actions);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -47,7 +46,9 @@ export class AuthEffects {
           localStorage.setItem('token', response.token);
           // Redirige selon le rôle
           const route =
-            response.user.role === 'ADMIN' ? '/admin/dashboard' : '/employee/dashboard';
+            response.user.role === 'ADMIN'
+              ? '/admin/dashboard'
+              : '/employee/dashboard';
           this.router.navigate([route]);
         })
       ),
@@ -87,5 +88,4 @@ export class AuthEffects {
       )
     )
   );
-
 }

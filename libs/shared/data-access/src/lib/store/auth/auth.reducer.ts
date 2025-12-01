@@ -72,5 +72,5 @@ export const authReducer = createReducer(
     ...state,
     loading: false,
     error,
-  })),
+  }))
 );
