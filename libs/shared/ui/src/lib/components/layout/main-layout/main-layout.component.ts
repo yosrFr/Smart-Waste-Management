@@ -24,6 +24,5 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   styleUrl: './main-layout.component.css',
 })
 export class MainLayoutComponent {
-
   @ViewChild('drawer') drawer!: MatDrawer;
 }

@@ -1,20 +1,17 @@
 <mat-drawer-container class="layout-container" autosize>
-    <!-- Sidebar -->
-    <mat-drawer
-        #drawer
-        class="layout-sidenav"
-    >
-        <lib-sidebar></lib-sidebar>
-    </mat-drawer>
+  <!-- Sidebar -->
+  <mat-drawer #drawer class="layout-sidenav">
+    <lib-sidebar></lib-sidebar>
+  </mat-drawer>
 
-    <!-- Contenu principal -->
-    <mat-drawer-content class="layout-content">
-        <!-- Header -->
-        <lib-header (toggleSidebar)="drawer.toggle()"></lib-header>
+  <!-- Contenu principal -->
+  <mat-drawer-content class="layout-content">
+    <!-- Header -->
+    <lib-header (toggleSidebar)="drawer.toggle()"></lib-header>
 
-        <!-- Contenu des pages -->
-        <div class="page-content">
-            <router-outlet></router-outlet>
-        </div>
-    </mat-drawer-content>
+    <!-- Contenu des pages -->
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
 </mat-drawer-container>
