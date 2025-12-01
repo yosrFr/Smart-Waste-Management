@@ -4,6 +4,7 @@ import { StatutVehicule, TypeDechet } from "../enums";
  * Modèle pour un véhicule de collecte
  */
 export interface Vehicule {
+    id: string;
     matricule: string;
     marque: string;
     /** Capacité maximale en kg */
