@@ -4,12 +4,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of, interval } from 'rxjs';
 import { map, catchError, switchMap, startWith } from 'rxjs/operators';
 import * as PointsCollecteActions from './points-de-collecte.actions';
-import { PointCollecteService } from '../../services/points-de-collecte.service';
+import { PointCollecteService } from '../../services/point-de-collecte.service';
 
 @Injectable()
 export class PointCollecteEffects {
-    private actions$ = inject(Actions);
-    private pointCollecteService = inject(PointCollecteService);
+  private actions$ = inject(Actions);
+  private pointCollecteService = inject(PointCollecteService);
 
   loadPointsCollecte$ = createEffect(() =>
     this.actions$.pipe(

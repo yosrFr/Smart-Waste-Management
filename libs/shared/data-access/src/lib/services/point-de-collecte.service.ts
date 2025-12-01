@@ -68,7 +68,7 @@ export class PointCollecteService {
     // Simule la mise à jour des niveaux (backend fait ça en réalité)
     this.simulateNiveauUpdate();
 
-    return of([...this.mockPoints]).pipe(delay(300));
+    return of([...this.mockPoints]);
   }
 
   /**
@@ -86,7 +86,7 @@ export class PointCollecteService {
     };
 
     this.mockPoints.push(point);
-    return of(point).pipe(delay(300));
+    return of(point);
   }
 
   /**
@@ -106,7 +106,7 @@ export class PointCollecteService {
       ...dto,
     };
 
-    return of(this.mockPoints[index]).pipe(delay(300));
+    return of(this.mockPoints[index]);
   }
 
   /**
@@ -116,7 +116,7 @@ export class PointCollecteService {
    */
   delete(id: string): Observable<void> {
     this.mockPoints = this.mockPoints.filter((p) => p.id !== id);
-    return of(undefined).pipe(delay(300));
+    return of(undefined);
   }
 
   /**
