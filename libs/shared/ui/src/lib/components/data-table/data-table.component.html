@@ -1,72 +1,58 @@
 <div class="data-table-container">
-      <!-- Barre de recherche -->
-      <mat-form-field *ngIf="searchable" class="search-field">
-        <mat-label>Rechercher</mat-label>
-        <input
-          matInput
-          (keyup)="applyFilter($event)"
-          placeholder="Rechercher..."
-        />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+  <!-- Barre de recherche -->
+  <mat-form-field *ngIf="searchable" class="search-field">
+    <mat-label>Rechercher</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher..." />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
 
-      <!-- Tableau -->
-      <div class="table-wrapper">
-        <table
-          mat-table
-          [dataSource]="dataSource"
-          matSort
-          class="mat-elevation-z2"
+  <!-- Tableau -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2">
+      <!-- Colonnes dynamiques -->
+      <ng-container
+        *ngFor="let column of columns"
+        [matColumnDef]="column.key.toString()"
+      >
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          [mat-sort-header]="column.sortable ? column.key.toString() : ''"
         >
-          <!-- Colonnes dynamiques -->
-          <ng-container
-            *ngFor="let column of columns"
-            [matColumnDef]="column.key.toString()"
+          {{ column.label }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{
+            column.customTemplate ? column.customTemplate(row) : row[column.key]
+          }}
+        </td>
+      </ng-container>
+
+      <!-- Colonne Actions -->
+      <ng-container matColumnDef="actions" *ngIf="actions.length > 0">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <button
+            *ngFor="let action of actions"
+            mat-icon-button
+            (click)="action.action(row); $event.stopPropagation()"
+            [hidden]="action.visible && !action.visible(row)"
           >
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              [mat-sort-header]="column.sortable ? column.key.toString() : ''"
-            >
-              {{ column.label }}
-            </th>
-            <td mat-cell *matCellDef="let row">
-              {{
-                column.customTemplate
-                  ? column.customTemplate(row)
-                  : row[column.key]
-              }}
-            </td>
-          </ng-container>
+            <mat-icon>{{ action.icon }}</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-          <!-- Colonne Actions -->
-          <ng-container matColumnDef="actions" *ngIf="actions.length > 0">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let row">
-              <button
-                *ngFor="let action of actions"
-                mat-icon-button
-                (click)="action.action(row); $event.stopPropagation()"
-                [hidden]="action.visible && !action.visible(row)"
-              >
-                <mat-icon>{{ action.icon }}</mat-icon>
-              </button>
-            </td>
-          </ng-container>
+      <!-- Définition des lignes -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
 
-          <!-- Définition des lignes -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr
-            mat-row
-            *matRowDef="let row; columns: displayedColumns"
-          ></tr>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <mat-paginator
-        *ngIf="paginated"
-        [pageSize]="pageSize"
-        showFirstLastButtons
-      ></mat-paginator>
-    </div>
+  <!-- Pagination -->
+  <mat-paginator
+    *ngIf="paginated"
+    [pageSize]="pageSize"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>

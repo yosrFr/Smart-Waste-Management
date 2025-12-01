@@ -1,10 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  Component,
-  Input,
-  ViewChild,
-  OnInit,
-} from '@angular/core';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
@@ -35,7 +30,7 @@ export interface TableAction<T = any> {
   /** Icône Material */
   icon: string;
   /** fonction callback executé on click  */
-  action: (row: T) => void;  
+  action: (row: T) => void;
   /** Condition d'affichage */
   visible?: (row: T) => boolean;
 }
@@ -113,7 +108,7 @@ export class DataTableComponent<T> implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    // Remise à 0 de la pagination après filtrage des données 
+    // Remise à 0 de la pagination après filtrage des données
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
