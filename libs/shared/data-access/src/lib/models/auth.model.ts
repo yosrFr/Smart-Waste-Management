@@ -12,6 +12,8 @@ export interface LoginDto {
  * Réponse de l'API après une connexion réussie
  */
 export interface LoginResponse {
+  /** Token JWT */
+  token: string;
   /** Informations de l'utilisateur connecté */
   user: Employe | Administrateur;
 }

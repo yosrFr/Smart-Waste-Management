@@ -66,7 +66,7 @@ export class AuthService {
   /**
    * Connexion d'un utilisateur
    * @param credentials Email et mot de passe
-   * @returns Observable avec les infos utilisateur
+   * @returns Observable avec le token et les infos utilisateur
    */
   login(credentials: LoginDto): Observable<LoginResponse> {
     return of(null).pipe(
@@ -85,7 +85,11 @@ export class AuthService {
           throw new Error('Compte désactivé');
         }
 
+        // Génère un token JWT mocké
+        const token = btoa(JSON.stringify({ userId: user.id, role: user.role }));
+
         return {
+          token,
           user,
         };
       })
@@ -96,6 +100,7 @@ export class AuthService {
    * Déconnexion de l'utilisateur
    */
   logout(): void {
+    localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
   }
 
@@ -107,14 +112,12 @@ export class AuthService {
   changePassword(dto: ChangePasswordDto): Observable<void> {
     return of(null).pipe(
       map(() => {
-        const currentUserStr = localStorage.getItem('currentUser');
-        if (!currentUserStr) {
+        const currentUser = this.getCurrentUser();
+        if (!currentUser) {
           throw new Error('Utilisateur non connecté');
         }
 
-        const currentUser = JSON.parse(currentUserStr);
         const user = this.mockUsers.find((u) => u.id === currentUser.id);
-
         if (!user) {
           throw new Error('Utilisateur introuvable');
         }
@@ -125,19 +128,31 @@ export class AuthService {
 
         // Met à jour le mot de passe
         user.motDePasse = dto.nouveauMotDePasse;
-        // Met à jour aussi dans le localStorage
-        localStorage.setItem('currentUser', JSON.stringify(user));
-
         return;
       })
     );
   }
 
-    /**
-     * Récupère l'utilisateur depuis le localStorage
-     */
-    getCurrentUser(): Utilisateur | null {
-        const userStr = localStorage.getItem('currentUser');
-        return userStr ? JSON.parse(userStr) : null;
+  /**
+   * Récupère l'utilisateur actuellement connecté depuis le localStorage
+   * @returns Utilisateur connecté ou null
+   */
+  getCurrentUser(): Utilisateur | null {
+    const userStr = localStorage.getItem('currentUser');
+    return userStr ? JSON.parse(userStr) : null;
+  }
+
+  /**
+   * Vérifie si un token est valide
+   * @param token Token JWT à vérifier
+   * @returns true si valide, false sinon
+   */
+  isTokenValid(token: string): boolean {
+    try {
+      const decoded = JSON.parse(atob(token));
+      return !!decoded.userId;
+    } catch {
+      return false;
     }
+  }
 }

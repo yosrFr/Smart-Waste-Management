@@ -9,6 +9,8 @@ import * as AuthActions from './auth.actions';
 export interface AuthState {
   /** Utilisateur actuellement connecté */
   user: Utilisateur | null;
+  /** Token JWT */
+  token: string | null;
   /** Indique si une opération est en cours */
   loading: boolean;
   /** Message d'erreur */
@@ -22,6 +24,7 @@ export interface AuthState {
  */
 export const initialAuthState: AuthState = {
   user: null,
+  token: null,
   loading: false,
   error: null,
   isAuthenticated: false,
@@ -41,6 +44,7 @@ export const authReducer = createReducer(
   on(AuthActions.loginSuccess, (state, { response }) => ({
     ...state,
     user: response.user,
+    token: response.token,
     loading: false,
     isAuthenticated: true,
     error: null,

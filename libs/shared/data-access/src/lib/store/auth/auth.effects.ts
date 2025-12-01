@@ -26,11 +26,7 @@ export class AuthEffects {
       ofType(AuthActions.login),
       switchMap(({ credentials }) =>
         this.authService.login(credentials).pipe(
-          map((response) => {
-            // Sauvegarde l'utilisateur dans localStorage
-            localStorage.setItem('currentUser', JSON.stringify(response.user));
-            return AuthActions.loginSuccess({ response });
-          }),
+          map((response) => AuthActions.loginSuccess({ response })),
           catchError((error) =>
             of(AuthActions.loginFailure({ error: error.message }))
           )
@@ -47,6 +43,8 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
         tap(({ response }) => {
+          // Sauvegarde le token
+          localStorage.setItem('token', response.token);
           // Redirige selon le rôle
           const route =
             response.user.role === 'ADMIN' ? '/admin/dashboard' : '/employee/dashboard';
@@ -64,8 +62,8 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.logout),
         tap(() => {
-          // Supprime l'utilisateur du localStorage
-          localStorage.removeItem('currentUser');
+          // Supprime le token
+          localStorage.removeItem('token');
           // Redirige vers login
           this.router.navigate(['/auth/login']);
         })
@@ -89,4 +87,5 @@ export class AuthEffects {
       )
     )
   );
+
 }
