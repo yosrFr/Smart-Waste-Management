@@ -1,18 +1,18 @@
 <div class="page-header">
-    <div class="header-left">
-        <button
-            *ngIf="showBack"
-            mat-icon-button
-            (click)="back.emit()"
-            class="back-button"
-        >
-            <mat-icon>arrow_back</mat-icon>
-        </button>
+  <div class="header-left">
+    <button
+      *ngIf="showBack"
+      mat-icon-button
+      (click)="back.emit()"
+      class="back-button"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
     <div class="header-text">
-        <p *ngIf="subtitle" class="page-subtitle">{{ subtitle }}</p>
+      <p *ngIf="subtitle" class="page-subtitle">{{ subtitle }}</p>
     </div>
-    </div>
-        <div class="header-actions">
-        <ng-content></ng-content>
-    </div>
+  </div>
+  <div class="header-actions">
+    <ng-content></ng-content>
+  </div>
 </div>

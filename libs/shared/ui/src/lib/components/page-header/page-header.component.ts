@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './page-header.component.css',
 })
 export class PageHeaderComponent {
-
   /** Sous-titre optionnel */
   @Input() subtitle?: string;
 
