@@ -20,7 +20,7 @@ export class DateRelativePipe implements PipeTransform {
     const diffHour = Math.floor(diffMin / 60);
 
     if (diffSec < 60) {
-      return 'À l\'instant';
+      return "À l'instant";
     } else if (diffMin < 60) {
       return `Il y a ${diffMin} minute${diffMin > 1 ? 's' : ''}`;
     } else if (diffHour < 24) {

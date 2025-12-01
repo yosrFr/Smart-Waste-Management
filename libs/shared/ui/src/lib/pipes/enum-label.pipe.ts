@@ -20,8 +20,8 @@ import {
 export class EnumLabelPipe implements PipeTransform {
   private readonly labels: Record<string, Record<string, string>> = {
     Role: {
-        [Role.ADMIN]: 'Admin',
-        [Role.EMPLOYE]: 'Employé',
+      [Role.ADMIN]: 'Admin',
+      [Role.EMPLOYE]: 'Employé',
     },
     StatutVehicule: {
       [StatutVehicule.ACTIF]: 'Actif',
@@ -49,7 +49,7 @@ export class EnumLabelPipe implements PipeTransform {
       [EtatConteneur.NORMAL]: 'Normal',
       [EtatConteneur.ENDOMMAGE]: 'Endommagé',
       [EtatConteneur.PLEIN]: 'Plein',
-      [EtatConteneur.SUPPRIME]: 'Supprimé'
+      [EtatConteneur.SUPPRIME]: 'Supprimé',
     },
     TypeNotif: {
       [TypeNotif.PLEIN]: 'Conteneur plein',
