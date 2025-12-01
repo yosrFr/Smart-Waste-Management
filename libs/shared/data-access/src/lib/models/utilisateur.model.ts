@@ -43,3 +43,44 @@ export interface Employe extends Utilisateur {
     /** Numéro de permis de conduire */
     numPermis: string;
 }
+
+/**
+ * DTO pour la création d'un utilisateur
+ */
+export interface CreateUtilisateurDto {
+  nom: string;
+  prenom: string;
+  email: string;
+  motDePasse: string;
+  tel: string;
+  dateNaissance: string;
+  role: Role;
+  actif: boolean;
+  /** Pour les employés uniquement */
+  disponibilite?: Disponibilite;
+  numPermis?: string;
+}
+
+/**
+ * DTO pour la modification d'un utilisateur (Admin)
+ */
+export interface UpdateUtilisateurAdminDto {
+  role?: Role;
+  email?: string;
+  tel?: string;
+  actif?: boolean;
+  /** Pour les employés uniquement */
+  disponibilite?: Disponibilite;
+}
+
+/**
+ * DTO pour la modification du profil (Employé)
+ */
+export interface UpdateProfilEmployeDto {
+  nom?: string;
+  prenom?: string;
+  email?: string;
+  tel?: string;
+  dateNaissance?: string;
+  numPermis?: string;
+}

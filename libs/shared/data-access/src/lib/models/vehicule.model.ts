@@ -16,3 +16,14 @@ export interface Vehicule {
     /** Type de déchet aue le véhicule collecte */
     typeDechet: TypeDechet;
 }
+
+/**
+ * DTO pour la création/modification d'un véhicule
+ */
+export interface CreateVehiculeDto {
+  capaciteMax: number;
+  marque: string;
+  matricule: string;
+  poidsVide: number;
+  typeDechet: TypeDechet;
+}

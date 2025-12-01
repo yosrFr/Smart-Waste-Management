@@ -11,3 +11,24 @@ export interface PointDeCollecte {
     /** Etat actuel du conteneur */
     etat: EtatConteneur;
 }
+/**
+ * DTO pour la création d'un point de collecte
+ */
+export interface CreatePointCollecteDto {
+  localisation: GeoPoint;
+  typeDechet: TypeDechet;
+  /** État initial (par défaut NORMAL) */
+  etat?: EtatConteneur;
+  /** Niveau initial (par défaut 0) */
+  niveauRemplissage?: number;
+}
+
+/**
+ * DTO pour la modification d'un point de collecte
+ */
+export interface UpdatePointCollecteDto {
+  localisation?: GeoPoint;
+  typeDechet?: TypeDechet;
+  etat?: EtatConteneur;
+  niveauRemplissage?: number;
+}
