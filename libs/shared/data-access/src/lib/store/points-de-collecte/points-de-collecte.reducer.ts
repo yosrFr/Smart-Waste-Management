@@ -43,8 +43,11 @@ export const pointCollecteReducer = createReducer(
     ...state,
     points: state.points.filter((p) => p.id !== id),
   })),
-  on(PointsCollecteActions.refreshPointsCollecteSuccess, (state, { points }) => ({
-    ...state,
-    points,
-  }))
+  on(
+    PointsCollecteActions.refreshPointsCollecteSuccess,
+    (state, { points }) => ({
+      ...state,
+      points,
+    })
+  )
 );

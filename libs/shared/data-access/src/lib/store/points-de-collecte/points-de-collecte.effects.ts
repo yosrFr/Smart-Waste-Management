@@ -16,9 +16,15 @@ export class PointCollecteEffects {
       ofType(PointsCollecteActions.loadPointsCollecte),
       switchMap(() =>
         this.pointCollecteService.getAll().pipe(
-          map((points) => PointsCollecteActions.loadPointsCollecteSuccess({ points })),
+          map((points) =>
+            PointsCollecteActions.loadPointsCollecteSuccess({ points })
+          ),
           catchError((error) =>
-            of(PointsCollecteActions.loadPointsCollecteFailure({ error: error.message }))
+            of(
+              PointsCollecteActions.loadPointsCollecteFailure({
+                error: error.message,
+              })
+            )
           )
         )
       )
@@ -30,9 +36,15 @@ export class PointCollecteEffects {
       ofType(PointsCollecteActions.createPointCollecte),
       switchMap(({ dto }) =>
         this.pointCollecteService.create(dto).pipe(
-          map((point) => PointsCollecteActions.createPointCollecteSuccess({ point })),
+          map((point) =>
+            PointsCollecteActions.createPointCollecteSuccess({ point })
+          ),
           catchError((error) =>
-            of(PointsCollecteActions.loadPointsCollecteFailure({ error: error.message }))
+            of(
+              PointsCollecteActions.loadPointsCollecteFailure({
+                error: error.message,
+              })
+            )
           )
         )
       )
@@ -44,9 +56,15 @@ export class PointCollecteEffects {
       ofType(PointsCollecteActions.updatePointCollecte),
       switchMap(({ id, dto }) =>
         this.pointCollecteService.update(id, dto).pipe(
-          map((point) => PointsCollecteActions.updatePointCollecteSuccess({ point })),
+          map((point) =>
+            PointsCollecteActions.updatePointCollecteSuccess({ point })
+          ),
           catchError((error) =>
-            of(PointsCollecteActions.loadPointsCollecteFailure({ error: error.message }))
+            of(
+              PointsCollecteActions.loadPointsCollecteFailure({
+                error: error.message,
+              })
+            )
           )
         )
       )
@@ -60,7 +78,11 @@ export class PointCollecteEffects {
         this.pointCollecteService.delete(id).pipe(
           map(() => PointsCollecteActions.deletePointCollecteSuccess({ id })),
           catchError((error) =>
-            of(PointsCollecteActions.loadPointsCollecteFailure({ error: error.message }))
+            of(
+              PointsCollecteActions.loadPointsCollecteFailure({
+                error: error.message,
+              })
+            )
           )
         )
       )
@@ -75,7 +97,9 @@ export class PointCollecteEffects {
       startWith(0),
       switchMap(() =>
         this.pointCollecteService.getAll().pipe(
-          map((points) => PointsCollecteActions.refreshPointsCollecteSuccess({ points })),
+          map((points) =>
+            PointsCollecteActions.refreshPointsCollecteSuccess({ points })
+          ),
           catchError(() => of({ type: 'NO_ACTION' }))
         )
       )
