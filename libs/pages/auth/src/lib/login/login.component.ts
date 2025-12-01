@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -43,8 +43,8 @@ import {
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit, OnDestroy {
-    private fb = inject(FormBuilder);
-    private store = inject(Store);
+  private fb = inject(FormBuilder);
+  private store = inject(Store);
 
   loginForm: FormGroup;
   hidePassword = true;
@@ -68,13 +68,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Redirige si déjà authentifié
-    this.isAuthenticated$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((isAuth) => {
-        if (isAuth) {
-          // La redirection sera gérée par l'effect après login
-        }
-      });
+    this.isAuthenticated$.pipe(takeUntil(this.destroy$)).subscribe((isAuth) => {
+      if (isAuth) {
+        // La redirection sera gérée par l'effect après login
+      }
+    });
   }
 
   ngOnDestroy(): void {
