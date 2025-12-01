@@ -1,4 +1,4 @@
-import { Administrateur, Employe } from "./utilisateur.model";
+import { Administrateur, Employe } from './utilisateur.model';
 
 /**
  * DTO pour la connexion

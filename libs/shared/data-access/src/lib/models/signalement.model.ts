@@ -1,5 +1,5 @@
-import { TypeDechet } from "../enums";
-import { GeoPoint } from "../interfaces";
+import { TypeDechet } from '../enums';
+import { GeoPoint } from '../interfaces';
 
 /**
  * DTO pour signaler un conteneur endommagé

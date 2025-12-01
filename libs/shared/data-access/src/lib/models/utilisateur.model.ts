@@ -1,27 +1,27 @@
-import { Disponibilite, Role } from "../enums";
+import { Disponibilite, Role } from '../enums';
 
 /**
  * Modèle de base pour un utilisateur
  */
 export interface Utilisateur {
-    id: string;
-    /** Nom de famille */
-    nom: string;
-    prenom: string;
-    email: string;
-    /** Numèro de téléphone */
-    tel: string;
-    /** Date de naissance */
-    dateNais: string;
-    /** Indique si l'emplyé travaille encore dans le société */
-    actif: boolean;
-    /** Mot de passe hashé */
-    motDePasse: string;
-    /** 
-     * Role de l'emplyé dans la société
-     * Il peut être un administrateur ou un employé
-     */
-    role: Role;
+  id: string;
+  /** Nom de famille */
+  nom: string;
+  prenom: string;
+  email: string;
+  /** Numèro de téléphone */
+  tel: string;
+  /** Date de naissance */
+  dateNais: string;
+  /** Indique si l'emplyé travaille encore dans le société */
+  actif: boolean;
+  /** Mot de passe hashé */
+  motDePasse: string;
+  /**
+   * Role de l'emplyé dans la société
+   * Il peut être un administrateur ou un employé
+   */
+  role: Role;
 }
 
 /**
@@ -29,7 +29,7 @@ export interface Utilisateur {
  * Hérite de Utilisateur
  */
 export interface Administrateur extends Utilisateur {
-    role: Role.ADMIN;
+  role: Role.ADMIN;
 }
 
 /**
@@ -37,11 +37,11 @@ export interface Administrateur extends Utilisateur {
  * Hérite de Utilisateur
  */
 export interface Employe extends Utilisateur {
-    role: Role.EMPLOYE;
-    /** Disponibilité actuelle de l'employé */
-    disponibilite: Disponibilite;
-    /** Numéro de permis de conduire */
-    numPermis: string;
+  role: Role.EMPLOYE;
+  /** Disponibilité actuelle de l'employé */
+  disponibilite: Disponibilite;
+  /** Numéro de permis de conduire */
+  numPermis: string;
 }
 
 /**

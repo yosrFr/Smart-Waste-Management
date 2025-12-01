@@ -1,17 +1,17 @@
-import { EtatConteneur, TypeDechet, TypeNotif } from "../enums";
-import { GeoPoint } from "../interfaces";
+import { EtatConteneur, TypeDechet, TypeNotif } from '../enums';
+import { GeoPoint } from '../interfaces';
 
 /**
  * Modèle de base d'une notification
  */
 export interface NotificationBase {
-    id: string;
-    /** Date et heure de création */
-    date: string;
-    /** Description de la notification */
-    description: string;
-    /** Type de notification */
-    type: TypeNotif;
+  id: string;
+  /** Date et heure de création */
+  date: string;
+  /** Description de la notification */
+  description: string;
+  /** Type de notification */
+  type: TypeNotif;
 }
 
 /**
@@ -114,7 +114,7 @@ export interface CreateNotificationDto {
   type: TypeNotif;
   date: string;
   description: string;
-  details: 
+  details:
     | NotificationConteneurPleinDetails
     | NotificationConteneurEndommageDetails
     | NotificationVehiculeEnPanneDetails
