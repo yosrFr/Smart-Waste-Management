@@ -2,7 +2,10 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog.component';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData,
+} from './confirm-dialog.component';
 
 /**
  * Service helper pour ouvrir des dialogs de confirmation
