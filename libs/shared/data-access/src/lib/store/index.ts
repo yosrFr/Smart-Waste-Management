@@ -2,6 +2,7 @@
 import { ActionReducerMap } from '@ngrx/store';
 import * as fromAuth from './auth';
 import * as fromNotifications from './notifications';
+import * as fromPointsCollecte from './points-de-collecte';
 
 /**
  * Interface représentant l'état global de l'application
@@ -9,6 +10,7 @@ import * as fromNotifications from './notifications';
 export interface AppState {
   auth: fromAuth.AuthState;
   notifications: fromNotifications.NotificationState;
+  pointsCollecte: fromPointsCollecte.PointCollecteState;
 }
 
 /**
@@ -17,6 +19,7 @@ export interface AppState {
 export const reducers: ActionReducerMap<AppState> = {
   auth: fromAuth.authReducer,
   notifications: fromNotifications.notificationReducer,
+  pointsCollecte: fromPointsCollecte.pointCollecteReducer,
 };
 
 /**
@@ -25,4 +28,5 @@ export const reducers: ActionReducerMap<AppState> = {
 export const effects = [
   fromAuth.AuthEffects,
   fromNotifications.NotificationEffects,
+  fromPointsCollecte.PointCollecteEffects,
 ];
