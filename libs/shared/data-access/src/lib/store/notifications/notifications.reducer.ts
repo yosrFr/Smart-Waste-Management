@@ -41,11 +41,14 @@ export const notificationReducer = createReducer(
     loading: true,
     error: null,
   })),
-  on(NotificationActions.loadNotificationsSuccess, (state, { notifications }) => ({
-    ...state,
-    notifications,
-    loading: false,
-  })),
+  on(
+    NotificationActions.loadNotificationsSuccess,
+    (state, { notifications }) => ({
+      ...state,
+      notifications,
+      loading: false,
+    })
+  ),
   on(NotificationActions.loadNotificationsFailure, (state, { error }) => ({
     ...state,
     loading: false,
@@ -57,10 +60,13 @@ export const notificationReducer = createReducer(
     notifications: [notification, ...state.notifications],
   })),
   // Create Success
-  on(NotificationActions.createNotificationSuccess, (state, { notification }) => ({
-    ...state,
-    notifications: [notification, ...state.notifications],
-  })),
+  on(
+    NotificationActions.createNotificationSuccess,
+    (state, { notification }) => ({
+      ...state,
+      notifications: [notification, ...state.notifications],
+    })
+  ),
   // Pagination
   on(NotificationActions.setPageIndex, (state, { pageIndex }) => ({
     ...state,

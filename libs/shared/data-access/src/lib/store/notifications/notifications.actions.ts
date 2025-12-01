@@ -5,7 +5,9 @@ import { CreateNotificationDto, Notification } from '../../models';
 /**
  * Actions pour les notifications
  */
-export const loadNotifications = createAction('[Notifications] Load Notifications');
+export const loadNotifications = createAction(
+  '[Notifications] Load Notifications'
+);
 
 export const loadNotificationsSuccess = createAction(
   '[Notifications] Load Notifications Success',

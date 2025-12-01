@@ -26,7 +26,11 @@ export class NotificationEffects {
             NotificationActions.loadNotificationsSuccess({ notifications })
           ),
           catchError((error) =>
-            of(NotificationActions.loadNotificationsFailure({ error: error.message }))
+            of(
+              NotificationActions.loadNotificationsFailure({
+                error: error.message,
+              })
+            )
           )
         )
       )
@@ -44,8 +48,7 @@ export class NotificationEffects {
           map((notification) =>
             NotificationActions.createNotificationSuccess({ notification })
           ),
-          catchError((() => of({ type: 'NO_ACTION' }))
-          )
+          catchError(() => of({ type: 'NO_ACTION' }))
         )
       )
     )
