@@ -26,5 +26,4 @@ export class StatCardComponent {
 
   /** Icône Material */
   @Input() icon = 'info';
-
 }
