@@ -64,11 +64,11 @@ function passwordMatchValidator(
   styleUrl: './change-password.component.css',
 })
 export class ChangePasswordComponent implements OnInit {
-    private fb = inject(FormBuilder);
-    private store = inject(Store);
-    private router = inject(Router);
-    private actions$ = inject(Actions);
-    private snackBar = inject(MatSnackBar);
+  private fb = inject(FormBuilder);
+  private store = inject(Store);
+  private router = inject(Router);
+  private actions$ = inject(Actions);
+  private snackBar = inject(MatSnackBar);
 
   changePasswordForm: FormGroup;
 
