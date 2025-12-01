@@ -36,17 +36,25 @@ interface MenuItem {
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent implements OnInit {
-  private store = inject(Store); 
+  private store = inject(Store);
   private router = inject(Router);
 
   /** Menus pour admin */
   private adminMenuItems: MenuItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/admin/dashboard' },
-    { label: 'Points de collecte', icon: 'location_on', route: '/admin/points-collecte' },
+    {
+      label: 'Points de collecte',
+      icon: 'location_on',
+      route: '/admin/points-collecte',
+    },
     { label: 'Véhicules', icon: 'local_shipping', route: '/admin/vehicules' },
     { label: 'Employés', icon: 'people', route: '/admin/employes' },
     { label: 'Tournées', icon: 'route', route: '/admin/tournees' },
-    { label: 'Notifications', icon: 'notifications', route: '/shared/notifications' },
+    {
+      label: 'Notifications',
+      icon: 'notifications',
+      route: '/shared/notifications',
+    },
     { label: 'Profil', icon: 'person', route: '/shared/profil' },
   ];
 
@@ -54,8 +62,16 @@ export class SidebarComponent implements OnInit {
   private employeeMenuItems: MenuItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/employee/dashboard' },
     { label: 'Mes tournées', icon: 'route', route: '/employee/mes-tournees' },
-    { label: 'Signaler un problème', icon: 'report_problem', route: '/employee/signaler' },
-    { label: 'Notifications', icon: 'notifications', route: '/shared/notifications' },
+    {
+      label: 'Signaler un problème',
+      icon: 'report_problem',
+      route: '/employee/signaler',
+    },
+    {
+      label: 'Notifications',
+      icon: 'notifications',
+      route: '/shared/notifications',
+    },
     { label: 'Profil', icon: 'person', route: '/shared/profil' },
   ];
 
