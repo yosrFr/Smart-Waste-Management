@@ -1,111 +1,111 @@
 .app-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .page-title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    margin-left: 1rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-left: 1rem;
 }
 
 .spacer {
-    flex: 1;
+  flex: 1;
 }
 
 .notification-button {
-    margin-right: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 /* Menu Notifications */
 .notification-menu {
-    max-width: 400px;
-    max-height: 600px;
+  max-width: 400px;
+  max-height: 600px;
 }
 
 .notification-header {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .notification-header h3 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 500;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .notification-list {
-    max-height: 400px;
-    overflow-y: auto;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .notification-item {
-    display: flex !important;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem !important;
-    height: auto !important;
-    white-space: normal;
-    text-align: left;
+  display: flex !important;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem !important;
+  height: auto !important;
+  white-space: normal;
+  text-align: left;
 }
 
 .notification-icon {
-    color: #2e7d32;
-    flex-shrink: 0;
+  color: #2e7d32;
+  flex-shrink: 0;
 }
 
 .notification-content {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .notification-title {
-    margin: 0 0 0.25rem 0;
-    font-size: 0.875rem;
-    font-weight: 500;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .notification-time {
-    font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.6);
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .no-notifications {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .no-notifications mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    margin-bottom: 0.5rem;
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.5rem;
 }
 
 /* Menu Utilisateur */
 .user-info {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .user-name {
-    margin: 0 0 0.25rem 0;
-    font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  font-weight: 500;
 }
 
 .user-role {
-    margin: 0;
-    font-size: 0.875rem;
-    color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 @media (max-width: 768px) {
-    .page-title {
-        font-size: 1rem;
-    }
+  .page-title {
+    font-size: 1rem;
+  }
 }
