@@ -18,7 +18,8 @@ export class StatusBadgeComponent {
   @Input() label = '';
 
   /** Couleur (success, warning, danger, info, default) */
-  @Input() color: 'success' | 'warning' | 'danger' | 'info' | 'default' = 'default';
+  @Input() color: 'success' | 'warning' | 'danger' | 'info' | 'default' =
+    'default';
 
   get colorClass(): string {
     return this.color;

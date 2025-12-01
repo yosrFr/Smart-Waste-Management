@@ -1,29 +1,29 @@
 .status-chip {
-    font-weight: 500;
-    font-size: 0.875rem;
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
 .status-chip.success {
-    background-color: #2e7d32 !important;
-    color: white !important;
+  background-color: #2e7d32 !important;
+  color: white !important;
 }
 
 .status-chip.warning {
-    background-color: #f9a825 !important;
-    color: white !important;
+  background-color: #f9a825 !important;
+  color: white !important;
 }
 
 .status-chip.danger {
-    background-color: #c62828 !important;
-    color: white !important;
+  background-color: #c62828 !important;
+  color: white !important;
 }
 
 .status-chip.info {
-    background-color: #0277bd !important;
-    color: white !important;
+  background-color: #0277bd !important;
+  color: white !important;
 }
 
 .status-chip.default {
-    background-color: #616161 !important;
-    color: white !important;
+  background-color: #616161 !important;
+  color: white !important;
 }
