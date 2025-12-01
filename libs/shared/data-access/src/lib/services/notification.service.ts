@@ -62,7 +62,7 @@ export class NotificationService {
     return of([...this.mockNotifications]);
   }
 
-/**
+  /**
    * Crée une nouvelle notification
    * @param dto Données de la notification à créer
    * @returns Observable avec la notification créée
@@ -70,7 +70,7 @@ export class NotificationService {
   create(dto: CreateNotificationDto): Observable<Notification> {
     const notification: Notification = {
       id: (this.nextId++).toString(),
-      ...dto
+      ...dto,
     } as Notification;
 
     this.mockNotifications.unshift(notification);

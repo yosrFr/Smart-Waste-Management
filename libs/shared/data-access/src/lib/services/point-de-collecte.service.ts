@@ -127,7 +127,10 @@ export class PointCollecteService {
     this.mockPoints.forEach((point) => {
       // Augmente aléatoirement le niveau (0 à 5%)
       const increase = Math.random() * 5;
-      point.niveauRemplissage = Math.min(100, point.niveauRemplissage + increase);
+      point.niveauRemplissage = Math.min(
+        100,
+        point.niveauRemplissage + increase
+      );
 
       // Met à jour l'état selon le niveau
       if (point.niveauRemplissage >= 90) {

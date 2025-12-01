@@ -23,7 +23,7 @@ export class AuthService {
   /**
    * Utilisateurs mockés pour la démo
    */
-  private mockUsers: ( Employe | Administrateur)[] = [
+  private mockUsers: (Employe | Administrateur)[] = [
     {
       id: '1',
       nom: 'Admin',
@@ -86,7 +86,9 @@ export class AuthService {
         }
 
         // Génère un token JWT mocké
-        const token = btoa(JSON.stringify({ userId: user.id, role: user.role }));
+        const token = btoa(
+          JSON.stringify({ userId: user.id, role: user.role })
+        );
 
         return {
           token,
