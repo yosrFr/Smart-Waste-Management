@@ -1,0 +1,11 @@
+<mat-tab-group
+  [(selectedIndex)]="selectedIndex"
+  (selectedIndexChange)="onTabChange($event)"
+>
+  <mat-tab *ngFor="let tab of tabs">
+    <ng-template mat-tab-label>
+      <span>{{ tab.label }}</span>
+    </ng-template>
+    <ng-content [select]="'[tab=' + tab.value + ']'"></ng-content>
+  </mat-tab>
+</mat-tab-group>
