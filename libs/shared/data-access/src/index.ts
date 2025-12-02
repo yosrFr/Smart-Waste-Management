@@ -10,3 +10,6 @@ export * from './lib/store';
 export * from './lib/store/auth';
 export * from './lib/store/notifications';
 export * from './lib/store/points-de-collecte';
+export * from './lib/store/employes';
+export * from './lib/store/tournees';
+export * from './lib/store/vehicules';

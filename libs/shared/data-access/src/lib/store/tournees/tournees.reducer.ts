@@ -12,14 +12,14 @@ export interface TourneeState {
   error: string | null;
 }
 
-export const initialState: TourneeState = {
+export const initialTourneeState: TourneeState = {
   tournees: [],
   loading: false,
   error: null,
 };
 
 export const tourneeReducer = createReducer(
-  initialState,
+  initialTourneeState,
   on(TourneesActions.loadTournees, (state) => ({
     ...state,
     loading: true,

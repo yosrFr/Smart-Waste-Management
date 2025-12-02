@@ -9,14 +9,14 @@ export interface PointCollecteState {
   error: string | null;
 }
 
-export const initialState: PointCollecteState = {
+export const initialPointCollecteState: PointCollecteState = {
   points: [],
   loading: false,
   error: null,
 };
 
 export const pointCollecteReducer = createReducer(
-  initialState,
+  initialPointCollecteState,
   on(PointsCollecteActions.loadPointsCollecte, (state) => ({
     ...state,
     loading: true,

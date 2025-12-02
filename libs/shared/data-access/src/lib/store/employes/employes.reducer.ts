@@ -12,14 +12,14 @@ export interface EmployeState {
   error: string | null;
 }
 
-export const initialState: EmployeState = {
+export const initialEmployeState: EmployeState = {
   employes: [],
   loading: false,
   error: null,
 };
 
 export const employeReducer = createReducer(
-  initialState,
+  initialEmployeState,
   on(EmployesActions.loadEmployes, (state) => ({
     ...state,
     loading: true,

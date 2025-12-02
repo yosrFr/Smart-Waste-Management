@@ -12,14 +12,14 @@ export interface VehiculeState {
   error: string | null;
 }
 
-export const initialState: VehiculeState = {
+export const initialVehiculeState: VehiculeState = {
   vehicules: [],
   loading: false,
   error: null,
 };
 
 export const vehiculeReducer = createReducer(
-  initialState,
+  initialVehiculeState,
   on(VehiculesActions.loadVehicules, (state) => ({
     ...state,
     loading: true,
