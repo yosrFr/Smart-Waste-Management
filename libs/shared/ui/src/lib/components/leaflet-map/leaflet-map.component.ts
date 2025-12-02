@@ -36,8 +36,8 @@ export interface MapPolyline {
   selector: 'lib-leaflet-map',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './leaflet-map.html',
-  styleUrl: './leaflet-map.css',
+  templateUrl: './leaflet-map.component.html',
+  styleUrl: './leaflet-map.component.css',
 })
 export class LeafletMapComponent implements AfterViewInit, OnDestroy {
   /** ID unique de la carte */
