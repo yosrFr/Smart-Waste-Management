@@ -1,0 +1,72 @@
+<lib-page-header
+  [title]="'Véhicules'"
+  [subtitle]="totalVehicules + ' véhicules au total'"
+>
+  <button mat-raised-button color="primary" (click)="addVehicule()">
+    <mat-icon>add</mat-icon>
+    Ajouter un véhicule
+  </button>
+</lib-page-header>
+
+<!-- Loading -->
+<lib-loading-spinner
+  *ngIf="loading$ | async"
+  [message]="'Chargement des véhicules...'"
+></lib-loading-spinner>
+
+<!-- Tabs par statut -->
+<div *ngIf="(loading$ | async) === false">
+  <lib-tabs-with-count
+    [tabs]="tabs"
+    [selectedIndex]="selectedTabIndex"
+    (tabChange)="onTabChange($event)"
+  >
+    <!-- Actifs -->
+    <div tab="ACTIF">
+      <lib-data-table
+        [data]="vehiculesActifs"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- Inactifs -->
+    <div tab="INACTIF">
+      <lib-data-table
+        [data]="vehiculesInactifs"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- En réparation -->
+    <div tab="EN_REPARATION">
+      <lib-data-table
+        [data]="vehiculesEnReparation"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- En mission -->
+    <div tab="EN_MISSION">
+      <lib-data-table
+        [data]="vehiculesEnMission"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+  </lib-tabs-with-count>
+</div>
