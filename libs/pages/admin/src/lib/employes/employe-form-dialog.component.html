@@ -1,0 +1,140 @@
+<h2 mat-dialog-title>
+  {{ data.mode === 'create' ? 'Ajouter' : 'Modifier' }} un employé
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form">
+    <!-- Informations personnelles (création uniquement) -->
+    <div *ngIf="data.mode === 'create'" class="form-section">
+      <h3>Informations personnelles</h3>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nom</mat-label>
+          <input matInput formControlName="nom" />
+          <mat-error *ngIf="form.get('nom')?.hasError('required')">
+            Le nom est requis
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Prénom</mat-label>
+          <input matInput formControlName="prenom" />
+          <mat-error *ngIf="form.get('prenom')?.hasError('required')">
+            Le prénom est requis
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Date de naissance</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="dateNaissance"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="form.get('dateNaissance')?.hasError('required')">
+          La date de naissance est requise
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Contact et accès -->
+    <div class="form-section">
+      <h3>Contact et accès</h3>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error *ngIf="form.get('email')?.hasError('required')">
+          L'email est requis
+        </mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('email')">
+          Email invalide
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+        *ngIf="data.mode === 'create'"
+      >
+        <mat-label>Mot de passe</mat-label>
+        <input matInput type="password" formControlName="motDePasse" />
+        <mat-error *ngIf="form.get('motDePasse')?.hasError('required')">
+          Le mot de passe est requis
+        </mat-error>
+        <mat-error *ngIf="form.get('motDePasse')?.hasError('minlength')">
+          Le mot de passe doit contenir au moins 6 caractères
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Téléphone</mat-label>
+        <input matInput formControlName="tel" />
+        <mat-error *ngIf="form.get('tel')?.hasError('required')">
+          Le téléphone est requis
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Rôle et statut -->
+    <div class="form-section">
+      <h3>Rôle et statut</h3>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Rôle</mat-label>
+        <mat-select formControlName="role" (selectionChange)="onRoleChange()">
+          <mat-option [value]="Role.ADMIN">Administrateur</mat-option>
+          <mat-option [value]="Role.EMPLOYE">Employé</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('role')?.hasError('required')">
+          Le rôle est requis
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+        *ngIf="isEmployeRole"
+      >
+        <mat-label>Disponibilité</mat-label>
+        <mat-select formControlName="disponibilite">
+          <mat-option [value]="Disponibilite.DISPONIBLE">Disponible</mat-option>
+          <mat-option [value]="Disponibilite.EN_MISSION">En mission</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="actif" class="checkbox">
+        Compte actif
+      </mat-checkbox>
+    </div>
+
+    <!-- Permis (employé uniquement) -->
+    <div class="form-section" *ngIf="isEmployeRole">
+      <h3>Informations de conduite</h3>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Numéro de permis</mat-label>
+        <input matInput formControlName="numPermis" />
+        <mat-error *ngIf="form.get('numPermis')?.hasError('required')">
+          Le numéro de permis est requis
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="form.invalid"
+  >
+    {{ data.mode === 'create' ? 'Ajouter' : 'Modifier' }}
+  </button>
+</mat-dialog-actions>
