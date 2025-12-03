@@ -33,5 +33,11 @@ export const tourneeReducer = createReducer(
     ...state,
     error,
     loading: false,
+  })),
+  on(TourneesActions.updateTourneePosition, (state, { id, position }) => ({
+    ...state,
+    tournees: state.tournees.map((t) =>
+      t.id === id ? { ...t, positionActuelle: position } : t
+    ),
   }))
 );
