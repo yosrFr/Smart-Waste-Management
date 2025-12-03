@@ -32,21 +32,47 @@ export class EmployeEffects {
         this.employeService.create(dto).pipe(
           map((employe) => EmployesActions.createEmployeSuccess({ employe })),
           catchError((error) =>
-            of(EmployesActions.loadEmployesFailure({ error: error.message }))
+            of(EmployesActions.createEmployeFailure({ error: error.message }))
           )
         )
       )
     )
   );
 
-  updateEmploye$ = createEffect(() =>
+  updateEmployeByAdmin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(EmployesActions.updateEmploye),
+      ofType(EmployesActions.updateEmployeByAdmin),
       switchMap(({ id, dto }) =>
-        this.employeService.update(id, dto).pipe(
-          map((employe) => EmployesActions.updateEmployeSuccess({ employe })),
+        this.employeService.updateByAdmin(id, dto).pipe(
+          map((employe) =>
+            EmployesActions.updateEmployeByAdminSuccess({ employe })
+          ),
           catchError((error) =>
-            of(EmployesActions.loadEmployesFailure({ error: error.message }))
+            of(
+              EmployesActions.updateEmployeByAdminFailure({
+                error: error.message,
+              })
+            )
+          )
+        )
+      )
+    )
+  );
+
+  updateProfilEmploye$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployesActions.updateProfilEmploye),
+      switchMap(({ id, dto }) =>
+        this.employeService.updateProfil(id, dto).pipe(
+          map((employe) =>
+            EmployesActions.updateProfilEmployeSuccess({ employe })
+          ),
+          catchError((error) =>
+            of(
+              EmployesActions.updateProfilEmployeFailure({
+                error: error.message,
+              })
+            )
           )
         )
       )
@@ -60,7 +86,7 @@ export class EmployeEffects {
         this.employeService.delete(id).pipe(
           map(() => EmployesActions.deleteEmployeSuccess({ id })),
           catchError((error) =>
-            of(EmployesActions.loadEmployesFailure({ error: error.message }))
+            of(EmployesActions.deleteEmployeFailure({ error: error.message }))
           )
         )
       )

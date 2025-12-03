@@ -2,9 +2,10 @@
 import { createAction, props } from '@ngrx/store';
 import {
   Employe,
-  Utilisateur,
   CreateUtilisateurDto,
   UpdateUtilisateurAdminDto,
+  Administrateur,
+  UpdateProfilEmployeDto,
 } from '../../models';
 import { Disponibilite } from '../../enums';
 
@@ -12,7 +13,7 @@ export const loadEmployes = createAction('[Employes] Load');
 
 export const loadEmployesSuccess = createAction(
   '[Employes] Load Success',
-  props<{ employes: (Employe | Utilisateur)[] }>()
+  props<{ employes: (Employe | Administrateur)[] }>()
 );
 
 export const loadEmployesFailure = createAction(
@@ -27,17 +28,42 @@ export const createEmploye = createAction(
 
 export const createEmployeSuccess = createAction(
   '[Employes] Create Success',
-  props<{ employe: Employe | Utilisateur }>()
+  props<{ employe: Employe | Administrateur }>()
 );
 
-export const updateEmploye = createAction(
-  '[Employes] Update',
+export const createEmployeFailure = createAction(
+  '[Employes] Create Failure',
+  props<{ error: string }>()
+);
+
+export const updateEmployeByAdmin = createAction(
+  '[Employes] Update By Admin',
   props<{ id: string; dto: UpdateUtilisateurAdminDto }>()
 );
 
-export const updateEmployeSuccess = createAction(
-  '[Employes] Update Success',
-  props<{ employe: Employe | Utilisateur }>()
+export const updateEmployeByAdminSuccess = createAction(
+  '[Employes] Update By Admin Success',
+  props<{ employe: Employe | Administrateur }>()
+);
+
+export const updateEmployeByAdminFailure = createAction(
+  '[Employes] Update By Admin Failure',
+  props<{ error: string }>()
+);
+
+export const updateProfilEmploye = createAction(
+  '[Employes] Update Profil Employe',
+  props<{ id: string; dto: UpdateProfilEmployeDto }>()
+);
+
+export const updateProfilEmployeSuccess = createAction(
+  '[Employes] Update Profil Employe Success',
+  props<{ employe: Employe | Administrateur }>()
+);
+
+export const updateProfilEmployeFailure = createAction(
+  '[Employes] Update Profil Employe Failure',
+  props<{ error: string }>()
 );
 
 export const deleteEmploye = createAction(
@@ -48,6 +74,11 @@ export const deleteEmploye = createAction(
 export const deleteEmployeSuccess = createAction(
   '[Employes] Delete Success',
   props<{ id: string }>()
+);
+
+export const deleteEmployeFailure = createAction(
+  '[Employes] Delete Failure',
+  props<{ error: string }>()
 );
 
 export const updateEmployeDisponibilite = createAction(

@@ -1,13 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { createReducer, on } from '@ngrx/store';
-import { Employe, Utilisateur } from '../../models';
+import { Administrateur, Employe } from '../../models';
 import * as EmployesActions from './employes.actions';
 
 /**
  * État des employés
  */
 export interface EmployeState {
-  employes: (Employe | Utilisateur)[];
+  employes: (Employe | Administrateur)[];
   loading: boolean;
   error: string | null;
 }
@@ -38,7 +38,11 @@ export const employeReducer = createReducer(
     ...state,
     employes: [...state.employes, employe],
   })),
-  on(EmployesActions.updateEmployeSuccess, (state, { employe }) => ({
+  on(EmployesActions.updateEmployeByAdminSuccess, (state, { employe }) => ({
+    ...state,
+    employes: state.employes.map((e) => (e.id === employe.id ? employe : e)),
+  })),
+  on(EmployesActions.updateProfilEmployeSuccess, (state, { employe }) => ({
     ...state,
     employes: state.employes.map((e) => (e.id === employe.id ? employe : e)),
   })),

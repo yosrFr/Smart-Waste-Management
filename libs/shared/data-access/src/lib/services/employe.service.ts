@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
   Employe,
-  Utilisateur,
   CreateUtilisateurDto,
   UpdateUtilisateurAdminDto,
   Administrateur,
+  UpdateProfilEmployeDto,
 } from '../models';
 import { Role, Disponibilite } from '../enums';
+import { generateNextId } from '@smart-waste-management/shared/utils';
 
 /**
  * Service pour gérer les employés et utilisateurs
@@ -18,22 +19,11 @@ import { Role, Disponibilite } from '../enums';
 })
 export class EmployeService {
   /**
-   * Utilisateurs mockés (employés + admins)
+   * Employés mockés
    */
-  private mockEmployes: (Employe | Utilisateur)[] = [
+  private mockEmployes: Employe[] = [
     {
       id: '1',
-      nom: 'Admin',
-      prenom: 'Principal',
-      email: 'admin@waste.com',
-      motDePasse: 'admin123',
-      tel: '+216 20 123 456',
-      dateNais: '1985-05-15',
-      role: Role.ADMIN,
-      actif: true,
-    },
-    {
-      id: '2',
       nom: 'Ben Ali',
       prenom: 'Mohamed',
       email: 'employe@waste.com',
@@ -46,7 +36,7 @@ export class EmployeService {
       numPermis: 'B123456',
     },
     {
-      id: '3',
+      id: '2',
       nom: 'Trabelsi',
       prenom: 'Ahmed',
       email: 'ahmed@waste.com',
@@ -59,7 +49,7 @@ export class EmployeService {
       numPermis: 'B234567',
     },
     {
-      id: '4',
+      id: '3',
       nom: 'Gharbi',
       prenom: 'Fatma',
       email: 'fatma@waste.com',
@@ -73,14 +63,61 @@ export class EmployeService {
     },
   ];
 
-  private nextId = 5;
+  /**
+   * Administrateurs mockés
+   */
+  private mockAdmins: Administrateur[] = [
+    {
+      id: '10',
+      nom: 'Admin',
+      prenom: 'Principal',
+      email: 'admin@waste.com',
+      motDePasse: 'admin123',
+      tel: '+216 20 123 456',
+      dateNais: '1985-05-15',
+      role: Role.ADMIN,
+      actif: true,
+    },
+  ];
+
+  /**
+   * Regroupe admins + employés
+   */
+  private get mockUtilisateurs(): (Employe | Administrateur)[] {
+    return [...this.mockAdmins, ...this.mockEmployes];
+  }
+
+  private set mockUtilisateurs(value: (Employe | Administrateur)[]) {
+    this.mockAdmins = value.filter(
+      (u) => u.role === Role.ADMIN
+    ) as Administrateur[];
+    this.mockEmployes = value.filter(
+      (u) => u.role === Role.EMPLOYE
+    ) as Employe[];
+  }
 
   /**
    * Récupère tous les utilisateurs (employés + admins)
    * @returns Observable avec la liste
    */
-  getAll(): Observable<(Employe | Utilisateur)[]> {
-    return of([...this.mockEmployes]);
+  getAll(): Observable<(Employe | Administrateur)[]> {
+    return of(this.mockUtilisateurs);
+  }
+
+  /**
+   * Récupère tous les admins
+   * @returns Observable avec la liste
+   */
+  getAllEmployes(): Observable<Employe[]> {
+    return of(this.mockEmployes);
+  }
+
+  /**
+   * Récupère tous les employés
+   * @returns Observable avec la liste
+   */
+  getAllAdmins(): Observable<Administrateur[]> {
+    return of(this.mockAdmins);
   }
 
   /**
@@ -89,8 +126,10 @@ export class EmployeService {
    * @returns Observable avec l'utilisateur créé
    */
   create(dto: CreateUtilisateurDto): Observable<Employe | Administrateur> {
+    const id = generateNextId(this.mockUtilisateurs);
+
     const baseUser = {
-      id: (this.nextId++).toString(),
+      id,
       nom: dto.nom,
       prenom: dto.prenom,
       email: dto.email,
@@ -101,41 +140,106 @@ export class EmployeService {
       actif: dto.actif,
     };
 
-    const user: Employe | Administrateur =
-      dto.role === Role.EMPLOYE
-        ? {
-            ...baseUser,
-            role: Role.EMPLOYE,
-            disponibilite: dto.disponibilite || Disponibilite.DISPONIBLE,
-            numPermis: dto.numPermis || '',
-          }
-        : { ...baseUser, role: Role.ADMIN };
+    let newUser: Employe | Administrateur;
 
-    this.mockEmployes.push(user);
-    return of(user);
+    if (dto.role === Role.EMPLOYE) {
+      newUser = {
+        ...baseUser,
+        role: Role.EMPLOYE,
+        disponibilite: dto.disponibilite ?? Disponibilite.DISPONIBLE,
+        numPermis: dto.numPermis ?? '',
+      };
+      this.mockEmployes.push(newUser);
+    } else {
+      newUser = {
+        ...baseUser,
+        role: Role.ADMIN,
+      };
+      this.mockAdmins.push(newUser);
+    }
+
+    return of(newUser);
   }
 
   /**
-   * Met à jour un utilisateur (admin)
+   * Met à jour un utilisateur depuis le formulaire de modification de l'admin
    * @param id ID de l'utilisateur
    * @param dto Données à mettre à jour
    * @returns Observable avec l'utilisateur mis à jour
    */
-  update(
+  updateByAdmin(
     id: string,
     dto: UpdateUtilisateurAdminDto
-  ): Observable<Employe | Utilisateur> {
-    const index = this.mockEmployes.findIndex((e) => e.id === id);
-    if (index === -1) {
-      throw new Error('Utilisateur introuvable');
+  ): Observable<Employe | Administrateur> {
+    const utilisateurs = this.mockUtilisateurs;
+    const index = utilisateurs.findIndex((u) => u.id === id);
+
+    if (index === -1) throw new Error('Utilisateur introuvable');
+
+    const utilisateur = utilisateurs[index];
+
+    const finalRole = dto.role ?? utilisateur.role;
+
+    let updatedUser: Employe | Administrateur;
+
+    if (finalRole === Role.EMPLOYE) {
+      updatedUser = {
+        ...(utilisateur as Employe),
+        ...dto,
+        role: Role.EMPLOYE,
+      };
+    } else {
+      updatedUser = {
+        ...(utilisateur as Administrateur),
+        ...dto,
+        role: Role.ADMIN,
+      };
     }
 
-    this.mockEmployes[index] = {
-      ...this.mockEmployes[index],
-      ...dto,
-    };
+    utilisateurs[index] = updatedUser;
+    this.mockUtilisateurs = utilisateurs;
 
-    return of(this.mockEmployes[index]);
+    return of(updatedUser);
+  }
+
+  /**
+   * Met à jour un utilisateur depuis le formulaire de modification de profil
+   * @param id ID de l'utilisateur
+   * @param dto Données à mettre à jour
+   * @returns Observable avec l'utilisateur mis à jour
+   */
+  updateProfil(
+    id: string,
+    dto: UpdateProfilEmployeDto
+  ): Observable<Employe | Administrateur> {
+    const utilisateurs = this.mockUtilisateurs;
+    const index = utilisateurs.findIndex((u) => u.id === id);
+
+    if (index === -1) throw new Error('Utilisateur introuvable');
+
+    const utilisateur = utilisateurs[index];
+
+    let updatedUser: Employe | Administrateur;
+
+    if (utilisateur.role === Role.EMPLOYE) {
+      updatedUser = {
+        ...(utilisateur as Employe),
+        ...dto,
+        dateNais: dto.dateNaissance ?? utilisateur.dateNais,
+        numPermis: dto.numPermis ?? utilisateur.numPermis,
+      };
+    } else {
+      updatedUser = {
+        ...(utilisateur as Administrateur),
+        ...dto,
+        dateNais: dto.dateNaissance ?? utilisateur.dateNais,
+      };
+    }
+
+    utilisateurs[index] = updatedUser;
+    this.mockUtilisateurs = utilisateurs;
+
+    return of(updatedUser);
   }
 
   /**
@@ -144,7 +248,14 @@ export class EmployeService {
    * @returns Observable vide
    */
   delete(id: string): Observable<void> {
-    this.mockEmployes = this.mockEmployes.filter((e) => e.id !== id);
+    const utilisateurs = this.mockUtilisateurs;
+    const index = utilisateurs.findIndex((u) => u.id === id);
+
+    if (index === -1) throw new Error('Utilisateur introuvable');
+
+    utilisateurs[index].actif = false;
+
+    this.mockUtilisateurs = utilisateurs;
     return of(undefined);
   }
 }
