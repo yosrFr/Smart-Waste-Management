@@ -1,0 +1,69 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Modifier' : 'Ajouter' }} un véhicule</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Matricule</mat-label>
+      <input matInput formControlName="matricule" />
+      <mat-error *ngIf="form.get('matricule')?.hasError('required')">
+        Le matricule est requis
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Marque</mat-label>
+      <input matInput formControlName="marque" />
+      <mat-error *ngIf="form.get('marque')?.hasError('required')">
+        La marque est requise
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Capacité maximale (kg)</mat-label>
+      <input matInput type="number" formControlName="capaciteMax" />
+      <mat-error *ngIf="form.get('capaciteMax')?.hasError('required')">
+        La capacité est requise
+      </mat-error>
+      <mat-error *ngIf="form.get('capaciteMax')?.hasError('min')">
+        La capacité doit être positive
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Poids à vide (kg)</mat-label>
+      <input matInput type="number" formControlName="poidsVide" />
+      <mat-error *ngIf="form.get('poidsVide')?.hasError('required')">
+        Le poids est requis
+      </mat-error>
+      <mat-error *ngIf="form.get('poidsVide')?.hasError('min')">
+        Le poids doit être positif
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Type de déchet</mat-label>
+      <mat-select formControlName="typeDechet">
+        <mat-option [value]="TypeDechet.PLASTIQUE">Plastique</mat-option>
+        <mat-option [value]="TypeDechet.METAUX">Métaux</mat-option>
+        <mat-option [value]="TypeDechet.ALIMENTAIRE">Alimentaire</mat-option>
+        <mat-option [value]="TypeDechet.VERRE">Verre</mat-option>
+        <mat-option [value]="TypeDechet.AUTRE">Autre</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('typeDechet')?.hasError('required')">
+        Le type de déchet est requis
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="form.invalid"
+  >
+    {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+  </button>
+</mat-dialog-actions>
