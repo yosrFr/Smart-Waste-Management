@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>
+  <mat-icon>map</mat-icon>
+  Tournée - {{ tournee.vehicule.matricule }}
+</h2>
+
+<mat-dialog-content>
+  <lib-leaflet-map
+    [height]="500"
+    [markers]="markers"
+    [polylines]="polylines"
+    [center]="mapCenter"
+    [zoom]="14"
+  ></lib-leaflet-map>
+
+  <div class="info-panel">
+    <h3>Informations</h3>
+    <p>
+      <strong>Employé:</strong> {{ tournee.employe.prenom }}
+      {{ tournee.employe.nom }}
+    </p>
+    <p>
+      <strong>Points de collecte:</strong> {{ tournee.pointsDeCollecte.length }}
+    </p>
+    <p><strong>Statut:</strong> {{ tournee.statut }}</p>
+    <p *ngIf="tournee.positionActuelle">
+      <strong>Position actuelle:</strong>
+      {{ tournee.positionActuelle.latitude | number : '1.4-4' }},
+      {{ tournee.positionActuelle.longitude | number : '1.4-4' }}
+    </p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Fermer</button>
+</mat-dialog-actions>
