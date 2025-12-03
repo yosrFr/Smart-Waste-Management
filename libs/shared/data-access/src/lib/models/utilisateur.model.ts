@@ -62,19 +62,17 @@ export interface CreateUtilisateurDto {
 }
 
 /**
- * DTO pour la modification d'un utilisateur (Admin)
+ * DTO pour la modification d'un utilisateur
  */
 export interface UpdateUtilisateurAdminDto {
   role?: Role;
   email?: string;
   tel?: string;
   actif?: boolean;
-  /** Pour les employés uniquement */
-  disponibilite?: Disponibilite;
 }
 
 /**
- * DTO pour la modification du profil (Employé)
+ * DTO pour la modification du profil
  */
 export interface UpdateProfilEmployeDto {
   nom?: string;
@@ -82,5 +80,6 @@ export interface UpdateProfilEmployeDto {
   email?: string;
   tel?: string;
   dateNaissance?: string;
+  /** Pour les employés uniquement */
   numPermis?: string;
 }
