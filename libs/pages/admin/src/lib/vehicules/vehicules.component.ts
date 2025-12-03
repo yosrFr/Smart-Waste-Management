@@ -137,10 +137,6 @@ export class VehiculesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  onTabChange(tab: Tab): void {
-    console.log('Tab changed:', tab);
-  }
-
   addVehicule(): void {
     const dialogRef = this.dialog.open(VehiculeFormDialogComponent, {
       width: '600px',

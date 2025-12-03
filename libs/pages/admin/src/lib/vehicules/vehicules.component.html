@@ -16,11 +16,7 @@
 
 <!-- Tabs par statut -->
 <div *ngIf="(loading$ | async) === false">
-  <lib-tabs
-    [tabs]="tabs"
-    [selectedIndex]="selectedTabIndex"
-    (tabChange)="onTabChange($event)"
-  >
+  <lib-tabs [tabs]="tabs" [selectedIndex]="selectedTabIndex">
     <!-- Actifs -->
     <div tab="ACTIF">
       <lib-data-table
