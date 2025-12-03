@@ -14,7 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
  */
 export interface TableColumn<T = any> {
   /** Clé de la propriété à afficher */
-  key: keyof T;
+  key: keyof T | string;
   /** Label de la colonne */
   label: string;
   /** Si la colonne est triable */
