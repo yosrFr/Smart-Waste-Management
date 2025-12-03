@@ -21,7 +21,7 @@ import {
   DataTableComponent,
   TableColumn,
   TableAction,
-  TabsWithCountComponent,
+  TabsComponent,
   Tab,
   LoadingSpinnerComponent,
   ConfirmDialogService,
@@ -41,12 +41,11 @@ import { VehiculeFormDialogComponent } from './vehicule-form-dialog.component';
     MatIconModule,
     PageHeaderComponent,
     DataTableComponent,
-    TabsWithCountComponent,
+    TabsComponent,
     LoadingSpinnerComponent,
     EnumLabelPipe,
   ],
-  template: ``,
-  styles: [],
+  templateUrl: './vehicules.component.html',
 })
 export class VehiculesComponent implements OnInit, OnDestroy {
   private store = inject(Store);

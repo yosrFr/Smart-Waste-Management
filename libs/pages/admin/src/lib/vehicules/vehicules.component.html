@@ -16,7 +16,7 @@
 
 <!-- Tabs par statut -->
 <div *ngIf="(loading$ | async) === false">
-  <lib-tabs-with-count
+  <lib-tabs
     [tabs]="tabs"
     [selectedIndex]="selectedTabIndex"
     (tabChange)="onTabChange($event)"
@@ -68,5 +68,5 @@
         [pageSize]="10"
       ></lib-data-table>
     </div>
-  </lib-tabs-with-count>
+  </lib-tabs>
 </div>

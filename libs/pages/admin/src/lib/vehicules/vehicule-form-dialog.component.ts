@@ -36,8 +36,8 @@ import {
     MatSelectModule,
     MatButtonModule,
   ],
-  template: ``,
-  styles: [``],
+  templateUrl: './vehicule-form-dialog.component.html',
+  styleUrl: './vehicule-form-dialog.component.css',
 })
 export class VehiculeFormDialogComponent {
   private fb = inject(FormBuilder);
