@@ -1,1 +1,6 @@
 export * from './lib/login/login.component';
+export * from './lib/change-password/change-password.component';
+export * from './lib/guards/auth.guard';
+export * from './lib/guards/admin.guard';
+export * from './lib/guards/employee.guard';
+export * from './lib/auth.routes';
