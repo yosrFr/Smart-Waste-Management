@@ -1,0 +1,185 @@
+<lib-page-header
+  [title]="'Notifications'"
+  [subtitle]="'Historique de toutes vos notifications'"
+>
+</lib-page-header>
+
+<div class="notifications-container">
+  <!-- Loading -->
+  <lib-loading-spinner
+    *ngIf="loading$ | async"
+    [message]="'Chargement des notifications...'"
+  ></lib-loading-spinner>
+
+  <!-- Empty State -->
+  <lib-empty-state
+    *ngIf="
+      (loading$ | async) === false && (allNotifications$ | async)?.length === 0
+    "
+    [icon]="'notifications_none'"
+    [title]="'Aucune notification'"
+    [message]="'Vous n\'avez reçu aucune notification pour le moment.'"
+  ></lib-empty-state>
+
+  <!-- Liste des notifications -->
+  <div
+    class="notifications-list"
+    *ngIf="
+      (loading$ | async) === false &&
+      (paginatedNotifications$ | async) as notifications
+    "
+  >
+    <mat-card
+      *ngFor="let notification of notifications"
+      class="notification-card"
+    >
+      <div class="notification-header">
+        <div class="notification-icon-wrapper">
+          <mat-icon
+            [class]="
+              'notification-icon ' + getNotificationClass(notification.type)
+            "
+          >
+            {{ getNotificationIcon(notification.type) }}
+          </mat-icon>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title-row">
+            <h3 class="notification-title">
+              {{ notification.type | enumLabel : 'TypeNotification' }}
+            </h3>
+            <span class="notification-time">
+              {{ notification.date | dateRelative }}
+            </span>
+          </div>
+          <p class="notification-description">
+            {{ notification.description }}
+          </p>
+
+          <!-- Détails spécifiques -->
+          <div class="notification-details">
+            <ng-container
+              *ngIf="getNotificationDetails(notification) as details"
+              [ngSwitch]="notification.type"
+            >
+              <!-- Conteneur plein -->
+              <div *ngIf="isConteneur(notification)" class="details-grid">
+                <div class="detail-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>
+                    {{
+                      notification.details.localisation.latitude
+                        | number : '1.4-4'
+                    }},
+                    {{
+                      notification.details.localisation.longitude
+                        | number : '1.4-4'
+                    }}
+                  </span>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>delete</mat-icon>
+                  <span>{{
+                    notification.details.typeConteneur
+                      | enumLabel : 'TypeDechet'
+                  }}</span>
+                </div>
+                <div
+                  class="detail-item"
+                  *ngIf="notification.type === TypeNotif.PLEIN"
+                >
+                  <mat-icon>show_chart</mat-icon>
+                  <span>{{ notification.details.etat }}</span>
+                </div>
+              </div>
+
+              <!-- Conteneur endommagé -->
+              <div *ngIf="isConteneur(notification)" class="details-grid">
+                <div class="detail-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>
+                    {{
+                      notification.details.localisation.latitude
+                        | number : '1.4-4'
+                    }},
+                    {{
+                      notification.details.localisation.longitude
+                        | number : '1.4-4'
+                    }}
+                  </span>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>delete</mat-icon>
+                  <span>{{
+                    notification.details.typeConteneur
+                      | enumLabel : 'TypeDechet'
+                  }}</span>
+                </div>
+              </div>
+
+              <!-- Véhicule en panne -->
+              <div *ngIf="isVehicule(notification)" class="details-grid">
+                <div class="detail-item">
+                  <mat-icon>local_shipping</mat-icon>
+                  <span>{{ notification.details.matricule }}</span>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>delete</mat-icon>
+                  <span>{{
+                    notification.details.typeDechet | enumLabel : 'TypeDechet'
+                  }}</span>
+                </div>
+              </div>
+
+              <!-- Incident trajet -->
+              <div *ngIf="isIncident(notification)" class="details-grid">
+                <div class="detail-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>
+                    {{
+                      notification.details.localisation.latitude
+                        | number : '1.4-4'
+                    }},
+                    {{
+                      notification.details.localisation.longitude
+                        | number : '1.4-4'
+                    }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Nouvelle tâche -->
+              <div *ngIf="isNouvelleTache(notification)" class="details-grid">
+                <div class="detail-item">
+                  <mat-icon>event</mat-icon>
+                  <span>{{
+                    notification.details.dateDebut | date : 'dd/MM/yyyy HH:mm'
+                  }}</span>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>local_shipping</mat-icon>
+                  <span>{{ notification.details.vehiculeMatricule }}</span>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ notification.details.nombrePoints }} points</span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Pagination -->
+    <mat-paginator
+      [length]="(allNotifications$ | async)?.length || 0"
+      [pageSize]="pageSize$ | async"
+      [pageIndex]="pageIndex$ | async"
+      [pageSizeOptions]="[10, 20, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>
