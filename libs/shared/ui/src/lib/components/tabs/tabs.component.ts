@@ -16,12 +16,12 @@ export interface Tab {
  * Composant tabs avec compteurs (badges)
  */
 @Component({
-  selector: 'lib-tabs-with-count',
+  selector: 'lib-tabs',
   standalone: true,
   imports: [CommonModule, MatTabsModule, MatBadgeModule],
   templateUrl: './tabs.component.html',
 })
-export class TabsWithCountComponent {
+export class TabsComponent {
   /** Liste des tabs avec leurs compteurs */
   @Input() tabs: Tab[] = [];
 
