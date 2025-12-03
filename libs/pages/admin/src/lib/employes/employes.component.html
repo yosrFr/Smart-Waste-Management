@@ -1,0 +1,59 @@
+<lib-page-header
+  [title]="'Employés'"
+  [subtitle]="totalEmployes + ' employés au total'"
+>
+  <button mat-raised-button color="primary" (click)="addEmploye()">
+    <mat-icon>add</mat-icon>
+    Ajouter un employé
+  </button>
+</lib-page-header>
+
+<!-- Loading -->
+<lib-loading-spinner
+  *ngIf="loading$ | async"
+  [message]="'Chargement des employés...'"
+></lib-loading-spinner>
+
+<!-- Tabs par disponibilité -->
+<div *ngIf="(loading$ | async) === false">
+  <lib-tabs [tabs]="tabs" [selectedIndex]="selectedTabIndex">
+    <!-- Disponibles -->
+    <div tab="DISPONIBLE">
+      <p>{{ employesDisponibles.length }} employé(s) disponible(s) trouvé(s)</p>
+      <lib-data-table
+        [data]="employesDisponibles"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- En mission -->
+    <div tab="EN_MISSION">
+      <p>{{ employesEnMission.length }} employé(s) en mission trouvé(s)</p>
+      <lib-data-table
+        [data]="employesEnMission"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- Admin -->
+    <div tab="ADMIN">
+      <p>{{ admin.length }} administrateur(s) trouvé(s)</p>
+      <lib-data-table
+        [data]="admin"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+  </lib-tabs>
+</div>
