@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { createAction, props } from '@ngrx/store';
-import { CreateNotificationDto, Notification } from '../../models';
+import { CreateNotificationDto, AppNotification } from '../../models';
 
 /**
  * Actions pour les notifications
@@ -11,7 +11,7 @@ export const loadNotifications = createAction(
 
 export const loadNotificationsSuccess = createAction(
   '[Notifications] Load Notifications Success',
-  props<{ notifications: Notification[] }>()
+  props<{ notifications: AppNotification[] }>()
 );
 
 export const loadNotificationsFailure = createAction(
@@ -22,7 +22,7 @@ export const loadNotificationsFailure = createAction(
 // Pour la simulation de reception des notification
 export const addNotification = createAction(
   '[Notifications] Add Notification',
-  props<{ notification: Notification }>()
+  props<{ notification: AppNotification }>()
 );
 
 export const createNotification = createAction(
@@ -32,7 +32,7 @@ export const createNotification = createAction(
 
 export const createNotificationSuccess = createAction(
   '[Notifications] Create Notification Success',
-  props<{ notification: Notification }>()
+  props<{ notification: AppNotification }>()
 );
 
 export const setPageIndex = createAction(

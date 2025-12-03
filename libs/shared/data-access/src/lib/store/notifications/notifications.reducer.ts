@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { createReducer, on } from '@ngrx/store';
-import { Notification } from '../../models';
+import { AppNotification } from '../../models';
 import * as NotificationActions from './notifications.actions';
 
 /**
@@ -8,7 +8,7 @@ import * as NotificationActions from './notifications.actions';
  */
 export interface NotificationState {
   /** Liste de toutes les notifications */
-  notifications: Notification[];
+  notifications: AppNotification[];
   /** Indique si un chargement est en cours */
   loading: boolean;
   /** Message d'erreur */

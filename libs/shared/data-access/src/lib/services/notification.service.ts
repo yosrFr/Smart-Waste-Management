@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { CreateNotificationDto, Notification } from '../models';
+import { CreateNotificationDto, AppNotification } from '../models';
 import { TypeNotif, TypeDechet, EtatConteneur } from '../enums';
 
 /**
@@ -15,7 +15,7 @@ export class NotificationService {
   /**
    * Stockage en mémoire des notifications mockées
    */
-  private mockNotifications: Notification[] = [
+  private mockNotifications: AppNotification[] = [
     {
       id: '1',
       type: TypeNotif.PLEIN,
@@ -58,7 +58,7 @@ export class NotificationService {
    * Récupère toutes les notifications
    * @returns Observable avec la liste des notifications triées par date
    */
-  getAll(): Observable<Notification[]> {
+  getAll(): Observable<AppNotification[]> {
     return of([...this.mockNotifications]);
   }
 
@@ -67,11 +67,11 @@ export class NotificationService {
    * @param dto Données de la notification à créer
    * @returns Observable avec la notification créée
    */
-  create(dto: CreateNotificationDto): Observable<Notification> {
-    const notification: Notification = {
+  create(dto: CreateNotificationDto): Observable<AppNotification> {
+    const notification: AppNotification = {
       id: (this.nextId++).toString(),
       ...dto,
-    } as Notification;
+    } as AppNotification;
 
     this.mockNotifications.unshift(notification);
     return of(notification).pipe(delay(200));

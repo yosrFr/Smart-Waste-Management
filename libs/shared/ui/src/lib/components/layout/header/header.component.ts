@@ -15,7 +15,7 @@ import {
   selectCurrentUser,
   selectRecentNotifications,
   logout,
-  Notification,
+  AppNotification,
   Utilisateur,
 } from '@smart-waste-management/shared/data-access';
 import { ThemeService, ThemeMode } from '../../../services/theme.service';
@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
   currentUser$: Observable<Utilisateur | null>;
 
   /** Notifications récentes */
-  recentNotifications$: Observable<Notification[]>;
+  recentNotifications$: Observable<AppNotification[]>;
 
   /** Thème actuel */
   currentTheme: ThemeMode = 'light';

@@ -100,7 +100,7 @@ export interface NotificationNouvelleTache extends NotificationBase {
 /**
  * Union type pour toutes les notifications
  */
-export type Notification =
+export type AppNotification =
   | NotificationConteneurPlein
   | NotificationConteneurEndommage
   | NotificationVehiculeEnPanne
