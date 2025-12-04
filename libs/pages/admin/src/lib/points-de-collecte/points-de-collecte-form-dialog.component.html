@@ -1,0 +1,104 @@
+<h2 mat-dialog-title>
+  {{ isEditMode ? 'Modifier' : 'Ajouter' }} un point de collecte
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form">
+    <!-- Localisation -->
+    <div class="form-section">
+      <h3>Localisation</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Latitude</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="latitude"
+            step="0.0001"
+          />
+          <mat-error *ngIf="form.get('latitude')?.hasError('required')">
+            La latitude est requise
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Longitude</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="longitude"
+            step="0.0001"
+          />
+          <mat-error *ngIf="form.get('longitude')?.hasError('required')">
+            La longitude est requise
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="chooseOnMap()"
+        class="map-button"
+      >
+        <mat-icon>map</mat-icon>
+        Choisir sur la carte
+      </button>
+    </div>
+
+    <!-- Type de déchet -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Type de déchet</mat-label>
+      <mat-select formControlName="typeDechet">
+        <mat-option [value]="TypeDechet.PLASTIQUE">Plastique</mat-option>
+        <mat-option [value]="TypeDechet.METAUX">Métaux</mat-option>
+        <mat-option [value]="TypeDechet.ALIMENTAIRE">Alimentaire</mat-option>
+        <mat-option [value]="TypeDechet.VERRE">Verre</mat-option>
+        <mat-option [value]="TypeDechet.AUTRE">Autre</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('typeDechet')?.hasError('required')">
+        Le type de déchet est requis
+      </mat-error>
+    </mat-form-field>
+
+    <!-- État (seulement en mode édition) -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="isEditMode">
+      <mat-label>État</mat-label>
+      <mat-select formControlName="etat">
+        <mat-option [value]="EtatConteneur.NORMAL">Normal</mat-option>
+        <mat-option [value]="EtatConteneur.ENDOMMAGE">Endommagé</mat-option>
+        <mat-option [value]="EtatConteneur.PLEIN">Plein</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Niveau de remplissage (seulement en mode édition) -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="isEditMode">
+      <mat-label>Niveau de remplissage (%)</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="niveauRemplissage"
+        min="0"
+        max="100"
+      />
+      <mat-error *ngIf="form.get('niveauRemplissage')?.hasError('min')">
+        Le niveau doit être entre 0 et 100
+      </mat-error>
+      <mat-error *ngIf="form.get('niveauRemplissage')?.hasError('max')">
+        Le niveau doit être entre 0 et 100
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="form.invalid"
+  >
+    {{ isEditMode ? 'Modifier' : 'Ajouter' }}
+  </button>
+</mat-dialog-actions>
