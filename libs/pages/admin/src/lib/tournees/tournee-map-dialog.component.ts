@@ -48,7 +48,7 @@ export class TourneeMapDialogComponent implements OnInit, OnDestroy {
   tournee: Tournee;
   markers: MapMarker[] = [];
   polylines: MapPolyline[] = [];
-  mapCenter = { latitude: 36.8065, longitude: 10.1815 };
+  mapCenter = { latitude: 34.7065, longitude: 10.7487 };
 
   private destroy$ = new Subject<void>();
 

@@ -22,14 +22,14 @@ export class PointCollecteService {
   private mockPoints: PointDeCollecte[] = [
     {
       id: '1',
-      localisation: { latitude: 36.8065, longitude: 10.1815 },
+      localisation: { latitude: 34.7065, longitude: 10.7487 },
       typeDechet: TypeDechet.PLASTIQUE,
       etat: EtatConteneur.NORMAL,
       niveauRemplissage: 45,
     },
     {
       id: '2',
-      localisation: { latitude: 36.8189, longitude: 10.1658 },
+      localisation: { latitude: 34.7189, longitude: 10.1658 },
       typeDechet: TypeDechet.ALIMENTAIRE,
       etat: EtatConteneur.PLEIN,
       niveauRemplissage: 95,
@@ -43,14 +43,14 @@ export class PointCollecteService {
     },
     {
       id: '4',
-      localisation: { latitude: 36.8312, longitude: 10.1542 },
+      localisation: { latitude: 34.7312, longitude: 10.1542 },
       typeDechet: TypeDechet.PLASTIQUE,
       etat: EtatConteneur.ENDOMMAGE,
       niveauRemplissage: 60,
     },
     {
       id: '5',
-      localisation: { latitude: 36.8156, longitude: 10.1723 },
+      localisation: { latitude: 34.7156, longitude: 10.1723 },
       typeDechet: TypeDechet.METAUX,
       etat: EtatConteneur.NORMAL,
       niveauRemplissage: 20,

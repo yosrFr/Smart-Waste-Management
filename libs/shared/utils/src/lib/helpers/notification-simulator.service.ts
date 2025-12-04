@@ -214,12 +214,12 @@ export class NotificationSimulatorService {
   }
 
   /**
-   * Génère une localisation aléatoire autour de Tunis
+   * Génère une localisation aléatoire autour de Sfax
    */
   private getRandomLocation(): { latitude: number; longitude: number } {
-    // Centre approximatif: Tunis (36.8065, 10.1815)
-    const baseLat = 36.8065;
-    const baseLng = 10.1815;
+    // Centre approximatif: Sfax (34.7065, 10.7487)
+    const baseLat = 34.7065;
+    const baseLng = 10.7487;
     const radius = 0.05; // ~5km de rayon
 
     return {

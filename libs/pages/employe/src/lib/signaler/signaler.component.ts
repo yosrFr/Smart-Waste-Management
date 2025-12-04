@@ -57,8 +57,8 @@ export class SignalerComponent {
   constructor() {
     // Formulaire conteneur endommagé
     this.conteneurForm = this.fb.group({
-      latitude: [36.8065, [Validators.required]],
-      longitude: [10.1815, [Validators.required]],
+      latitude: [34.7065, [Validators.required]],
+      longitude: [10.7487, [Validators.required]],
       typeDechet: ['', [Validators.required]],
       description: [''],
     });
@@ -67,15 +67,15 @@ export class SignalerComponent {
     this.vehiculeForm = this.fb.group({
       matricule: ['', [Validators.required]],
       typeDechet: ['', [Validators.required]],
-      latitude: [36.8065, [Validators.required]],
-      longitude: [10.1815, [Validators.required]],
+      latitude: [34.7065, [Validators.required]],
+      longitude: [10.7487, [Validators.required]],
       description: [''],
     });
 
     // Formulaire incident
     this.incidentForm = this.fb.group({
-      latitude: [36.8065, [Validators.required]],
-      longitude: [10.1815, [Validators.required]],
+      latitude: [34.7065, [Validators.required]],
+      longitude: [10.7487, [Validators.required]],
       description: ['', [Validators.required]],
     });
   }
@@ -142,8 +142,8 @@ export class SignalerComponent {
               { duration: 3000 }
             );
             this.conteneurForm.reset({
-              latitude: 36.8065,
-              longitude: 10.1815,
+              latitude: 34.7065,
+              longitude: 10.7487,
             });
             this.submitting = false;
           },
@@ -178,8 +178,8 @@ export class SignalerComponent {
               { duration: 3000 }
             );
             this.vehiculeForm.reset({
-              latitude: 36.8065,
-              longitude: 10.1815,
+              latitude: 34.7065,
+              longitude: 10.7487,
             });
             this.submitting = false;
           },
@@ -214,8 +214,8 @@ export class SignalerComponent {
               duration: 3000,
             });
             this.incidentForm.reset({
-              latitude: 36.8065,
-              longitude: 10.1815,
+              latitude: 34.7065,
+              longitude: 10.7487,
             });
             this.submitting = false;
           },

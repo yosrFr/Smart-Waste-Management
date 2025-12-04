@@ -22,7 +22,7 @@ export class NotificationService {
       date: new Date(Date.now() - 3600000).toISOString(),
       description: 'Conteneur plein détecté',
       details: {
-        localisation: { latitude: 36.8065, longitude: 10.1815 },
+        localisation: { latitude: 34.7065, longitude: 10.7487 },
         typeConteneur: TypeDechet.PLASTIQUE,
         etat: 'PLEIN' as EtatConteneur,
       },
