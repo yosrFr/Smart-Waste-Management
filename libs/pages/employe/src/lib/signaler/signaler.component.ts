@@ -39,8 +39,8 @@ import {
     MatIconModule,
     PageHeaderComponent,
   ],
-  template: ``,
-  styles: [``],
+  templateUrl: './signaler.component.html',
+  styleUrl: './signaler.component.css',
 })
 export class SignalerComponent {
   private fb = inject(FormBuilder);
