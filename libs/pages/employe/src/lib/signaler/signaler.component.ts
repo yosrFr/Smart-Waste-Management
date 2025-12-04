@@ -15,11 +15,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PageHeaderComponent } from '@smart-waste-management/shared/ui';
+import {
+  MapChooserDialogComponent,
+  PageHeaderComponent,
+} from '@smart-waste-management/shared/ui';
 import {
   TypeDechet,
   SignalementService,
 } from '@smart-waste-management/shared/data-access';
+import { MatDialog } from '@angular/material/dialog';
 
 /**
  * Composant Signaler un problème (Employee)
@@ -46,6 +50,7 @@ export class SignalerComponent {
   private fb = inject(FormBuilder);
   private signalementService = inject(SignalementService);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   conteneurForm: FormGroup;
   vehiculeForm: FormGroup;
@@ -60,62 +65,46 @@ export class SignalerComponent {
       latitude: [34.7065, [Validators.required]],
       longitude: [10.7487, [Validators.required]],
       typeDechet: ['', [Validators.required]],
-      description: [''],
     });
 
     // Formulaire véhicule en panne
     this.vehiculeForm = this.fb.group({
       matricule: ['', [Validators.required]],
       typeDechet: ['', [Validators.required]],
-      latitude: [34.7065, [Validators.required]],
-      longitude: [10.7487, [Validators.required]],
-      description: [''],
     });
 
     // Formulaire incident
     this.incidentForm = this.fb.group({
       latitude: [34.7065, [Validators.required]],
       longitude: [10.7487, [Validators.required]],
-      description: ['', [Validators.required]],
     });
   }
 
   /**
-   * Récupère la position
+   * Récupère la position d'une map
    */
-  getLocation(formType: 'conteneur' | 'incident'): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
+  chooseOnMap(type: 'conteneur' | 'incident') {
+    const dialogRef = this.dialog.open(MapChooserDialogComponent, {
+      width: '800px',
+      height: '600px',
+      disableClose: true,
+    });
 
-          switch (formType) {
-            case 'conteneur':
-              this.conteneurForm.patchValue({ latitude: lat, longitude: lng });
-              break;
-            case 'incident':
-              this.incidentForm.patchValue({ latitude: lat, longitude: lng });
-              break;
-          }
-
-          this.snackBar.open('Position récupérée', 'Fermer', {
-            duration: 2000,
+    dialogRef.afterClosed().subscribe((coords) => {
+      if (coords) {
+        if (type === 'conteneur') {
+          this.conteneurForm.patchValue({
+            latitude: coords.lat,
+            longitude: coords.lng,
           });
-        },
-        (error) => {
-          this.snackBar.open('Impossible de récupérer la position', 'Fermer', {
-            duration: 3000,
+        } else if (type === 'incident') {
+          this.incidentForm.patchValue({
+            latitude: coords.lat,
+            longitude: coords.lng,
           });
         }
-      );
-    } else {
-      this.snackBar.open(
-        "La géolocalisation n'est pas supportée par votre navigateur",
-        'Fermer',
-        { duration: 3000 }
-      );
-    }
+      }
+    });
   }
 
   /**
