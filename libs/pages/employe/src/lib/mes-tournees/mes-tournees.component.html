@@ -1,0 +1,46 @@
+<lib-page-header
+  [title]="'Mes tournées'"
+  [subtitle]="totalTournees + ' tournées au total'"
+>
+</lib-page-header>
+
+<!-- Tabs par statut -->
+<div>
+  <lib-tabs [tabs]="tabs" [selectedIndex]="selectedTabIndex">
+    <!-- Non commencées -->
+    <div tab="NON_COMMENCEE">
+      <lib-data-table
+        [data]="tourneesNonCommencees"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="false"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- En cours -->
+    <div tab="EN_COURS">
+      <lib-data-table
+        [data]="tourneesEnCours"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="false"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- Terminées -->
+    <div tab="TERMINEE">
+      <lib-data-table
+        [data]="tourneesTerminees"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="false"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+  </lib-tabs>
+</div>
