@@ -1,0 +1,12 @@
+<h2>Choisir une localisation</h2>
+
+<lib-leaflet-map
+  [height]="500"
+  [selectionMode]="true"
+  (positionSelected)="onPosSelected($event)"
+></lib-leaflet-map>
+
+<div class="actions">
+  <button mat-stroked-button (click)="cancel()">Annuler</button>
+  <button mat-flat-button color="primary" (click)="validate()">Valider</button>
+</div>

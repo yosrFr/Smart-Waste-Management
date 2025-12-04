@@ -73,12 +73,18 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
   private map?: L.Map;
   private markerLayer?: L.LayerGroup;
   private polylineLayer?: L.LayerGroup;
+  private selectionMarker?: L.Marker;
+  private mapClickHandler?: (e: L.LeafletMouseEvent) => void;
 
   ngAfterViewInit(): void {
     this.initMap();
   }
 
   ngOnDestroy(): void {
+    if (this.map && this.mapClickHandler) {
+      this.map.off('click', this.mapClickHandler);
+    }
+
     if (this.map) {
       this.map.remove();
     }
@@ -88,6 +94,12 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
     if (this.map) {
       this.updateMarkers();
       this.updatePolylines();
+    }
+
+    if (this.selectionMode) {
+      this.enableSelection();
+    } else {
+      this.disableSelection();
     }
   }
 
@@ -111,17 +123,66 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
 
     // Mode sélection
     if (this.selectionMode) {
-      this.map.on('click', (e: L.LeafletMouseEvent) => {
-        this.positionSelected.emit({
-          latitude: e.latlng.lat,
-          longitude: e.latlng.lng,
-        });
-      });
+      this.enableSelection();
     }
 
     // Ajoute les marqueurs et polylignes initiaux
     this.updateMarkers();
     this.updatePolylines();
+  }
+
+  private enableSelection(): void {
+    if (!this.map) return;
+    if (this.mapClickHandler) return; // déjà actif
+
+    this.mapClickHandler = (e: L.LeafletMouseEvent) => {
+      this.placeSelectionMarker(e.latlng);
+      this.positionSelected.emit({
+        latitude: e.latlng.lat,
+        longitude: e.latlng.lng,
+      });
+    };
+
+    this.map.on('click', this.mapClickHandler);
+  }
+
+  private disableSelection(): void {
+    if (!this.map) return;
+    if (this.mapClickHandler) {
+      this.map.off('click', this.mapClickHandler);
+      this.mapClickHandler = undefined;
+    }
+    if (this.selectionMarker) {
+      this.map.removeLayer(this.selectionMarker);
+      this.selectionMarker = undefined;
+    }
+  }
+
+  private placeSelectionMarker(latlng: L.LatLngExpression) {
+    if (!this.map) return;
+
+    if (this.selectionMarker) {
+      this.selectionMarker.setLatLng(latlng);
+    } else {
+      this.selectionMarker = L.marker(latlng, { draggable: true }).addTo(
+        this.map
+      );
+      this.selectionMarker.on('dragend', () => {
+        const ll = this.selectionMarker!.getLatLng();
+        this.positionSelected.emit({ latitude: ll.lat, longitude: ll.lng });
+      });
+    }
+    this.map.panTo(latlng);
+  }
+
+  public startSelection(): void {
+    this.selectionMode = true;
+    this.enableSelection();
+  }
+
+  public stopSelection(): void {
+    this.selectionMode = false;
+    this.disableSelection();
   }
 
   /**
