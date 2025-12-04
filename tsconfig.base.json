@@ -17,7 +17,12 @@
         "libs/pages/shared/src/index.ts"
       ],
       "@smart-waste-management/pages/admin": ["libs/pages/admin/src/index.ts"],
-      "@smart-waste-management/shared/utils": ["libs/shared/utils/src/index.ts"]
+      "@smart-waste-management/shared/utils": [
+        "libs/shared/utils/src/index.ts"
+      ],
+      "@smart-waste-management/pages/employe": [
+        "libs/pages/employe/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
