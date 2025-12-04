@@ -1,0 +1,52 @@
+<lib-page-header
+  [title]="'Tournées'"
+  [subtitle]="totalTournees + ' tournées au total'"
+>
+</lib-page-header>
+
+<!-- Loading -->
+<lib-loading-spinner
+  *ngIf="loading$ | async"
+  [message]="'Chargement des tournées...'"
+></lib-loading-spinner>
+
+<!-- Tabs par statut -->
+<div *ngIf="(loading$ | async) === false">
+  <lib-tabs [tabs]="tabs" [selectedIndex]="selectedTabIndex">
+    <!-- Non commencées -->
+    <div tab="NON_COMMENCEE">
+      <lib-data-table
+        [data]="tourneesNonCommencees"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- En cours -->
+    <div tab="EN_COURS">
+      <lib-data-table
+        [data]="tourneesEnCours"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+
+    <!-- Terminées -->
+    <div tab="TERMINEE">
+      <lib-data-table
+        [data]="tourneesTerminees"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
+  </lib-tabs>
+</div>
