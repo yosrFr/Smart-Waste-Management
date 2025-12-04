@@ -1,0 +1,198 @@
+<lib-page-header
+  [title]="'Signaler un problème'"
+  [subtitle]="'Signalez rapidement un incident sur le terrain'"
+>
+</lib-page-header>
+
+<mat-card>
+  <mat-card-content>
+    <mat-tab-group>
+      <!-- Tab 1: Conteneur endommagé -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>warning</mat-icon>
+          Conteneur endommagé
+        </ng-template>
+
+        <div class="tab-content">
+          <form [formGroup]="conteneurForm" (ngSubmit)="signalerConteneur()">
+            <h3>Signaler un conteneur endommagé</h3>
+
+            <!-- Localisation -->
+            <div class="form-section">
+              <h4>Localisation</h4>
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Latitude</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="latitude"
+                    step="0.0001"
+                  />
+                  <mat-error>La latitude est requise</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Longitude</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="longitude"
+                    step="0.0001"
+                  />
+                  <mat-error>La longitude est requise</mat-error>
+                </mat-form-field>
+              </div>
+
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="getLocation('conteneur')"
+              >
+                <mat-icon>my_location</mat-icon>
+                Utiliser ma position actuelle
+              </button>
+            </div>
+
+            <!-- Type de déchet -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Type de déchet du conteneur</mat-label>
+              <mat-select formControlName="typeDechet">
+                <mat-option [value]="TypeDechet.PLASTIQUE"
+                  >Plastique</mat-option
+                >
+                <mat-option [value]="TypeDechet.METAUX">Métaux</mat-option>
+                <mat-option [value]="TypeDechet.ALIMENTAIRE"
+                  >Alimentaire</mat-option
+                >
+                <mat-option [value]="TypeDechet.VERRE">Verre</mat-option>
+                <mat-option [value]="TypeDechet.AUTRE">Autre</mat-option>
+              </mat-select>
+              <mat-error>Le type de déchet est requis</mat-error>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="conteneurForm.invalid || submitting"
+            >
+              <mat-icon>send</mat-icon>
+              Signaler
+            </button>
+          </form>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 2: Véhicule en panne -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>build_circle</mat-icon>
+          Véhicule en panne
+        </ng-template>
+
+        <div class="tab-content">
+          <form [formGroup]="vehiculeForm" (ngSubmit)="signalerVehicule()">
+            <h3>Signaler un véhicule en panne</h3>
+
+            <!-- Matricule -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Matricule du véhicule</mat-label>
+              <input matInput formControlName="matricule" />
+              <mat-error>Le matricule est requis</mat-error>
+            </mat-form-field>
+
+            <!-- Type de déchet -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Type de déchet</mat-label>
+              <mat-select formControlName="typeDechet">
+                <mat-option [value]="TypeDechet.PLASTIQUE"
+                  >Plastique</mat-option
+                >
+                <mat-option [value]="TypeDechet.METAUX">Métaux</mat-option>
+                <mat-option [value]="TypeDechet.ALIMENTAIRE"
+                  >Alimentaire</mat-option
+                >
+                <mat-option [value]="TypeDechet.VERRE">Verre</mat-option>
+                <mat-option [value]="TypeDechet.AUTRE">Autre</mat-option>
+              </mat-select>
+              <mat-error>Le type de déchet est requis</mat-error>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="vehiculeForm.invalid || submitting"
+            >
+              <mat-icon>send</mat-icon>
+              Signaler
+            </button>
+          </form>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 3: Incident sur le trajet -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>error</mat-icon>
+          Incident sur le trajet
+        </ng-template>
+
+        <div class="tab-content">
+          <form [formGroup]="incidentForm" (ngSubmit)="signalerIncident()">
+            <h3>Signaler un incident sur le trajet</h3>
+
+            <!-- Localisation -->
+            <div class="form-section">
+              <h4>Localisation de l'incident</h4>
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Latitude</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="latitude"
+                    step="0.0001"
+                  />
+                  <mat-error>La latitude est requise</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Longitude</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="longitude"
+                    step="0.0001"
+                  />
+                  <mat-error>La longitude est requise</mat-error>
+                </mat-form-field>
+              </div>
+
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="getGPSLocation('incident')"
+              >
+                <mat-icon>my_location</mat-icon>
+                Utiliser ma position actuelle
+              </button>
+            </div>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="incidentForm.invalid || submitting"
+            >
+              <mat-icon>send</mat-icon>
+              Signaler
+            </button>
+          </form>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
