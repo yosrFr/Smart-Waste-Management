@@ -113,7 +113,7 @@ export type AppNotification =
 export interface CreateNotificationDto {
   type: TypeNotif;
   date: string;
-  description: string;
+  description?: string;
   details:
     | NotificationConteneurPleinDetails
     | NotificationConteneurEndommageDetails
