@@ -1,0 +1,118 @@
+<lib-page-header [title]="'Dashboard'" [subtitle]="'Bienvenue ' + userName">
+</lib-page-header>
+
+<!-- Cartes de statistiques -->
+<div class="stats-grid">
+  <lib-stat-card
+    [value]="tourneesAujourdhui"
+    [label]="'Tournées aujourd\'hui'"
+    [icon]="'today'"
+  ></lib-stat-card>
+
+  <lib-stat-card
+    [value]="tourneesTerminees"
+    [label]="'Tournées terminées'"
+    [subtitle]="'Au total'"
+    [icon]="'check_circle'"
+  ></lib-stat-card>
+</div>
+
+<!-- Tournées à faire aujourd'hui -->
+<mat-card class="tournees-card">
+  <mat-card-header>
+    <mat-card-title>
+      <div class="card-title-row">
+        <div class="card-title-left">
+          <mat-icon>assignment</mat-icon>
+          <span>Mes tournées d'aujourd'hui</span>
+        </div>
+        <button mat-raised-button color="primary" (click)="goToMesTournees()">
+          Voir toutes mes tournées
+        </button>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="table-container">
+      <table
+        mat-table
+        [dataSource]="mesTourneesAujourdhui"
+        class="tournees-table"
+      >
+        <!-- Date début -->
+        <ng-container matColumnDef="dateDebut">
+          <th mat-header-cell *matHeaderCellDef>Date début</th>
+          <td mat-cell *matCellDef="let tournee">
+            {{ tournee.dateDebut | date : 'HH:mm' }}
+          </td>
+        </ng-container>
+
+        <!-- Date fin -->
+        <ng-container matColumnDef="dateFin">
+          <th mat-header-cell *matHeaderCellDef>Date fin</th>
+          <td mat-cell *matCellDef="let tournee">
+            {{ tournee.dateFin | date : 'HH:mm' }}
+          </td>
+        </ng-container>
+
+        <!-- Véhicule -->
+        <ng-container matColumnDef="vehicule">
+          <th mat-header-cell *matHeaderCellDef>Véhicule</th>
+          <td mat-cell *matCellDef="let tournee">
+            {{ tournee.vehicule.matricule }}
+          </td>
+        </ng-container>
+
+        <!-- Points -->
+        <ng-container matColumnDef="points">
+          <th mat-header-cell *matHeaderCellDef>Points</th>
+          <td mat-cell *matCellDef="let tournee">
+            {{ tournee.pointsDeCollecte.length }} points
+          </td>
+        </ng-container>
+
+        <!-- Type de déchet -->
+        <ng-container matColumnDef="typeDechet">
+          <th mat-header-cell *matHeaderCellDef>Type de déchet</th>
+          <td mat-cell *matCellDef="let tournee">
+            {{ tournee.vehicule.typeDechet | enumLabel : 'TypeDechet' }}
+          </td>
+        </ng-container>
+
+        <!-- Statut -->
+        <ng-container matColumnDef="statut">
+          <th mat-header-cell *matHeaderCellDef>Statut</th>
+          <td mat-cell *matCellDef="let tournee">
+            <lib-status-badge
+              [label]="tournee.statut | enumLabel : 'StatutTournee'"
+              [color]="getStatutColor(tournee.statut)"
+            ></lib-status-badge>
+          </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let tournee">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="viewTourneeMap(tournee); $event.stopPropagation()"
+              matTooltip="Voir sur la carte"
+            >
+              <mat-icon>map</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <div *ngIf="mesTourneesAujourdhui.length === 0" class="no-data">
+        <mat-icon>event_available</mat-icon>
+        <p>Aucune tournée prévue pour aujourd'hui</p>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
