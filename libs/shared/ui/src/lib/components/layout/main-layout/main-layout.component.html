@@ -1,3 +1,6 @@
+<!-- Header (fixed, outside drawer) -->
+<lib-header (toggleSidebar)="drawer.toggle()" class="fixed-header"></lib-header>
+
 <mat-drawer-container class="layout-container" autosize>
   <!-- Sidebar -->
   <mat-drawer #drawer class="layout-sidenav">
@@ -6,9 +9,6 @@
 
   <!-- Contenu principal -->
   <mat-drawer-content class="layout-content">
-    <!-- Header -->
-    <lib-header (toggleSidebar)="drawer.toggle()"></lib-header>
-
     <!-- Contenu des pages -->
     <div class="page-content">
       <router-outlet></router-outlet>
