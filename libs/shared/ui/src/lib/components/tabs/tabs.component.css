@@ -1,0 +1,13 @@
+.tabs-content-container {
+  padding: 16px;
+}
+
+/* Cache les éléments qui ne correspondent pas au tab actif */
+.tabs-content-container > div[tab] {
+  display: none;
+}
+
+/* Affiche seulement le tab actif */
+.tabs-content-container > div[tab].active {
+  display: block;
+}
