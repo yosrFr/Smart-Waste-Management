@@ -37,26 +37,7 @@
   font-size: 40px;
   width: 40px;
   height: 40px;
-}
-
-.notification-icon.conteneur-plein {
-  color: #c62828;
-}
-
-.notification-icon.conteneur-endommage {
-  color: #f9a825;
-}
-
-.notification-icon.vehicule-panne {
-  color: #d32f2f;
-}
-
-.notification-icon.incident-trajet {
-  color: #e64a19;
-}
-
-.notification-icon.nouvelle-tache {
-  color: #0277bd;
+  color: #000;
 }
 
 .notification-content {
