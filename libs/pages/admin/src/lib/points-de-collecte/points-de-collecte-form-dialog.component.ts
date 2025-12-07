@@ -131,6 +131,7 @@ export class PointCollecteFormDialogComponent {
             dto: {
               localisation,
               typeDechet: this.form.value.typeDechet,
+              capacite: 50,
             },
           })
         );
