@@ -25,7 +25,6 @@ import {
   Tab,
   LoadingSpinnerComponent,
   ConfirmDialogService,
-  EnumLabelPipe,
 } from '@smart-waste-management/shared/ui';
 import { VehiculeFormDialogComponent } from './vehicule-form-dialog.component';
 
@@ -43,7 +42,6 @@ import { VehiculeFormDialogComponent } from './vehicule-form-dialog.component';
     DataTableComponent,
     TabsComponent,
     LoadingSpinnerComponent,
-    EnumLabelPipe,
   ],
   templateUrl: './vehicules.component.html',
 })
@@ -65,10 +63,10 @@ export class VehiculesComponent implements OnInit, OnDestroy {
 
   // Configuration des tabs
   tabs: Tab[] = [
-    { label: 'Actifs', value: StatutVehicule.ACTIF },
-    { label: 'Inactifs', value: StatutVehicule.INACTIF },
-    { label: 'En réparation', value: StatutVehicule.EN_REPARATION },
-    { label: 'En mission', value: StatutVehicule.EN_MISSION },
+    { label: 'Actifs', value: 'ACTIF' },
+    { label: 'Inactifs', value: 'INACTIF' },
+    { label: 'En réparation', value: 'EN_REPARATION' },
+    { label: 'En mission', value: 'EN_MISSION' },
   ];
 
   // Configuration du tableau

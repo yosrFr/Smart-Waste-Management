@@ -15,7 +15,6 @@ import {
   loadPointsCollecte,
   deletePointCollecte,
   PointDeCollecte,
-  TypeDechet,
   EtatConteneur,
 } from '@smart-waste-management/shared/data-access';
 import {
@@ -27,7 +26,6 @@ import {
   MapMarker,
   LoadingSpinnerComponent,
   ConfirmDialogService,
-  EnumLabelPipe,
 } from '@smart-waste-management/shared/ui';
 import { PointCollecteFormDialogComponent } from './points-de-collecte-form-dialog.component';
 import * as L from 'leaflet';
@@ -52,7 +50,6 @@ type ViewMode = 'table' | 'map';
     DataTableComponent,
     LeafletMapComponent,
     LoadingSpinnerComponent,
-    EnumLabelPipe,
   ],
   templateUrl: './points-de-collecte.component.html',
   styleUrl: './points-de-collecte.component.css',

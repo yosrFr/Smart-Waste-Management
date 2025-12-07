@@ -22,8 +22,6 @@ import {
   TabsComponent,
   Tab,
   LoadingSpinnerComponent,
-  StatusBadgeComponent,
-  EnumLabelPipe,
 } from '@smart-waste-management/shared/ui';
 import { TourneeMapDialogComponent } from './tournee-map-dialog.component';
 
@@ -41,8 +39,6 @@ import { TourneeMapDialogComponent } from './tournee-map-dialog.component';
     DataTableComponent,
     TabsComponent,
     LoadingSpinnerComponent,
-    StatusBadgeComponent,
-    EnumLabelPipe,
   ],
   templateUrl: './tournees.component.html',
 })
@@ -61,9 +57,9 @@ export class TourneesComponent implements OnInit, OnDestroy {
   tourneesTerminees: Tournee[] = [];
 
   tabs: Tab[] = [
-    { label: 'Non commencées', value: StatutTournee.NON_COMMENCEE },
-    { label: 'En cours', value: StatutTournee.EN_COURS },
-    { label: 'Terminées', value: StatutTournee.TERMINEE },
+    { label: 'Non commencées', value: 'NON_COMMENCEE' },
+    { label: 'En cours', value: 'EN_COURS' },
+    { label: 'Terminées', value: 'TERMINEE' },
   ];
 
   tableColumns: TableColumn<Tournee>[] = [
