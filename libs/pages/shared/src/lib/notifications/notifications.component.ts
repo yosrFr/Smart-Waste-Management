@@ -33,7 +33,6 @@ import {
   DateRelativePipe,
   EnumLabelPipe,
 } from '@smart-waste-management/shared/ui';
-import { CdkNoDataRow } from '@angular/cdk/table';
 
 /**
  * Composant page Notifications
@@ -54,7 +53,6 @@ import { CdkNoDataRow } from '@angular/cdk/table';
     EmptyStateComponent,
     DateRelativePipe,
     EnumLabelPipe,
-    CdkNoDataRow,
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css',
