@@ -55,9 +55,6 @@ export interface CreateUtilisateurDto {
   tel: string;
   dateNaissance: string;
   role: Role;
-  actif: boolean;
-  /** Pour les employés uniquement */
-  disponibilite?: Disponibilite;
   numPermis?: string;
 }
 
