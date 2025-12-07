@@ -85,8 +85,7 @@ export class ProfilComponent implements OnInit {
    * Navigue vers la page de modification du profil
    */
   editProfile(): void {
-    // Sera implémenté dans les prochains commits
-    console.log('Modifier profil');
+    this.router.navigate(['/shared/edit-profil']);
   }
 
   /**
