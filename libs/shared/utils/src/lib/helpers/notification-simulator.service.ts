@@ -55,8 +55,6 @@ export class NotificationSimulatorService {
 
         // Ajoute au store NgRx
         this.store.dispatch(addNotification({ notification }));
-
-        console.log('📢 Notification générée:', notification);
       });
   }
 
