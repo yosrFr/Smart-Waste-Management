@@ -4,6 +4,7 @@
   flex-direction: column;
   background-color: #263238;
   color: #b0bec5;
+  overflow-y: auto;
 }
 
 .sidebar-header {
@@ -12,6 +13,7 @@
   gap: 1rem;
   padding: 1.5rem 1rem;
   background-color: rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .app-logo {
@@ -30,6 +32,8 @@
 
 mat-nav-list {
   padding-top: 1rem;
+  flex: 1;
+  overflow-y: auto;
 }
 
 a[mat-list-item] {

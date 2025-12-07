@@ -1,9 +1,10 @@
-<!-- Header (fixed, outside drawer) -->
+<!-- Header (fixed, above everything) -->
 <lib-header (toggleSidebar)="drawer.toggle()" class="fixed-header"></lib-header>
 
-<mat-drawer-container class="layout-container" autosize>
+<!-- Drawer container below header -->
+<mat-drawer-container class="drawer-and-content" autosize [hasBackdrop]="false">
   <!-- Sidebar -->
-  <mat-drawer #drawer class="layout-sidenav">
+  <mat-drawer #drawer class="layout-sidenav" mode="side" [opened]="true">
     <lib-sidebar></lib-sidebar>
   </mat-drawer>
 
