@@ -1,7 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, Output, EventEmitter, OnInit, inject } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -61,6 +62,7 @@ export class HeaderComponent implements OnInit {
 
   private store = inject(Store);
   private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
   private themeService = inject(ThemeService);
 
   constructor() {
@@ -73,6 +75,22 @@ export class HeaderComponent implements OnInit {
     this.themeService.theme$.subscribe((theme) => {
       this.currentTheme = theme;
     });
+    // Met à jour le titre de la page en fonction du route data ou de l'URL
+    // Use NavigationEnd with setTimeout to ensure route tree is updated
+    this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe(() => {
+        // Use setTimeout to allow Angular to update the route tree
+        setTimeout(() => {
+          const titleFromData = this.getTitleFromRouteData();
+          if (titleFromData) {
+            this.pageTitle = titleFromData;
+          } else {
+            const url = this.router.url;
+            this.pageTitle = this.computeTitleFromUrl(url);
+          }
+        }, 0);
+      });
   }
 
   /**
@@ -129,5 +147,46 @@ export class HeaderComponent implements OnInit {
    */
   setPageTitle(title: string): void {
     this.pageTitle = title;
+  }
+
+  private getTitleFromRouteData(): string | null {
+    let route = this.activatedRoute;
+    // Traverse to the deepest child route
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    // Check current route's data
+    const snapshot = route.snapshot;
+    if (snapshot && snapshot.data && snapshot.data['title']) {
+      return snapshot.data['title'];
+    }
+    return null;
+  }
+
+  private computeTitleFromUrl(url: string): string {
+    if (!url || url === '/' || url === '/auth/login') return 'Dashboard';
+    // Remove query params and hash
+    const clean = url.split('?')[0].split('#')[0];
+    const parts = clean.split('/').filter(Boolean);
+    if (parts.length === 0) return 'Dashboard';
+    // Use the last segment as page key
+    const last = parts[parts.length - 1];
+    // Map common routes to nicer titles
+    const map: Record<string, string> = {
+      dashboard: 'Dashboard',
+      'points-collecte': 'Points de collecte',
+      vehicules: 'Véhicules',
+      employes: 'Employés',
+      tournees: 'Tournées',
+      profil: 'Profil',
+      notifications: 'Notifications',
+      'mes-tournees': 'Mes tournées',
+      login: 'Connexion',
+    };
+
+    if (map[last]) return map[last];
+
+    // Fallback: convert kebab-case / snake_case to Title Case
+    return last.replace(/[-_]/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
   }
 }

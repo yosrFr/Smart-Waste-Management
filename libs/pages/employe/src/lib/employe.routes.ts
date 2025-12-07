@@ -23,14 +23,17 @@ export const employeeRoutes: Route[] = [
       {
         path: 'dashboard',
         component: EmployeeDashboardComponent,
+        data: { title: 'Dashboard' },
       },
       {
         path: 'mes-tournees',
         component: MesTourneesComponent,
+        data: { title: 'Mes tournées' },
       },
       {
         path: 'signaler',
         component: SignalerComponent,
+        data: { title: 'Signaler un incident' },
       },
     ],
   },

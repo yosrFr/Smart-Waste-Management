@@ -17,10 +17,12 @@ export const sharedRoutes: Route[] = [
       {
         path: 'profil',
         component: ProfilComponent,
+        data: { title: 'Profil' },
       },
       {
         path: 'notifications',
         component: NotificationsComponent,
+        data: { title: 'Notifications' },
       },
     ],
   },

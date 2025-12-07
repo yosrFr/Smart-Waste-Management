@@ -22,22 +22,27 @@ export const adminRoutes: Route[] = [
       {
         path: 'dashboard',
         component: DashboardComponent,
+        data: { title: 'Dashboard' },
       },
       {
         path: 'points-collecte',
         component: PointsCollecteComponent,
+        data: { title: 'Points de collecte' },
       },
       {
         path: 'vehicules',
         component: VehiculesComponent,
+        data: { title: 'Véhicules' },
       },
       {
         path: 'employes',
         component: EmployesComponent,
+        data: { title: 'Employés' },
       },
       {
         path: 'tournees',
         component: TourneesComponent,
+        data: { title: 'Tournées' },
       },
     ],
   },
