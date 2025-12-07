@@ -60,34 +60,6 @@
         Le type de déchet est requis
       </mat-error>
     </mat-form-field>
-
-    <!-- État (seulement en mode édition) -->
-    <mat-form-field appearance="outline" class="full-width" *ngIf="isEditMode">
-      <mat-label>État</mat-label>
-      <mat-select formControlName="etat">
-        <mat-option [value]="EtatConteneur.NORMAL">Normal</mat-option>
-        <mat-option [value]="EtatConteneur.ENDOMMAGE">Endommagé</mat-option>
-        <mat-option [value]="EtatConteneur.PLEIN">Plein</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <!-- Niveau de remplissage (seulement en mode édition) -->
-    <mat-form-field appearance="outline" class="full-width" *ngIf="isEditMode">
-      <mat-label>Niveau de remplissage (%)</mat-label>
-      <input
-        matInput
-        type="number"
-        formControlName="niveauRemplissage"
-        min="0"
-        max="100"
-      />
-      <mat-error *ngIf="form.get('niveauRemplissage')?.hasError('min')">
-        Le niveau doit être entre 0 et 100
-      </mat-error>
-      <mat-error *ngIf="form.get('niveauRemplissage')?.hasError('max')">
-        Le niveau doit être entre 0 et 100
-      </mat-error>
-    </mat-form-field>
   </form>
 </mat-dialog-content>
 

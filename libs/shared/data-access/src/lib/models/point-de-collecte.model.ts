@@ -29,6 +29,4 @@ export interface CreatePointCollecteDto {
 export interface UpdatePointCollecteDto {
   localisation?: GeoPoint;
   typeDechet?: TypeDechet;
-  etat?: EtatConteneur;
-  niveauRemplissage?: number;
 }

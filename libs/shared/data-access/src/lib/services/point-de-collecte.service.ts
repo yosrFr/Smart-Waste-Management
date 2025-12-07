@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import {
   PointDeCollecte,
   CreatePointCollecteDto,
@@ -122,22 +121,19 @@ export class PointCollecteService {
   /**
    * Simule la mise à jour aléatoire des niveaux de remplissage
    * En réalité, c'est le backend qui fait ça avec les capteurs IoT
+   * L'état du conteneur ne change qu'avec une action manuelle (pas basé sur le taux de remplissage)
    */
   private simulateNiveauUpdate(): void {
-    this.mockPoints.forEach((point) => {
+    this.mockPoints = this.mockPoints.map((point) => {
       // Augmente aléatoirement le niveau (0 à 5%)
       const increase = Math.random() * 5;
-      point.niveauRemplissage = Math.min(
-        100,
-        point.niveauRemplissage + increase
-      );
+      const newNiveau = Math.min(100, point.niveauRemplissage + increase);
 
-      // Met à jour l'état selon le niveau
-      if (point.niveauRemplissage >= 90) {
-        point.etat = EtatConteneur.PLEIN;
-      } else if (point.etat !== EtatConteneur.ENDOMMAGE) {
-        point.etat = EtatConteneur.NORMAL;
-      }
+      // L'état reste inchangé (NORMAL, PLEIN, ou ENDOMMAGE) — ne change que via actions manuelles
+      return {
+        ...point,
+        niveauRemplissage: newNiveau,
+      };
     });
   }
 }

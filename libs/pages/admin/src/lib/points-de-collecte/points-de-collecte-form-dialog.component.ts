@@ -121,8 +121,6 @@ export class PointCollecteFormDialogComponent {
             dto: {
               localisation,
               typeDechet: this.form.value.typeDechet,
-              etat: this.form.value.etat,
-              niveauRemplissage: this.form.value.niveauRemplissage,
             },
           })
         );
