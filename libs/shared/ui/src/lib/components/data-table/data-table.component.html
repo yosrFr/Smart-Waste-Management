@@ -17,7 +17,8 @@
         <th
           mat-header-cell
           *matHeaderCellDef
-          [mat-sort-header]="column.sortable ? column.key.toString() : ''"
+          [mat-sort-header]="column.key.toString()"
+          [disabled]="!column.sortable"
         >
           {{ column.label }}
         </th>
