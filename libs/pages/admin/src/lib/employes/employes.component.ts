@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,15 +9,12 @@ import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  selectAllEmployes,
   selectEmployesOnly,
   selectEmployesLoading,
   loadEmployes,
   deleteEmploye,
   Employe,
-  Utilisateur,
   Disponibilite,
-  Role,
   Administrateur,
   selectAdminsOnly,
 } from '@smart-waste-management/shared/data-access';
@@ -29,9 +26,7 @@ import {
   TabsComponent,
   Tab,
   LoadingSpinnerComponent,
-  StatusBadgeComponent,
   ConfirmDialogService,
-  EnumLabelPipe,
 } from '@smart-waste-management/shared/ui';
 import { EmployeFormDialogComponent } from './employe-form-dialog.component';
 
@@ -49,8 +44,6 @@ import { EmployeFormDialogComponent } from './employe-form-dialog.component';
     DataTableComponent,
     TabsComponent,
     LoadingSpinnerComponent,
-    StatusBadgeComponent,
-    EnumLabelPipe,
   ],
   templateUrl: './employes.component.html',
 })
@@ -73,9 +66,9 @@ export class EmployesComponent implements OnInit, OnDestroy {
 
   // Configuration des tabs
   tabs: Tab[] = [
-    { label: 'Disponibles', value: Disponibilite.DISPONIBLE },
-    { label: 'En mission', value: Disponibilite.EN_MISSION },
-    { label: 'Admin', value: Role.ADMIN },
+    { label: 'Disponibles', value: 'DISPONIBLE' },
+    { label: 'En mission', value: 'EN_MISSION' },
+    { label: 'Admin', value: 'ADMIN' },
   ];
   selectedTabIndex = 0;
 

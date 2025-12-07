@@ -19,7 +19,6 @@
   <lib-tabs [tabs]="tabs" [selectedIndex]="selectedTabIndex">
     <!-- Disponibles -->
     <div tab="DISPONIBLE">
-      <p>{{ employesDisponibles.length }} employé(s) disponible(s) trouvé(s)</p>
       <lib-data-table
         [data]="employesDisponibles"
         [columns]="tableColumns"
@@ -32,7 +31,6 @@
 
     <!-- En mission -->
     <div tab="EN_MISSION">
-      <p>{{ employesEnMission.length }} employé(s) en mission trouvé(s)</p>
       <lib-data-table
         [data]="employesEnMission"
         [columns]="tableColumns"
@@ -45,7 +43,6 @@
 
     <!-- Admin -->
     <div tab="ADMIN">
-      <p>{{ admin.length }} administrateur(s) trouvé(s)</p>
       <lib-data-table
         [data]="admin"
         [columns]="tableColumns"
