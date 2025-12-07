@@ -1,12 +1,20 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, Output, EventEmitter, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  OnInit,
+  inject,
+  ViewChild,
+  HostListener,
+} from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
@@ -65,6 +73,10 @@ export class HeaderComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private themeService = inject(ThemeService);
 
+  @ViewChild('notificationTrigger') notificationTrigger?: MatMenuTrigger;
+  @ViewChild('themeTrigger') themeTrigger?: MatMenuTrigger;
+  @ViewChild('userTrigger') userTrigger?: MatMenuTrigger;
+
   constructor() {
     this.currentUser$ = this.store.select(selectCurrentUser);
     this.recentNotifications$ = this.store.select(selectRecentNotifications);
@@ -91,6 +103,24 @@ export class HeaderComponent implements OnInit {
           }
         }, 0);
       });
+  }
+
+  private closeAllMenusExcept(except?: 'notification' | 'theme' | 'user') {
+    if (except !== 'notification' && this.notificationTrigger?.menuOpen) {
+      this.notificationTrigger.closeMenu();
+    }
+    if (except !== 'theme' && this.themeTrigger?.menuOpen) {
+      this.themeTrigger.closeMenu();
+    }
+    if (except !== 'user' && this.userTrigger?.menuOpen) {
+      this.userTrigger.closeMenu();
+    }
+  }
+
+  // Called when a menu is opened by MatMenuTrigger
+  onMenuOpened(menu: 'notification' | 'theme' | 'user'): void {
+    // Close other menus once this one opens
+    this.closeAllMenusExcept(menu);
   }
 
   /**

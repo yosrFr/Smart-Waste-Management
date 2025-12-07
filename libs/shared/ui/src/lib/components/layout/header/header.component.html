@@ -11,9 +11,11 @@
 
   <!-- Bouton Notifications -->
   <button
+    #notificationTrigger="matMenuTrigger"
     mat-icon-button
     [matMenuTriggerFor]="notificationMenu"
     class="notification-button"
+    (menuOpened)="onMenuOpened('notification')"
   >
     <mat-icon matBadgeColor="warn" matBadgeSize="small">
       notifications
@@ -22,9 +24,9 @@
 
   <!-- Menu Notifications -->
   <mat-menu #notificationMenu="matMenu" class="notification-menu">
-    <button class="notification-header" (click)="$event.stopPropagation()">
+    <div class="notification-header">
       <h3>Notifications récentes</h3>
-    </button>
+    </div>
     <mat-divider></mat-divider>
 
     <div class="notification-list">
@@ -62,7 +64,12 @@
   </mat-menu>
 
   <!-- Bouton Thème -->
-  <button mat-icon-button [matMenuTriggerFor]="themeMenu">
+  <button
+    #themeTrigger="matMenuTrigger"
+    mat-icon-button
+    [matMenuTriggerFor]="themeMenu"
+    (menuOpened)="onMenuOpened('theme')"
+  >
     <mat-icon>
       {{
         currentTheme === 'light'
@@ -91,14 +98,19 @@
   </mat-menu>
 
   <!-- Menu Utilisateur -->
-  <button mat-icon-button [matMenuTriggerFor]="userMenu">
+  <button
+    #userTrigger="matMenuTrigger"
+    mat-icon-button
+    [matMenuTriggerFor]="userMenu"
+    (menuOpened)="onMenuOpened('user')"
+  >
     <mat-icon>account_circle</mat-icon>
   </button>
 
   <!-- Menu déroulant Utilisateur -->
   <mat-menu #userMenu="matMenu">
     <ng-container *ngIf="currentUser$ | async as user">
-      <button class="user-info" (click)="$event.stopPropagation()">
+      <div class="user-info">
         <p class="user-name">
           {{ user.prenom }}
           {{ user.nom }}
@@ -106,7 +118,7 @@
         <p class="user-role">
           {{ user.role | enumLabel : 'Role' }}
         </p>
-      </button>
+      </div>
     </ng-container>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="goToProfile()">
