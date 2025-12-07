@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -59,6 +59,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private router = inject(Router);
   private dialog = inject(MatDialog);
+
+  @Output() pageTitle = 'Dashboard';
 
   // Statistiques
   totalPoints = 0;
