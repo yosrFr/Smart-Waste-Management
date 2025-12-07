@@ -94,22 +94,11 @@
           Le rôle est requis
         </mat-error>
       </mat-form-field>
-
-      <mat-form-field
-        appearance="outline"
-        class="full-width"
-        *ngIf="isEmployeRole"
-      >
-        <mat-label>Disponibilité</mat-label>
-        <mat-select formControlName="disponibilite">
-          <mat-option [value]="Disponibilite.DISPONIBLE">Disponible</mat-option>
-          <mat-option [value]="Disponibilite.EN_MISSION">En mission</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-checkbox formControlName="actif" class="checkbox">
-        Compte actif
-      </mat-checkbox>
+      <div *ngIf="data.mode === 'edit'" class="form-section">
+        <mat-checkbox formControlName="actif" class="checkbox">
+          Compte actif
+        </mat-checkbox>
+      </div>
     </div>
 
     <!-- Permis (employé uniquement) -->

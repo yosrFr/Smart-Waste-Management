@@ -52,5 +52,17 @@
         [pageSize]="10"
       ></lib-data-table>
     </div>
+
+    <!-- Inactifs -->
+    <div tab="INACTIF">
+      <lib-data-table
+        [data]="employesInactifs"
+        [columns]="tableColumns"
+        [actions]="tableActions"
+        [paginated]="true"
+        [searchable]="true"
+        [pageSize]="10"
+      ></lib-data-table>
+    </div>
   </lib-tabs>
 </div>

@@ -137,7 +137,6 @@ export class EmployeService {
       tel: dto.tel,
       dateNais: dto.dateNaissance,
       role: dto.role,
-      actif: dto.actif,
     };
 
     let newUser: Employe | Administrateur;
@@ -146,14 +145,16 @@ export class EmployeService {
       newUser = {
         ...baseUser,
         role: Role.EMPLOYE,
-        disponibilite: dto.disponibilite ?? Disponibilite.DISPONIBLE,
         numPermis: dto.numPermis ?? '',
+        disponibilite: Disponibilite.DISPONIBLE,
+        actif: true,
       };
       this.mockEmployes.push(newUser);
     } else {
       newUser = {
         ...baseUser,
         role: Role.ADMIN,
+        actif: true,
       };
       this.mockAdmins.push(newUser);
     }

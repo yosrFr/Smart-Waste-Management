@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy, inject, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
+  selectAllEmployes,
   selectEmployesOnly,
   selectEmployesLoading,
   loadEmployes,
@@ -59,6 +60,7 @@ export class EmployesComponent implements OnInit, OnDestroy {
   // Données par disponibilité
   employesDisponibles: Employe[] = [];
   employesEnMission: Employe[] = [];
+  employesInactifs: (Employe | Administrateur)[] = [];
   admin: Administrateur[] = [];
 
   totalEmployes = 0;
@@ -69,6 +71,7 @@ export class EmployesComponent implements OnInit, OnDestroy {
     { label: 'Disponibles', value: 'DISPONIBLE' },
     { label: 'En mission', value: 'EN_MISSION' },
     { label: 'Admin', value: 'ADMIN' },
+    { label: 'Inactifs', value: 'INACTIF' },
   ];
   selectedTabIndex = 0;
 
@@ -103,27 +106,39 @@ export class EmployesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch(loadEmployes());
 
+    // Subscribe to employees (only role EMPLOYE) and keep only active ones for Disponibles/En mission
     this.store
       .select(selectEmployesOnly)
       .pipe(takeUntil(this.destroy$))
       .subscribe((employes) => {
         this.totalEmployes = employes.length;
 
-        // Filtre par disponibilité
+        // Filtre par disponibilité et actif === true
         this.employesDisponibles = employes.filter(
-          (e) => e.disponibilite === Disponibilite.DISPONIBLE
+          (e) =>
+            e.disponibilite === Disponibilite.DISPONIBLE && e.actif === true
         );
         this.employesEnMission = employes.filter(
-          (e) => e.disponibilite === Disponibilite.EN_MISSION
+          (e) =>
+            e.disponibilite === Disponibilite.EN_MISSION && e.actif === true
         );
+      });
+
+    // Subscribe to all users to compute inactifs (both employes and admins)
+    this.store
+      .select(selectAllEmployes)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((allUsers) => {
+        this.employesInactifs = allUsers.filter((u) => u.actif === false);
       });
 
     this.store
       .select(selectAdminsOnly)
       .pipe(takeUntil(this.destroy$))
       .subscribe((admins) => {
-        this.totalAdmins = admins.length;
-        this.admin = admins;
+        // Only show active admins in the Admin tab; inactive admins appear in the INACTIF tab
+        this.totalAdmins = admins.filter((a) => a.actif === true).length;
+        this.admin = admins.filter((a) => a.actif === true);
       });
   }
 
