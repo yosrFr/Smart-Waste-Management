@@ -70,6 +70,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
     {
       key: 'localisation',
       label: 'Localisation',
+      sortable: false,
       customTemplate: (point) =>
         `${point.localisation.latitude.toFixed(
           4
@@ -82,7 +83,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
     },
     {
       key: 'niveauRemplissage',
-      label: 'Niveau (%)',
+      label: 'Niveau de remplissage (%)',
       sortable: true,
       customTemplate: (point) => `${point.niveauRemplissage.toFixed(0)}%`,
     },
@@ -138,7 +139,16 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
    * Met à jour les marqueurs sur la carte
    */
   private updateMapMarkers(points: PointDeCollecte[]): void {
-    this.mapMarkers = points.map((point) => ({
+    // Filter out points without valid coordinates
+    const valid = points.filter(
+      (p) =>
+        p &&
+        p.localisation &&
+        Number.isFinite(p.localisation.latitude) &&
+        Number.isFinite(p.localisation.longitude)
+    );
+
+    this.mapMarkers = valid.map((point) => ({
       position: point.localisation,
       tooltip: this.getPointTooltip(point),
       icon: this.getMarkerIcon(point),
@@ -161,14 +171,37 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
    * Retourne l'icône du marqueur selon l'état et le niveau
    */
   private getMarkerIcon(point: PointDeCollecte): L.DivIcon {
-    let color = '#2e7d32'; // Vert par défaut (normal)
+    // Base colors by waste type
+    const baseColors: Record<string, string> = {
+      PLASTIQUE: '#29b6f6',
+      METAUX: '#ef5350',
+      ALIMENTAIRE: '#ffcc55ff',
+      VERRE: '#66bb6a',
+      AUTRE: '#757575',
+      ENDOMMAGE: '#000',
+    };
 
+    const darkerColor: Record<string, string> = {
+      PLASTIQUE: '#01579b',
+      METAUX: '#b71c1c',
+      ALIMENTAIRE: '#FFB300',
+      VERRE: '#2e7d32',
+      AUTRE: '#424242',
+    };
+
+    const typeKey = point.typeDechet as unknown as string;
+    const base = baseColors[typeKey];
+    const darker = darkerColor[typeKey];
+
+    let color = base;
+
+    // Adjust by state intensity
     if (point.etat === EtatConteneur.ENDOMMAGE) {
-      color = '#9e9e9e'; // Gris pour endommagé
+      color = '#000';
     } else if (point.etat === EtatConteneur.PLEIN) {
-      color = '#c62828'; // Rouge pour plein
-    } else if (point.etat === EtatConteneur.NORMAL) {
-      color = '#2e7d32'; // Jaune pour moyen
+      color = darker;
+    } else {
+      color = base;
     }
 
     return L.divIcon({

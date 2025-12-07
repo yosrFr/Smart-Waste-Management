@@ -5,7 +5,7 @@
 
 <mat-dialog-content>
   <lib-leaflet-map
-    [height]="500"
+    [height]="400"
     [markers]="markers"
     [polylines]="polylines"
     [center]="mapCenter"
@@ -26,6 +26,10 @@
       <strong>Position actuelle:</strong>
       {{ tournee.positionActuelle.latitude | number : '1.4-4' }},
       {{ tournee.positionActuelle.longitude | number : '1.4-4' }}
+    </p>
+    <p>
+      <strong>Type de déchet:</strong>
+      {{ tournee.vehicule.typeDechet | lowercase }}
     </p>
   </div>
 </mat-dialog-content>
