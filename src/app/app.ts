@@ -2,7 +2,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { loadCurrentUser } from '@smart-waste-management/shared/data-access';
+import {
+  loadCurrentUser,
+  loadNotifications,
+} from '@smart-waste-management/shared/data-access';
 
 @Component({
   imports: [RouterOutlet],
@@ -26,5 +29,7 @@ export class App implements OnInit {
         console.error('Erreur lors de la lecture de currentUser:', e);
       }
     }
+    // Charger les notifications au démarrage
+    this.store.dispatch(loadNotifications());
   }
 }

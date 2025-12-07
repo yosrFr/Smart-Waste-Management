@@ -25,6 +25,7 @@ export class PointCollecteService {
       typeDechet: TypeDechet.PLASTIQUE,
       etat: EtatConteneur.NORMAL,
       niveauRemplissage: 45,
+      capacite: 50,
     },
     {
       id: '2',
@@ -32,6 +33,7 @@ export class PointCollecteService {
       typeDechet: TypeDechet.ALIMENTAIRE,
       etat: EtatConteneur.PLEIN,
       niveauRemplissage: 95,
+      capacite: 50,
     },
     {
       id: '3',
@@ -39,6 +41,7 @@ export class PointCollecteService {
       typeDechet: TypeDechet.VERRE,
       etat: EtatConteneur.NORMAL,
       niveauRemplissage: 30,
+      capacite: 50,
     },
     {
       id: '4',
@@ -46,6 +49,7 @@ export class PointCollecteService {
       typeDechet: TypeDechet.PLASTIQUE,
       etat: EtatConteneur.ENDOMMAGE,
       niveauRemplissage: 60,
+      capacite: 50,
     },
     {
       id: '5',
@@ -53,6 +57,7 @@ export class PointCollecteService {
       typeDechet: TypeDechet.METAUX,
       etat: EtatConteneur.NORMAL,
       niveauRemplissage: 20,
+      capacite: 50,
     },
   ];
 
@@ -82,6 +87,7 @@ export class PointCollecteService {
       typeDechet: dto.typeDechet,
       etat: dto.etat || EtatConteneur.NORMAL,
       niveauRemplissage: dto.niveauRemplissage || 0,
+      capacite: dto.capacite,
     };
 
     this.mockPoints.push(point);

@@ -10,6 +10,8 @@ export interface PointDeCollecte {
   niveauRemplissage: number;
   /** Etat actuel du conteneur */
   etat: EtatConteneur;
+  /** Capacité d'un conteneur en Kg */
+  capacite: number;
 }
 /**
  * DTO pour la création d'un point de collecte
@@ -21,6 +23,7 @@ export interface CreatePointCollecteDto {
   etat?: EtatConteneur;
   /** Niveau initial (par défaut 0) */
   niveauRemplissage?: number;
+  capacite: number;
 }
 
 /**
