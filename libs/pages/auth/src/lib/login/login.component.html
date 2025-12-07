@@ -71,12 +71,12 @@
           class="full-width login-button"
           [disabled]="loginForm.invalid || (loading$ | async)"
         >
+          <span *ngIf="!(loading$ | async)">Se connecter</span>
           <mat-spinner
             *ngIf="loading$ | async"
             diameter="20"
             class="button-spinner"
           ></mat-spinner>
-          <span *ngIf="(loading$ | async) === false">Se connecter</span>
         </button>
       </form>
     </mat-card-content>

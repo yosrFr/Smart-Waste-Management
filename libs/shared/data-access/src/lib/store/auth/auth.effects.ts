@@ -44,6 +44,8 @@ export class AuthEffects {
         tap(({ response }) => {
           // Sauvegarde le token
           localStorage.setItem('token', response.token);
+          // Sauvegarde l'utilisateur
+          localStorage.setItem('currentUser', JSON.stringify(response.user));
           // Redirige selon le rôle
           const route =
             response.user.role === 'ADMIN'
@@ -63,13 +65,39 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.logout),
         tap(() => {
-          // Supprime le token
+          // Supprime le token et l'utilisateur
           localStorage.removeItem('token');
+          localStorage.removeItem('currentUser');
           // Redirige vers login
           this.router.navigate(['/auth/login']);
         })
       ),
     { dispatch: false }
+  );
+
+  /**
+   * Effect pour charger l'utilisateur au démarrage
+   */
+  loadCurrentUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.loadCurrentUser),
+      map(() => {
+        const userStr = localStorage.getItem('currentUser');
+        const token = localStorage.getItem('token');
+
+        if (userStr && token) {
+          try {
+            const user = JSON.parse(userStr);
+            return AuthActions.loadCurrentUserSuccess({ user });
+          } catch (e) {
+            return AuthActions.loadCurrentUserFailure({
+              error: 'Erreur de session',
+            });
+          }
+        }
+        return AuthActions.loadCurrentUserFailure({ error: 'Pas de session' });
+      })
+    )
   );
 
   /**

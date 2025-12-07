@@ -72,5 +72,28 @@ export const authReducer = createReducer(
     ...state,
     loading: false,
     error,
+  })),
+  // Load Current User
+  on(AuthActions.loadCurrentUser, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(AuthActions.loadCurrentUserSuccess, (state, { user }) => {
+    const token = localStorage.getItem('token');
+    return {
+      ...state,
+      user,
+      token,
+      loading: false,
+      isAuthenticated: true,
+      error: null,
+    };
+  }),
+  on(AuthActions.loadCurrentUserFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+    isAuthenticated: false,
   }))
 );
