@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import { Vehicule, CreateVehiculeDto } from '../models';
 import { StatutVehicule, TypeDechet } from '../enums';
 
