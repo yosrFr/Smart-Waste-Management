@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import {
   Employe,
   CreateUtilisateurDto,
-  UpdateUtilisateurAdminDto,
+  UpdateUtilisateurDto,
   Administrateur,
   UpdateProfilEmployeDto,
 } from '../models';
@@ -87,6 +87,9 @@ export class EmployeService {
     return [...this.mockAdmins, ...this.mockEmployes];
   }
 
+  /**
+   * Met à jour la liste des utilisateurs mockés
+   */
   private set mockUtilisateurs(value: (Employe | Administrateur)[]) {
     this.mockAdmins = value.filter(
       (u) => u.role === Role.ADMIN
@@ -98,7 +101,7 @@ export class EmployeService {
 
   /**
    * Récupère tous les utilisateurs (employés + admins)
-   * @returns Observable avec la liste
+   * @returns Observable avec la liste des utilisateurs (employés + admins)
    */
   getAll(): Observable<(Employe | Administrateur)[]> {
     return of(this.mockUtilisateurs);
@@ -106,7 +109,7 @@ export class EmployeService {
 
   /**
    * Récupère tous les admins
-   * @returns Observable avec la liste
+   * @returns Observable avec la liste des employés
    */
   getAllEmployes(): Observable<Employe[]> {
     return of(this.mockEmployes);
@@ -114,7 +117,7 @@ export class EmployeService {
 
   /**
    * Récupère tous les employés
-   * @returns Observable avec la liste
+   * @returns Observable avec la liste des admins
    */
   getAllAdmins(): Observable<Administrateur[]> {
     return of(this.mockAdmins);
@@ -126,10 +129,8 @@ export class EmployeService {
    * @returns Observable avec l'utilisateur créé
    */
   create(dto: CreateUtilisateurDto): Observable<Employe | Administrateur> {
-    const id = generateNextId(this.mockUtilisateurs);
-
     const baseUser = {
-      id,
+      id: generateNextId(this.mockUtilisateurs),
       nom: dto.nom,
       prenom: dto.prenom,
       email: dto.email,
@@ -137,6 +138,7 @@ export class EmployeService {
       tel: dto.tel,
       dateNais: dto.dateNaissance,
       role: dto.role,
+      actif: true,
     };
 
     let newUser: Employe | Administrateur;
@@ -147,14 +149,12 @@ export class EmployeService {
         role: Role.EMPLOYE,
         numPermis: dto.numPermis ?? '',
         disponibilite: Disponibilite.DISPONIBLE,
-        actif: true,
       };
       this.mockEmployes.push(newUser);
     } else {
       newUser = {
         ...baseUser,
         role: Role.ADMIN,
-        actif: true,
       };
       this.mockAdmins.push(newUser);
     }
@@ -170,7 +170,7 @@ export class EmployeService {
    */
   updateByAdmin(
     id: string,
-    dto: UpdateUtilisateurAdminDto
+    dto: UpdateUtilisateurDto
   ): Observable<Employe | Administrateur> {
     const utilisateurs = this.mockUtilisateurs;
     const index = utilisateurs.findIndex((u) => u.id === id);
@@ -188,6 +188,7 @@ export class EmployeService {
         ...(utilisateur as Employe),
         ...dto,
         role: Role.EMPLOYE,
+        numPermis: dto.numPermis ?? (utilisateur as Employe).numPermis,
       };
     } else {
       updatedUser = {
@@ -220,22 +221,10 @@ export class EmployeService {
 
     const utilisateur = utilisateurs[index];
 
-    let updatedUser: Employe | Administrateur;
-
-    if (utilisateur.role === Role.EMPLOYE) {
-      updatedUser = {
-        ...(utilisateur as Employe),
-        ...dto,
-        dateNais: dto.dateNaissance ?? utilisateur.dateNais,
-        numPermis: dto.numPermis ?? utilisateur.numPermis,
-      };
-    } else {
-      updatedUser = {
-        ...(utilisateur as Administrateur),
-        ...dto,
-        dateNais: dto.dateNaissance ?? utilisateur.dateNais,
-      };
-    }
+    const updatedUser = {
+      ...utilisateur,
+      ...dto,
+    };
 
     utilisateurs[index] = updatedUser;
     this.mockUtilisateurs = utilisateurs;

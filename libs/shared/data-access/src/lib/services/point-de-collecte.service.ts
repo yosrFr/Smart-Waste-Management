@@ -7,6 +7,7 @@ import {
   UpdatePointCollecteDto,
 } from '../models';
 import { EtatConteneur, TypeDechet } from '../enums';
+import { generateNextId } from '@smart-waste-management/shared/utils';
 
 /**
  * Service pour gérer les points de collecte
@@ -61,8 +62,6 @@ export class PointCollecteService {
     },
   ];
 
-  private nextId = 6;
-
   /**
    * Récupère tous les points de collecte
    * Simule également la mise à jour aléatoire des niveaux de remplissage
@@ -82,11 +81,11 @@ export class PointCollecteService {
    */
   create(dto: CreatePointCollecteDto): Observable<PointDeCollecte> {
     const point: PointDeCollecte = {
-      id: (this.nextId++).toString(),
+      id: generateNextId(this.mockPoints),
       localisation: dto.localisation,
       typeDechet: dto.typeDechet,
-      etat: dto.etat || EtatConteneur.NORMAL,
-      niveauRemplissage: dto.niveauRemplissage || 0,
+      etat: EtatConteneur.NORMAL,
+      niveauRemplissage: 0,
       capacite: dto.capacite,
     };
 
@@ -127,18 +126,17 @@ export class PointCollecteService {
   /**
    * Simule la mise à jour aléatoire des niveaux de remplissage
    * En réalité, c'est le backend qui fait ça avec les capteurs IoT
-   * L'état du conteneur ne change qu'avec une action manuelle (pas basé sur le taux de remplissage)
    */
   private simulateNiveauUpdate(): void {
     this.mockPoints = this.mockPoints.map((point) => {
       // Augmente aléatoirement le niveau (0 à 5%)
       const increase = Math.random() * 5;
       const newNiveau = Math.min(100, point.niveauRemplissage + increase);
-
-      // L'état reste inchangé (NORMAL, PLEIN, ou ENDOMMAGE) — ne change que via actions manuelles
+      const newEtat = newNiveau >= 80 ? EtatConteneur.PLEIN : point.etat;
       return {
         ...point,
         niveauRemplissage: newNiveau,
+        etat: newEtat,
       };
     });
   }

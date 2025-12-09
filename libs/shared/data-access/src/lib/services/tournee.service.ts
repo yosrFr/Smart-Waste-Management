@@ -155,25 +155,11 @@ export class TourneeService {
     },
   ];
 
-  private nextId = 4;
-
   /**
    * Récupère toutes les tournées
    * @returns Observable avec la liste des tournées
    */
   getAll(): Observable<Tournee[]> {
     return of([...this.mockTournees]);
-  }
-
-  /**
-   * Récupère les tournées d'un employé spécifique
-   * @param employeId ID de l'employé
-   * @returns Observable avec les tournées de l'employé
-   */
-  getByEmployeId(employeId: string): Observable<Tournee[]> {
-    const tournees = this.mockTournees.filter(
-      (t) => t.employe.id === employeId
-    );
-    return of(tournees);
   }
 }

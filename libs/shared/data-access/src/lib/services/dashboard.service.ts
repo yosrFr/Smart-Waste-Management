@@ -1,10 +1,18 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { DashboardAdminStats, DashboardEmployeStats } from '../models';
-import { PointCollecteService } from './point-de-collecte.service';
-import { VehiculeService } from './vehicule.service';
-import { TourneeService } from './tournee.service';
+import {
+  selectAllPointsCollecte,
+  selectPointsCollecteByEtat,
+} from '../store/points-de-collecte';
+import { selectVehiculesByStatut } from '../store/vehicules';
+import {
+  selectTourneesAujourdhuiByEmployeId,
+  selectTourneesAujourdhuiByEmployeIdAndStatut,
+  selectTourneesAujourdhuiByStatut,
+} from '../store/tournees';
+import { EtatConteneur, StatutTournee, StatutVehicule } from '../enums';
 
 /**
  * Service pour récupérer les statistiques des dashboards
@@ -13,25 +21,34 @@ import { TourneeService } from './tournee.service';
   providedIn: 'root',
 })
 export class DashboardService {
-  private pointCollecteService = inject(PointCollecteService);
-  private vehiculeService = inject(VehiculeService);
-  private tourneeService = inject(TourneeService);
-
   /**
    * Récupère les statistiques pour le dashboard admin
    * @returns Observable avec les statistiques
    */
   getAdminStats(): Observable<DashboardAdminStats> {
     const stats: DashboardAdminStats = {
-      totalPointsCollecte: 25,
-      pointsCollectePleins: 3,
-      pointsCollecteEndommages: 2,
-      vehiculesDisponibles: 8,
-      vehiculesEnReparation: 2,
-      vehiculesEnMission: 3,
-      tourneesEnCoursAujourdhui: 5,
-      tourneesTermineesAujourdhui: 12,
-      tourneesNonCommenceesAujourdhui: 8,
+      totalPointsCollecte: selectAllPointsCollecte.length,
+      pointsCollectePleins: selectPointsCollecteByEtat(EtatConteneur.PLEIN)
+        .length,
+      pointsCollecteEndommages: selectPointsCollecteByEtat(
+        EtatConteneur.ENDOMMAGE
+      ).length,
+      vehiculesDisponibles: selectVehiculesByStatut(StatutVehicule.ACTIF)
+        .length,
+      vehiculesEnReparation: selectVehiculesByStatut(
+        StatutVehicule.EN_REPARATION
+      ).length,
+      vehiculesEnMission: selectVehiculesByStatut(StatutVehicule.EN_MISSION)
+        .length,
+      tourneesEnCoursAujourdhui: selectTourneesAujourdhuiByStatut(
+        StatutTournee.EN_COURS
+      ).length,
+      tourneesTermineesAujourdhui: selectTourneesAujourdhuiByStatut(
+        StatutTournee.TERMINEE
+      ).length,
+      tourneesNonCommenceesAujourdhui: selectTourneesAujourdhuiByStatut(
+        StatutTournee.NON_COMMENCEE
+      ).length,
     };
 
     return of(stats);
@@ -45,8 +62,11 @@ export class DashboardService {
   getEmployeStats(employeId: string): Observable<DashboardEmployeStats> {
     // Calcule les stats pour cet employé
     const stats: DashboardEmployeStats = {
-      tourneesAujourdhui: 2,
-      tourneesTerminees: 15,
+      tourneesAujourdhui: selectTourneesAujourdhuiByEmployeId(employeId).length,
+      tourneesTerminees: selectTourneesAujourdhuiByEmployeIdAndStatut(
+        employeId,
+        StatutTournee.TERMINEE
+      ).length,
     };
 
     return of(stats);

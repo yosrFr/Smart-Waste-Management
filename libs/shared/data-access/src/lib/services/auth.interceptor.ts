@@ -2,7 +2,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 /**
- * Intercepteur HTTP fonctionnel (Angular 20)
+ * Intercepteur HTTP fonctionnel
  * Ajoute le token JWT à chaque requête HTTP
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {

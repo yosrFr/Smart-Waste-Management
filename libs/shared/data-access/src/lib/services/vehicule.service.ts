@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Vehicule, CreateVehiculeDto } from '../models';
 import { StatutVehicule, TypeDechet } from '../enums';
+import { generateNextId } from '@smart-waste-management/shared/utils';
 
 /**
  * Service pour gérer les véhicules
@@ -53,8 +54,6 @@ export class VehiculeService {
     },
   ];
 
-  private nextId = 5;
-
   /**
    * Récupère tous les véhicules
    * @returns Observable avec la liste des véhicules
@@ -70,7 +69,7 @@ export class VehiculeService {
    */
   create(dto: CreateVehiculeDto): Observable<Vehicule> {
     const vehicule: Vehicule = {
-      id: (this.nextId++).toString(),
+      id: generateNextId(this.mockVehicules),
       ...dto,
       statut: StatutVehicule.ACTIF,
     };

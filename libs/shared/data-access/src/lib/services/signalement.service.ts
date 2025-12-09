@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import {
   SignalerEndommageDto,
   SignalerVehiculePanneDto,
@@ -39,7 +38,7 @@ export class SignalementService {
       })
       .subscribe();
 
-    return of(undefined).pipe(delay(500));
+    return of(undefined);
   }
 
   /**
@@ -61,7 +60,7 @@ export class SignalementService {
       })
       .subscribe();
 
-    return of(undefined).pipe(delay(500));
+    return of(undefined);
   }
 
   /**
@@ -81,6 +80,6 @@ export class SignalementService {
       })
       .subscribe();
 
-    return of(undefined).pipe(delay(500));
+    return of(undefined);
   }
 }

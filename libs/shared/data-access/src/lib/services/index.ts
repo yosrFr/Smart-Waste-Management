@@ -9,5 +9,4 @@ export * from './employe.service';
 export * from './tournee.service';
 export * from './dashboard.service';
 export * from './signalement.service';
-export * from './storage.service';
 export * from './auth.interceptor';

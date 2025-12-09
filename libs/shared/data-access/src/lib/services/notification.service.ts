@@ -1,9 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import { CreateNotificationDto, AppNotification } from '../models';
 import { TypeNotif, TypeDechet, EtatConteneur } from '../enums';
+import { generateNextId } from '@smart-waste-management/shared/utils';
 
 /**
  * Service pour gérer les notifications
@@ -52,8 +52,6 @@ export class NotificationService {
     },
   ];
 
-  private nextId = 4;
-
   /**
    * Récupère toutes les notifications
    * @returns Observable avec la liste des notifications triées par date
@@ -69,11 +67,11 @@ export class NotificationService {
    */
   create(dto: CreateNotificationDto): Observable<AppNotification> {
     const notification: AppNotification = {
-      id: (this.nextId++).toString(),
+      id: generateNextId(this.mockNotifications),
       ...dto,
     } as AppNotification;
 
     this.mockNotifications.unshift(notification);
-    return of(notification).pipe(delay(200));
+    return of(notification);
   }
 }
