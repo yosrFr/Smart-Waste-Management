@@ -7,27 +7,31 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   selectCurrentUser,
-  selectTourneesByEmployeId,
-  selectTourneesAujourdhui,
   loadTournees,
   Tournee,
   StatutTournee,
+  selectTourneesAujourdhuiByEmployeIdAndStatut,
+  selectTourneesLoading,
+  selectTourneesAujourdhuiByEmployeId,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
   StatCardComponent,
   StatusBadgeComponent,
   EnumLabelPipe,
+  LoadingSpinnerComponent,
+  EmptyStateComponent,
 } from '@smart-waste-management/shared/ui';
-import { TourneeMapDialogComponent } from '../../../../admin/src/lib/tournees/tournee-map-dialog.component';
+import { TourneeMapDialogComponent } from '../../../../admin/src/lib/tournees/tournee-map-dialog/tournee-map-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 /**
- * Composant Dashboard Employee
+ * Composant Dashboard Employeé
+ * Affiche statistiques et tournées du jour
  */
 @Component({
   selector: 'lib-employee-dashboard',
@@ -42,6 +46,8 @@ import { MatDialog } from '@angular/material/dialog';
     StatCardComponent,
     StatusBadgeComponent,
     EnumLabelPipe,
+    LoadingSpinnerComponent,
+    EmptyStateComponent,
   ],
   templateUrl: 'dashboard.component.html',
   styleUrl: 'dashboard.component.css',
@@ -54,7 +60,10 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
   userName = '';
   tourneesAujourdhui = 0;
   tourneesTerminees = 0;
-  mesTourneesAujourdhui: Tournee[] = [];
+
+  mesTourneesAujourdhui$!: Observable<Tournee[]>;
+  loading$!: Observable<boolean>;
+
   displayedColumns = [
     'dateDebut',
     'dateFin',
@@ -69,9 +78,13 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
   private currentUserId = '';
 
   ngOnInit(): void {
+    // Dispatch pour charger les tournées
     this.store.dispatch(loadTournees());
 
-    // Récupère l'utilisateur actuel
+    // Observable de loading
+    this.loading$ = this.store.select(selectTourneesLoading);
+
+    // Récupère l'utilisateur actuel et charge ses tournées
     this.store
       .select(selectCurrentUser)
       .pipe(takeUntil(this.destroy$))
@@ -79,8 +92,6 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
         if (user) {
           this.userName = user.prenom;
           this.currentUserId = user.id;
-
-          // Charge les tournées de cet employé
           this.loadEmployeeTournees(user.id);
         }
       });
@@ -91,25 +102,42 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Charger les tournées d'un employé
+   * @param employeId id de l'employé
+   */
   private loadEmployeeTournees(employeId: string): void {
+    this.mesTourneesAujourdhui$ = this.store.select(
+      selectTourneesAujourdhuiByEmployeId(employeId)
+    );
+
+    // Nombre total de tournées aujourd'hui
     this.store
-      .select(selectTourneesByEmployeId(employeId))
+      .select(selectTourneesAujourdhuiByEmployeId(employeId))
       .pipe(takeUntil(this.destroy$))
       .subscribe((tournees) => {
-        const today = new Date().toISOString().split('T')[0];
+        this.tourneesAujourdhui = tournees.length;
+      });
 
-        this.mesTourneesAujourdhui = tournees.filter((t) =>
-          t.dateDeb.startsWith(today)
-        );
-
-        this.tourneesAujourdhui = this.mesTourneesAujourdhui.length;
-
-        this.tourneesTerminees = tournees.filter(
-          (t) => t.statut === StatutTournee.TERMINEE
-        ).length;
+    // Nombre de tournées terminées aujourdhui
+    this.store
+      .select(
+        selectTourneesAujourdhuiByEmployeIdAndStatut(
+          employeId,
+          StatutTournee.TERMINEE
+        )
+      )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((tourneesTerminees) => {
+        this.tourneesTerminees = tourneesTerminees.length;
       });
   }
 
+  /**
+   * Détermine la couleur d'un startut de tournée
+   * @param statut la statut de la tournée
+   * @returns 'success' | 'warning' | 'info'
+   */
   getStatutColor(statut: StatutTournee): 'success' | 'warning' | 'info' {
     switch (statut) {
       case StatutTournee.TERMINEE:
@@ -121,10 +149,17 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Naviger à la page mes tournées
+   */
   goToMesTournees(): void {
     this.router.navigate(['/employee/mes-tournees']);
   }
 
+  /**
+   * Renvoir la map d'une tournée spécifique
+   * @param tournee tournée spécifique
+   */
   viewTourneeMap(tournee: Tournee): void {
     this.dialog.open(TourneeMapDialogComponent, {
       width: '90vw',
