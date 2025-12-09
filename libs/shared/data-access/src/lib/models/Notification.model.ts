@@ -18,8 +18,11 @@ export interface NotificationBase {
  * Détails spécifiques pour une notification de conteneur plein
  */
 export interface NotificationConteneurPleinDetails {
+  // Localisation du conteneur plein
   localisation: GeoPoint;
+  // Type de dechet du conteneur plein
   typeConteneur: TypeDechet;
+  // État actuel du conteneur (plein, endommagé, normal, supprimé)
   etat: EtatConteneur;
 }
 
@@ -83,9 +86,13 @@ export interface NotificationIncident extends NotificationBase {
  */
 export interface NotificationNouvelleTacheDetails {
   tourneeId: string;
+  // Date de début estimée de la tournée
   dateDebut: string;
+  // Date de fin estimée de la tournée
   dateFin: string;
+  // Matricule du véhicule assigné
   vehiculeMatricule: string;
+  // Nombre de points de collecte dans la tournée
   nombrePoints: number;
 }
 
