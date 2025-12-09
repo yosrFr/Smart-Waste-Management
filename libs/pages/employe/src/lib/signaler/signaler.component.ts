@@ -26,7 +26,8 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 
 /**
- * Composant Signaler un problème (Employee)
+ * Composant Signaler un problème
+ * Permet de signaler un conteneur endommagé, un véhicule en panne ou un incident
  */
 @Component({
   selector: 'lib-signaler',
@@ -52,11 +53,19 @@ export class SignalerComponent {
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
+  /** Formulaire pour signaler un conteneur endommagé */
   conteneurForm: FormGroup;
+
+  /** Formulaire pour signaler un véhicule en panne */
   vehiculeForm: FormGroup;
+
+  /** Formulaire pour signaler un incident */
   incidentForm: FormGroup;
+
+  /** Indique si un signalement est en cours de soumission */
   submitting = false;
 
+  /** Enum des types de déchets */
   TypeDechet = TypeDechet;
 
   constructor() {
@@ -81,7 +90,8 @@ export class SignalerComponent {
   }
 
   /**
-   * Récupère la position d'une map
+   * Ouvre une dialog pour choisir une position sur la carte
+   * @param type 'conteneur' ou 'incident'
    */
   chooseOnMap(type: 'conteneur' | 'incident') {
     const dialogRef = this.dialog.open(MapChooserDialogComponent, {
