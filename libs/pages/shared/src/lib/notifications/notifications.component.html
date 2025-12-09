@@ -174,7 +174,7 @@
     <!-- Pagination -->
     <mat-paginator
       [length]="(allNotifications$ | async)?.length || 0"
-      [pageSize]="pageSize$ | async"
+      [pageSize]="pageSize"
       [pageIndex]="pageIndex$ | async"
       [pageSizeOptions]="[10, 20, 50, 100]"
       (page)="onPageChange($event)"
