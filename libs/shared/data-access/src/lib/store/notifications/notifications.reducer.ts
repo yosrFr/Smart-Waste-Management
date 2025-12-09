@@ -20,7 +20,7 @@ export interface NotificationState {
 }
 
 /**
- * État initial
+ * État initial des notifications
  */
 export const initialNotifState: NotificationState = {
   notifications: [],
@@ -35,7 +35,7 @@ export const initialNotifState: NotificationState = {
  */
 export const notificationReducer = createReducer(
   initialNotifState,
-  // Load
+  // Loading des notifications
   on(NotificationActions.loadNotifications, (state) => ({
     ...state,
     loading: true,
@@ -54,12 +54,7 @@ export const notificationReducer = createReducer(
     loading: false,
     error,
   })),
-  // Add (utilisé par le simulateur)
-  on(NotificationActions.addNotification, (state, { notification }) => ({
-    ...state,
-    notifications: [notification, ...state.notifications],
-  })),
-  // Create Success
+  // Création d'une notification
   on(
     NotificationActions.createNotificationSuccess,
     (state, { notification }) => ({
@@ -67,14 +62,14 @@ export const notificationReducer = createReducer(
       notifications: [notification, ...state.notifications],
     })
   ),
-  // Pagination
+  on(NotificationActions.createNotificationFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+  // Pagination des notifications
   on(NotificationActions.setPageIndex, (state, { pageIndex }) => ({
     ...state,
     pageIndex,
-  })),
-  on(NotificationActions.setPageSize, (state, { pageSize }) => ({
-    ...state,
-    pageSize,
-    pageIndex: 0, // Reset à la première page
   }))
 );

@@ -48,7 +48,13 @@ export class NotificationEffects {
           map((notification) =>
             NotificationActions.createNotificationSuccess({ notification })
           ),
-          catchError(() => of({ type: 'NO_ACTION' }))
+          catchError((error) =>
+            of(
+              NotificationActions.createNotificationFailure({
+                error: error.message,
+              })
+            )
+          )
         )
       )
     )

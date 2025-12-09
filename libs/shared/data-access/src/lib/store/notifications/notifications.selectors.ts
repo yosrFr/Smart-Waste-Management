@@ -3,10 +3,23 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { NotificationState } from './notifications.reducer';
 
 /**
+ * Taille de page fixe pour la pagination
+ */
+const pageSize = 10;
+
+/**
  * Sélecteur pour le feature state notifications
  */
 export const selectNotificationState =
   createFeatureSelector<NotificationState>('notifications');
+
+/**
+ * Sélectionne l'état de chargement
+ */
+export const selectNotificationsLoading = createSelector(
+  selectNotificationState,
+  (state) => state.loading
+);
 
 /**
  * Sélectionne toutes les notifications
@@ -33,21 +46,12 @@ export const selectNotificationPageIndex = createSelector(
 );
 
 /**
- * Sélectionne la taille de page
- */
-export const selectNotificationPageSize = createSelector(
-  selectNotificationState,
-  (state) => state.pageSize
-);
-
-/**
  * Sélectionne les notifications paginées
  */
 export const selectPaginatedNotifications = createSelector(
   selectAllNotifications,
   selectNotificationPageIndex,
-  selectNotificationPageSize,
-  (notifications, pageIndex, pageSize) => {
+  (notifications, pageIndex) => {
     const start = pageIndex * pageSize;
     const end = start + pageSize;
     return notifications.slice(start, end);
@@ -59,14 +63,5 @@ export const selectPaginatedNotifications = createSelector(
  */
 export const selectNotificationTotalPages = createSelector(
   selectAllNotifications,
-  selectNotificationPageSize,
-  (notifications, pageSize) => Math.ceil(notifications.length / pageSize)
-);
-
-/**
- * Sélectionne l'état de chargement
- */
-export const selectNotificationsLoading = createSelector(
-  selectNotificationState,
-  (state) => state.loading
+  (notifications) => Math.ceil(notifications.length / pageSize)
 );

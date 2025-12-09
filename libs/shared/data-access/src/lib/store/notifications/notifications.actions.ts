@@ -5,42 +5,58 @@ import { CreateNotificationDto, AppNotification } from '../../models';
 /**
  * Actions pour les notifications
  */
+
+/**
+ * Charger les notifications
+ */
 export const loadNotifications = createAction(
   '[Notifications] Load Notifications'
 );
 
+/**
+ * Notifications chargées avec succès
+ */
 export const loadNotificationsSuccess = createAction(
   '[Notifications] Load Notifications Success',
   props<{ notifications: AppNotification[] }>()
 );
 
+/**
+ * Échec du chargement des notifications
+ */
 export const loadNotificationsFailure = createAction(
   '[Notifications] Load Notifications Failure',
   props<{ error: string }>()
 );
 
-// Pour la simulation de reception des notification
-export const addNotification = createAction(
-  '[Notifications] Add Notification',
-  props<{ notification: AppNotification }>()
-);
-
+/**
+ * Créer une notification
+ */
 export const createNotification = createAction(
   '[Notifications] Create Notification',
   props<{ dto: CreateNotificationDto }>()
 );
 
+/**
+ * Notification créée avec succès
+ */
 export const createNotificationSuccess = createAction(
   '[Notifications] Create Notification Success',
   props<{ notification: AppNotification }>()
 );
 
+/**
+ * Action de création de notification échouée
+ */
+export const createNotificationFailure = createAction(
+  '[Notifications] Create Notification Failure',
+  props<{ error: string }>()
+);
+
+/**
+ * Définir l'index de la page
+ */
 export const setPageIndex = createAction(
   '[Notifications] Set Page Index',
   props<{ pageIndex: number }>()
-);
-
-export const setPageSize = createAction(
-  '[Notifications] Set Page Size',
-  props<{ pageSize: number }>()
 );
