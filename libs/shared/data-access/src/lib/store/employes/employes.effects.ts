@@ -6,11 +6,17 @@ import { map, catchError, switchMap } from 'rxjs/operators';
 import * as EmployesActions from './employes.actions';
 import { EmployeService } from '../../services/employe.service';
 
+/**
+ * Effects pour la gestion des employés
+ */
 @Injectable()
 export class EmployeEffects {
   private actions$ = inject(Actions);
   private employeService = inject(EmployeService);
 
+  /**
+   * Effect pour le chargement des employés
+   */
   loadEmployes$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployesActions.loadEmployes),
@@ -25,6 +31,9 @@ export class EmployeEffects {
     )
   );
 
+  /**
+   * Effect pour la création d'un employé
+   */
   createEmploye$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployesActions.createEmploye),
@@ -39,6 +48,9 @@ export class EmployeEffects {
     )
   );
 
+  /**
+   * Effect pour la mise à jour d'un employé par un admin
+   */
   updateEmployeByAdmin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployesActions.updateEmployeByAdmin),
@@ -59,6 +71,9 @@ export class EmployeEffects {
     )
   );
 
+  /**
+   * Effect pour la mise à jour du profil d'un employé
+   */
   updateProfilEmploye$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployesActions.updateProfilEmploye),
@@ -79,6 +94,9 @@ export class EmployeEffects {
     )
   );
 
+  /**
+   * Effect pour la suppression d'un employé
+   */
   deleteEmploye$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployesActions.deleteEmploye),
