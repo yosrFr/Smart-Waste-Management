@@ -1,4 +1,11 @@
 <div class="data-table-container">
+  <!-- Spinner overlay -->
+  <lib-loading-spinner
+    *ngIf="loading"
+    [overlay]="true"
+    message="Chargement..."
+  ></lib-loading-spinner>
+
   <!-- Barre de recherche -->
   <mat-form-field *ngIf="searchable" class="search-field">
     <mat-label>Rechercher</mat-label>

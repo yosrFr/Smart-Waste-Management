@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 /**
  * Définition d'une colonne du tableau
@@ -51,6 +52,7 @@ export interface TableAction<T = any> {
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: 'data-table.component.html',
   styleUrl: 'data-table.component.css',
@@ -74,6 +76,9 @@ export class DataTableComponent<T> implements OnInit {
   /** Active la recherche */
   @Input() searchable = true;
 
+  /** Indique si les données sont en cours de chargement */
+  @Input() loading = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -90,6 +95,9 @@ export class DataTableComponent<T> implements OnInit {
     ];
   }
 
+  /**
+   * Afficher la pagination après l'initialisation de la vue
+   */
   ngAfterViewInit(): void {
     if (this.paginated) {
       this.dataSource.paginator = this.paginator;
@@ -97,6 +105,9 @@ export class DataTableComponent<T> implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
+  /**
+   * Met à jour les données du tableau lors de changements de data
+   */
   ngOnChanges(): void {
     this.dataSource.data = this.data;
   }

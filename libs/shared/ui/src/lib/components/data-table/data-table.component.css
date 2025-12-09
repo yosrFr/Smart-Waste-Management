@@ -15,6 +15,7 @@ table {
   width: 100%;
 }
 
+/* Style pour les lignes du tableau au survol */
 tr.mat-mdc-row:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
