@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   selectCurrentUser,
@@ -13,6 +13,7 @@ import {
   loadTournees,
   Tournee,
   StatutTournee,
+  selectTourneesLoading,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -21,11 +22,18 @@ import {
   TableAction,
   TabsComponent,
   Tab,
+  LoadingSpinnerComponent,
 } from '@smart-waste-management/shared/ui';
-import { TourneeMapDialogComponent } from '../../../../admin/src/lib/tournees/tournee-map-dialog.component';
+import { TourneeMapDialogComponent } from '../../../../admin/src/lib/tournees/tournee-map-dialog/tournee-map-dialog.component';
 
 /**
  * Composant Mes Tournées (Employee)
+ * Il utilise des onglets pour séparer les tournées selon leur statut :
+ * - Non commencées
+ * - En cours
+ * - Terminées
+ * Chaque onglet contient un tableau avec des colonnes et actions définies
+ * Permet également de visualiser une tournée sur une carte via un dialogue
  */
 @Component({
   selector: 'lib-mes-tournees',
@@ -37,6 +45,7 @@ import { TourneeMapDialogComponent } from '../../../../admin/src/lib/tournees/to
     PageHeaderComponent,
     DataTableComponent,
     TabsComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './mes-tournees.component.html',
 })
@@ -51,12 +60,16 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
   tourneesEnCours: Tournee[] = [];
   tourneesTerminees: Tournee[] = [];
 
+  loading$!: Observable<boolean>;
+
+  /** Configuration des onglets */
   tabs: Tab[] = [
     { label: 'Non commencées', value: 'NON_COMMENCEE' },
     { label: 'En cours', value: 'EN_COURS' },
     { label: 'Terminées', value: 'TERMINEE' },
   ];
 
+  /** Définition des colonnes du tableau */
   tableColumns: TableColumn<Tournee>[] = [
     {
       key: 'dateDebut',
@@ -82,6 +95,7 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /** Actions disponibles sur chaque ligne de tableau */
   tableActions: TableAction<Tournee>[] = [
     {
       icon: 'map',
@@ -91,8 +105,14 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
+  /**
+   * Charger les tournées de l'employé courant
+   */
   ngOnInit(): void {
     this.store.dispatch(loadTournees());
+
+    // Observable de loading
+    this.loading$ = this.store.select(selectTourneesLoading);
 
     this.store
       .select(selectCurrentUser)
@@ -109,6 +129,10 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Charge les tournées d'un employé et les classe par statut
+   * @param employeId ID de l'employé
+   */
   private loadEmployeeTournees(employeId: string): void {
     this.store
       .select(selectTourneesByEmployeId(employeId))
@@ -128,6 +152,10 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Ouvre un dialogue affichant la tournée sur une carte
+   * @param tournee Tournée à visualiser
+   */
   viewOnMap(tournee: Tournee): void {
     this.dialog.open(TourneeMapDialogComponent, {
       width: '90vw',

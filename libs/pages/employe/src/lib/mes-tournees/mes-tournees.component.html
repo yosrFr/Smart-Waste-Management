@@ -4,6 +4,12 @@
 >
 </lib-page-header>
 
+<!-- Loading -->
+<lib-loading-spinner
+  *ngIf="loading$ | async"
+  [message]="'Chargement...'"
+></lib-loading-spinner>
+
 <!-- Tabs par statut -->
 <div>
   <lib-tabs [tabs]="tabs" [selectedIndex]="selectedTabIndex">
