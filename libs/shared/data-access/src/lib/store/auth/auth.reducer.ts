@@ -20,7 +20,7 @@ export interface AuthState {
 }
 
 /**
- * État initial
+ * État initial de l'authentification
  */
 export const initialAuthState: AuthState = {
   user: null,

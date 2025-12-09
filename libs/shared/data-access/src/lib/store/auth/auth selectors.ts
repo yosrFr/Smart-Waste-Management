@@ -48,6 +48,14 @@ export const selectIsAdmin = createSelector(
 );
 
 /**
+ * Vérifie si l'utilisateur est employé
+ */
+export const selectIsEmployee = createSelector(
+  selectUserRole,
+  (role) => role === 'EMPLOYE'
+);
+
+/**
  * Sélectionne l'état de chargement
  */
 export const selectAuthLoading = createSelector(
@@ -56,7 +64,7 @@ export const selectAuthLoading = createSelector(
 );
 
 /**
- * Sélectionne l'erreur
+ * Sélectionne l'erreur d'authentification
  */
 export const selectAuthError = createSelector(
   selectAuthState,
