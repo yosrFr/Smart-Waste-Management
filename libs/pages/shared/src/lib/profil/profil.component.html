@@ -1,3 +1,4 @@
+<!-- Page header -->
 <lib-page-header
   [title]="'Mon profil'"
   [subtitle]="'Informations de votre compte'"
@@ -8,7 +9,11 @@
   </button>
 </lib-page-header>
 
-<div class="profil-container" *ngIf="currentUser$ | async as user">
+<!-- Profil -->
+<div
+  class="profil-container"
+  *ngIf="currentUser$ | async as user; else loading"
+>
   <!-- Carte informations personnelles -->
   <mat-card>
     <mat-card-header>
@@ -101,3 +106,7 @@
     </mat-card-content>
   </mat-card>
 </div>
+<!-- Loading spinner si le chargement du profil prend un certain temps -->
+<ng-template #loading>
+  <lib-loading-spinner></lib-loading-spinner>
+</ng-template>

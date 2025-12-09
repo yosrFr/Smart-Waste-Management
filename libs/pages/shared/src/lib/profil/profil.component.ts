@@ -18,15 +18,15 @@ import {
   PageHeaderComponent,
   StatusBadgeComponent,
   EnumLabelPipe,
-  ConfirmDialogService,
+  LoadingSpinnerComponent,
 } from '@smart-waste-management/shared/ui';
-import { ProfilFormDialogComponent } from './profil-form-dialog.component';
+import { ProfilFormDialogComponent } from './profil-form-dialog/profil-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 /**
  * Composant page Profil
- * Affiche les informations de l'utilisateur connecté
+ * Affiche les informations de l'utilisateur connecté, modifier le profil et changer le mot de passe
  */
 @Component({
   selector: 'lib-profil',
@@ -41,6 +41,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     PageHeaderComponent,
     StatusBadgeComponent,
     EnumLabelPipe,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './profil.component.html',
   styleUrl: './profil.component.css',
@@ -50,7 +51,6 @@ export class ProfilComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
-  private confirmDialogService = inject(ConfirmDialogService);
 
   currentUser$: Observable<Utilisateur | null>;
   isEmployee = false;
@@ -61,6 +61,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
     this.currentUser$ = this.store.select(selectCurrentUser);
   }
 
+  /** Initialise le composant et vérifie si l'utilisateur est employé */
   ngOnInit(): void {
     this.currentUser$.subscribe((user) => {
       this.isEmployee = user?.role === 'EMPLOYE';
@@ -68,14 +69,18 @@ export class ProfilComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Vérifie si l'utilisateur est un employé
+   * Vérifie si l'utilisateur est de type employé
+   * @param user utilisateur à tester
+   * @returns true si l'utilisateur est un employé
    */
   isEmploye(user: Utilisateur): user is Employe {
     return 'disponibilite' in user;
   }
 
   /**
-   * Retourne la couleur du badge de disponibilité
+   * Retourne la couleur du badge en fonction de la disponibilité
+   * @param disponibilite État de disponibilité de l'employé
+   * @returns 'success' | 'warning' | 'default' qui désignent la couleur
    */
   getDisponibiliteColor(
     disponibilite: string
@@ -90,6 +95,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Ouvre le dialogue pour modifier le profil */
   editProfile(): void {
     const dialogRef = this.dialog.open(ProfilFormDialogComponent, {
       width: '700px',
@@ -109,9 +115,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
         }
       });
   }
-  /**
-   * Navigue vers la page de changement de mot de passe
-   */
+  /** Navigue vers la page de changement de mot de passe */
   changePassword(): void {
     this.router.navigate(['/auth/change-password']);
   }
