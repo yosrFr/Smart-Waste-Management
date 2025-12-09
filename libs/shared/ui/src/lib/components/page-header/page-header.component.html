@@ -1,5 +1,6 @@
 <div class="page-header">
   <div class="header-left">
+    <!-- Afficher le bouton de retour -->
     <button
       *ngIf="showBack"
       mat-icon-button
@@ -8,6 +9,7 @@
     >
       <mat-icon>arrow_back</mat-icon>
     </button>
+    <!-- Sous titre de la page -->
     <div class="header-text">
       <p *ngIf="subtitle" class="page-subtitle">{{ subtitle }}</p>
     </div>
