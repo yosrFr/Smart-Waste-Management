@@ -6,11 +6,17 @@ import { map, catchError, switchMap } from 'rxjs/operators';
 import * as TourneesActions from './tournees.actions';
 import { TourneeService } from '../../services/tournee.service';
 
+/**
+ * Effects pour la gestion des tournées
+ */
 @Injectable()
 export class TourneeEffects {
   private actions$ = inject(Actions);
   private tourneeService = inject(TourneeService);
 
+  /**
+   * Charger les tournées
+   */
   loadTournees$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TourneesActions.loadTournees),

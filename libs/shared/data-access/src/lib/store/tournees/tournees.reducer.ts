@@ -11,15 +11,21 @@ export interface TourneeState {
   loading: boolean;
   error: string | null;
 }
-
+/**
+ * État initial des tournées
+ */
 export const initialTourneeState: TourneeState = {
   tournees: [],
   loading: false,
   error: null,
 };
 
+/**
+ * Reducer pour les tournées
+ */
 export const tourneeReducer = createReducer(
   initialTourneeState,
+  // Loading des tournées
   on(TourneesActions.loadTournees, (state) => ({
     ...state,
     loading: true,
@@ -34,6 +40,7 @@ export const tourneeReducer = createReducer(
     error,
     loading: false,
   })),
+  // Mise à jour de la position d'un véhicule dans une tournée
   on(TourneesActions.updateTourneePosition, (state, { id, position }) => ({
     ...state,
     tournees: state.tournees.map((t) =>
