@@ -2,13 +2,7 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  map,
-  take,
-  switchMap,
-  filter,
-  distinctUntilChanged,
-} from 'rxjs/operators';
+import { map, take, switchMap, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
   selectIsAuthenticated,
@@ -18,6 +12,16 @@ import {
 
 /**
  * Guard pour protéger les routes nécessitant une authentification
+ * Fonctionne de la manière suivante :
+ * 1. Vérifie dans le store si l'utilisateur est déjà authentifié
+ * 2. Si oui, renvoie true pour autoriser l'accès
+ * 3. Sinon, vérifie si un token existe dans le localStorage
+ *    - Si aucun token, redirige immédiatement vers /auth/login
+ *    - Si un token existe, tente de recharger l'utilisateur courant
+ * 4. Attend la fin du chargement (loading = false), puis :
+ *    - Si l'utilisateur est authentifié après la recharge, renvoie true
+ *    - Sinon, redirige vers /auth/login
+ * @returns true si l'utilisateur est authentifié, sinon false et redirection
  */
 export const authGuard: CanActivateFn = () => {
   const store = inject(Store);
@@ -26,21 +30,23 @@ export const authGuard: CanActivateFn = () => {
   return store.select(selectIsAuthenticated).pipe(
     take(1),
     switchMap((isAuthenticated) => {
+      // Si l'utilisateur est déjà authentifié
       if (isAuthenticated) {
         return of(true);
       }
 
       const token = localStorage.getItem('token');
       if (!token) {
-        // Redirige immédiatement sans créer d'historique
+        // Aucun token trouvé : redirection immédiate vers la page de login
         router.navigate(['/auth/login'], { replaceUrl: true });
         return of(false);
       }
 
-      // We have a token but the store is not yet authenticated - try to rehydrate
+      // Un token existe mais le store n'est pas encore authentifié
+      // On tente de recharger l'utilisateur
       store.dispatch(loadCurrentUser());
 
-      // Wait for loading to finish, then allow or deny based on final auth state
+      // Attendre la fin du chargement, puis autoriser ou refuser l'accès
       return store.select(selectAuthLoading).pipe(
         filter((loading) => !loading),
         take(1),
@@ -49,11 +55,11 @@ export const authGuard: CanActivateFn = () => {
             take(1),
             map((isAuth) => {
               if (!isAuth) {
-                // Redirige immédiatement sans créer d'historique
+                // Après tentative de rechargement, l'utilisateur n'est pas authentifié
                 router.navigate(['/auth/login'], { replaceUrl: true });
                 return false;
               }
-              return true;
+              return true; // Authentification réussie
             })
           )
         )

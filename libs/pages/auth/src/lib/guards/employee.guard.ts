@@ -6,7 +6,12 @@ import { map, take } from 'rxjs/operators';
 import { selectUserRole } from '@smart-waste-management/shared/data-access';
 
 /**
- * Guard pour protéger les routes employé
+ *
+ * Guard pour protéger les routes réservées aux employés
+ * Vérifie le rôle de l'utilisateur dans le store.
+ * - Si le rôle est 'EMPLOYE', l'accès est autorisé.
+ * - Sinon, redirige vers '/admin/dashboard'
+ * @returns true si l'utilisateur est employé, ou une UrlTree pour rediriger
  */
 export const employeeGuard: CanActivateFn = () => {
   const store = inject(Store);
