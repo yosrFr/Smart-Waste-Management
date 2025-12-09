@@ -46,7 +46,7 @@
           </span>
         </div>
       </button>
-
+      <!-- Dans le cas où il n'y a pas de notification -->
       <div
         *ngIf="(recentNotifications$ | async)?.length === 0"
         class="no-notifications"
@@ -56,6 +56,7 @@
       </div>
     </div>
 
+    <!-- Pour ce déplacer à la page de notifications -->
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="goToNotifications()">
       <mat-icon>list</mat-icon>
@@ -109,6 +110,7 @@
 
   <!-- Menu déroulant Utilisateur -->
   <mat-menu #userMenu="matMenu">
+    <!-- Informations sur l'utilisateur -->
     <ng-container *ngIf="currentUser$ | async as user">
       <div class="user-info">
         <p class="user-name">
@@ -121,15 +123,18 @@
       </div>
     </ng-container>
     <mat-divider></mat-divider>
+    <!-- Bouton pour ce déplacer à la page du profil -->
     <button mat-menu-item (click)="goToProfile()">
       <mat-icon>person</mat-icon>
       <span>Voir profil</span>
     </button>
+    <!-- Bouton pour ce déplacer à la page de changement de mot de passe-->
     <button mat-menu-item (click)="goToChangePassword()">
       <mat-icon>lock</mat-icon>
       <span>Changer mot de passe</span>
     </button>
     <mat-divider></mat-divider>
+    <!-- Bouton de Logout -->
     <button mat-menu-item (click)="onLogout()">
       <mat-icon color="warn">logout</mat-icon>
       <span>Déconnexion</span>

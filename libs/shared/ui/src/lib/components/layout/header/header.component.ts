@@ -6,10 +6,8 @@ import {
   OnInit,
   inject,
   ViewChild,
-  HostListener,
 } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,7 +17,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { filter, map, Observable, Subscription } from 'rxjs';
 import {
   selectCurrentUser,
   selectRecentNotifications,
@@ -53,9 +51,6 @@ import { DateRelativePipe, EnumLabelPipe } from '../../../pipes';
   styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit {
-  /** Titre de la page actuelle */
-  pageTitle = 'Dashboard';
-
   /** Événement pour toggle le sidebar */
   @Output() toggleSidebar = new EventEmitter<void>();
 
@@ -68,10 +63,14 @@ export class HeaderComponent implements OnInit {
   /** Thème actuel */
   currentTheme: ThemeMode = 'light';
 
+  /** Titre de la page actuelle */
+  pageTitle = '';
+
   private store = inject(Store);
   private router = inject(Router);
-  private activatedRoute = inject(ActivatedRoute);
   private themeService = inject(ThemeService);
+
+  private routerSubscription?: Subscription;
 
   @ViewChild('notificationTrigger') notificationTrigger?: MatMenuTrigger;
   @ViewChild('themeTrigger') themeTrigger?: MatMenuTrigger;
@@ -87,24 +86,43 @@ export class HeaderComponent implements OnInit {
     this.themeService.theme$.subscribe((theme) => {
       this.currentTheme = theme;
     });
-    // Met à jour le titre de la page en fonction du route data ou de l'URL
-    // Use NavigationEnd with setTimeout to ensure route tree is updated
-    this.router.events
-      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+
+    // Mise à jour initiale du titre au chargement
+    this.pageTitle = this.getDeepestTitle(this.router.routerState.root) || '';
+
+    // Ensuite, mise à jour à chaque changement de route
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        // Use setTimeout to allow Angular to update the route tree
-        setTimeout(() => {
-          const titleFromData = this.getTitleFromRouteData();
-          if (titleFromData) {
-            this.pageTitle = titleFromData;
-          } else {
-            const url = this.router.url;
-            this.pageTitle = this.computeTitleFromUrl(url);
-          }
-        }, 0);
+        this.pageTitle =
+          this.getDeepestTitle(this.router.routerState.root) || '';
       });
   }
 
+  /**
+   * Fonction récursive pour obtenir la route la plus profonde
+   * @param route route actuelle
+   * @returns titre de la route la plus profonde ou null
+   */
+  private getDeepestTitle(route: ActivatedRoute): string | null {
+    if (route.snapshot.data && route.snapshot.data['title']) {
+      return route.snapshot.data['title'];
+    }
+
+    for (const child of route.children) {
+      const title = this.getDeepestTitle(child);
+      if (title) {
+        return title;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Ferme tous les menus ouverts, à l’exception de celui éventuellement spécifié
+   * @param except Le menu à laisser ouvert
+   */
   private closeAllMenusExcept(except?: 'notification' | 'theme' | 'user') {
     if (except !== 'notification' && this.notificationTrigger?.menuOpen) {
       this.notificationTrigger.closeMenu();
@@ -117,9 +135,11 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  // Called when a menu is opened by MatMenuTrigger
+  /**
+   * Gère l’ouverture d’un menu en fermant tous les autres
+   * @param menu Le menu qui vient d’être ouvert
+   */
   onMenuOpened(menu: 'notification' | 'theme' | 'user'): void {
-    // Close other menus once this one opens
     this.closeAllMenusExcept(menu);
   }
 
@@ -170,53 +190,5 @@ export class HeaderComponent implements OnInit {
    */
   onLogout(): void {
     this.store.dispatch(logout());
-  }
-
-  /**
-   * Met à jour le titre de la page
-   */
-  setPageTitle(title: string): void {
-    this.pageTitle = title;
-  }
-
-  private getTitleFromRouteData(): string | null {
-    let route = this.activatedRoute;
-    // Traverse to the deepest child route
-    while (route.firstChild) {
-      route = route.firstChild;
-    }
-    // Check current route's data
-    const snapshot = route.snapshot;
-    if (snapshot && snapshot.data && snapshot.data['title']) {
-      return snapshot.data['title'];
-    }
-    return null;
-  }
-
-  private computeTitleFromUrl(url: string): string {
-    if (!url || url === '/' || url === '/auth/login') return 'Dashboard';
-    // Remove query params and hash
-    const clean = url.split('?')[0].split('#')[0];
-    const parts = clean.split('/').filter(Boolean);
-    if (parts.length === 0) return 'Dashboard';
-    // Use the last segment as page key
-    const last = parts[parts.length - 1];
-    // Map common routes to nicer titles
-    const map: Record<string, string> = {
-      dashboard: 'Dashboard',
-      'points-collecte': 'Points de collecte',
-      vehicules: 'Véhicules',
-      employes: 'Employés',
-      tournees: 'Tournées',
-      profil: 'Profil',
-      notifications: 'Notifications',
-      'mes-tournees': 'Mes tournées',
-      login: 'Connexion',
-    };
-
-    if (map[last]) return map[last];
-
-    // Fallback: convert kebab-case / snake_case to Title Case
-    return last.replace(/[-_]/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
   }
 }
