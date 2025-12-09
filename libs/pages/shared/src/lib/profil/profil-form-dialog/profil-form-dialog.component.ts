@@ -29,6 +29,9 @@ interface EmployeDialogData {
   employe: Employe | Administrateur | null;
 }
 
+/**
+ * Composant dialog pour éditer le profil d'un utilisateur (employé ou administrateur)
+ */
 @Component({
   selector: 'lib-employe-form-dialog',
   standalone: true,
@@ -51,19 +54,22 @@ export class ProfilFormDialogComponent {
   private fb = inject(FormBuilder);
   private store = inject(Store);
   private dialogRef = inject(MatDialogRef<ProfilFormDialogComponent>);
+  /** Données passées au dialog (employé ou administrateur) */
   readonly data = inject(MAT_DIALOG_DATA) as EmployeDialogData;
 
+  /** Formulaire réactif pour les informations de l'utilisateur */
   form: FormGroup;
   isEmployeRole = true;
   currentUser: Utilisateur | null = null;
 
   constructor() {
+    /** Récupère l'utilisateur courant depuis le store */
     this.store.select(selectCurrentUser).subscribe((user) => {
       this.currentUser = user;
     });
 
     const employe = this.data.employe;
-
+    /** Initialise le formulaire avec les valeurs de l'utilisateur passé ou du courant */
     this.form = this.fb.group({
       nom: [employe?.nom || this.currentUser?.nom],
       prenom: [employe?.prenom || this.currentUser?.prenom],
@@ -73,6 +79,9 @@ export class ProfilFormDialogComponent {
     });
   }
 
+  /**
+   * Soumet le formulaire si valide et ferme le dialog
+   */
   onSubmit(): void {
     if (!this.form.valid) return;
 
@@ -90,6 +99,9 @@ export class ProfilFormDialogComponent {
     this.dialogRef.close(true);
   }
 
+  /**
+   * Annule l'édition et ferme le dialog
+   */
   onCancel(): void {
     this.dialogRef.close(false);
   }
