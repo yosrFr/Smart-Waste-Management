@@ -17,6 +17,10 @@ export class MapChooserDialogComponent {
 
   private dialogRef = inject(MatDialogRef<MapChooserDialogComponent>);
 
+  /**
+   * Prend un point sur la carte et renvoie ses coordonnées
+   * @param pos la latitude et longitude selectionner
+   */
   onPosSelected(pos: { latitude: number; longitude: number }) {
     this.chosen = { lat: pos.latitude, lng: pos.longitude };
   }
