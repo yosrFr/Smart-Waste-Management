@@ -25,6 +25,8 @@ import {
 
 /**
  * Composant page de connexion
+ * Gère le formulaire de login, la soumission et l'affichage des erreurs
+ * Les redirections après login réussi sont gérées via les effets NgRx
  */
 @Component({
   selector: 'lib-login',
@@ -43,36 +45,45 @@ import {
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  /** FormBuilder injecté pour créer les formulaires réactifs */
   private fb = inject(FormBuilder);
+
+  /** Store NgRx injecté pour dispatcher des actions et sélectionner l'état */
   private store = inject(Store);
 
+  /** Formulaire login */
   loginForm: FormGroup;
+
+  /** Masquer ou afficher le mot de passe */
   hidePassword = true;
 
+  /** Observable indiquant si l'authentification est en cours */
   loading$: Observable<boolean>;
+
+  /** Observable contenant les erreurs liées à l'authentification */
   error$: Observable<string | null>;
+
+  /** Observable indiquant si l'utilisateurs est déjà authentifié */
   isAuthenticated$: Observable<boolean>;
 
   private destroy$ = new Subject<void>();
 
   constructor() {
+    // INitialisation du formulaire de login avec validation
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       motDePasse: ['', [Validators.required]],
     });
 
+    // Sélection des observables depuis le store
     this.loading$ = this.store.select(selectAuthLoading);
     this.error$ = this.store.select(selectAuthError);
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
   }
 
   ngOnInit(): void {
-    // Redirige si déjà authentifié
-    this.isAuthenticated$.pipe(takeUntil(this.destroy$)).subscribe((isAuth) => {
-      if (isAuth) {
-        // La redirection sera gérée par l'effect après login
-      }
-    });
+    // Si l'utilisateur est déjà authentifié, la redirection est gérée par l'effet loginSuccess$
+    this.isAuthenticated$.pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   ngOnDestroy(): void {
