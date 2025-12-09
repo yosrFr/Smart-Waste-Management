@@ -6,11 +6,17 @@ import { map, catchError, switchMap } from 'rxjs/operators';
 import * as VehiculesActions from './vehicules.actions';
 import { VehiculeService } from '../../services/vehicule.service';
 
+/**
+ * Effects pour la gestion des véhicules
+ */
 @Injectable()
 export class VehiculeEffects {
   private actions$ = inject(Actions);
   private vehiculeService = inject(VehiculeService);
 
+  /**
+   * Charger les véhicules
+   */
   loadVehicules$ = createEffect(() =>
     this.actions$.pipe(
       ofType(VehiculesActions.loadVehicules),
@@ -27,6 +33,9 @@ export class VehiculeEffects {
     )
   );
 
+  /**
+   * Créer un véhicule
+   */
   createVehicule$ = createEffect(() =>
     this.actions$.pipe(
       ofType(VehiculesActions.createVehicule),
@@ -36,13 +45,16 @@ export class VehiculeEffects {
             VehiculesActions.createVehiculeSuccess({ vehicule })
           ),
           catchError((error) =>
-            of(VehiculesActions.loadVehiculesFailure({ error: error.message }))
+            of(VehiculesActions.createVehiculeFailure({ error: error.message }))
           )
         )
       )
     )
   );
 
+  /**
+   * Mettre à jour un véhicule
+   */
   updateVehicule$ = createEffect(() =>
     this.actions$.pipe(
       ofType(VehiculesActions.updateVehicule),
@@ -52,13 +64,16 @@ export class VehiculeEffects {
             VehiculesActions.updateVehiculeSuccess({ vehicule })
           ),
           catchError((error) =>
-            of(VehiculesActions.loadVehiculesFailure({ error: error.message }))
+            of(VehiculesActions.UpdateVehiculeFailure({ error: error.message }))
           )
         )
       )
     )
   );
 
+  /**
+   * Supprimer un véhicule
+   */
   deleteVehicule$ = createEffect(() =>
     this.actions$.pipe(
       ofType(VehiculesActions.deleteVehicule),
@@ -66,7 +81,7 @@ export class VehiculeEffects {
         this.vehiculeService.delete(id).pipe(
           map(() => VehiculesActions.deleteVehiculeSuccess({ id })),
           catchError((error) =>
-            of(VehiculesActions.loadVehiculesFailure({ error: error.message }))
+            of(VehiculesActions.deleteVehiculeFailure({ error: error.message }))
           )
         )
       )

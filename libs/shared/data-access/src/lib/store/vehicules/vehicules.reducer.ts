@@ -12,14 +12,21 @@ export interface VehiculeState {
   error: string | null;
 }
 
+/**
+ * État initial des véhicules
+ */
 export const initialVehiculeState: VehiculeState = {
   vehicules: [],
   loading: false,
   error: null,
 };
 
+/**
+ * Reducer pour les véhicules
+ */
 export const vehiculeReducer = createReducer(
   initialVehiculeState,
+  // Loading des véhicules
   on(VehiculesActions.loadVehicules, (state) => ({
     ...state,
     loading: true,
@@ -34,22 +41,36 @@ export const vehiculeReducer = createReducer(
     error,
     loading: false,
   })),
+  // Création d'un véhicule
   on(VehiculesActions.createVehiculeSuccess, (state, { vehicule }) => ({
     ...state,
     vehicules: [...state.vehicules, vehicule],
   })),
+  on(VehiculesActions.createVehiculeFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  })),
+  // Mise à jour d'un véhicule
   on(VehiculesActions.updateVehiculeSuccess, (state, { vehicule }) => ({
     ...state,
     vehicules: state.vehicules.map((v) =>
       v.id === vehicule.id ? vehicule : v
     ),
   })),
+  on(VehiculesActions.UpdateVehiculeFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  })),
+  // Suppression d'un véhicule
   on(VehiculesActions.deleteVehiculeSuccess, (state, { id }) => ({
     ...state,
     vehicules: state.vehicules.filter((v) => v.id !== id),
   })),
-  on(VehiculesActions.updateVehiculeStatut, (state, { id, statut }) => ({
+  on(VehiculesActions.deleteVehiculeFailure, (state, { error }) => ({
     ...state,
-    vehicules: state.vehicules.map((v) => (v.id === id ? { ...v, statut } : v)),
+    error,
+    loading: false,
   }))
 );
