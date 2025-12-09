@@ -6,11 +6,17 @@ import { map, catchError, switchMap, startWith } from 'rxjs/operators';
 import * as PointsCollecteActions from './points-de-collecte.actions';
 import { PointCollecteService } from '../../services/point-de-collecte.service';
 
+/**
+ * Effects pour la gestion des points de collecte
+ */
 @Injectable()
 export class PointCollecteEffects {
   private actions$ = inject(Actions);
   private pointCollecteService = inject(PointCollecteService);
 
+  /**
+   * Charger les points de collecte
+   */
   loadPointsCollecte$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PointsCollecteActions.loadPointsCollecte),
@@ -31,6 +37,9 @@ export class PointCollecteEffects {
     )
   );
 
+  /**
+   * Créer un point de collecte
+   */
   createPointCollecte$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PointsCollecteActions.createPointCollecte),
@@ -41,7 +50,7 @@ export class PointCollecteEffects {
           ),
           catchError((error) =>
             of(
-              PointsCollecteActions.loadPointsCollecteFailure({
+              PointsCollecteActions.createPointCollecteFailure({
                 error: error.message,
               })
             )
@@ -51,6 +60,9 @@ export class PointCollecteEffects {
     )
   );
 
+  /**
+   * Mettre à jour un point de collecte
+   */
   updatePointCollecte$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PointsCollecteActions.updatePointCollecte),
@@ -61,7 +73,7 @@ export class PointCollecteEffects {
           ),
           catchError((error) =>
             of(
-              PointsCollecteActions.loadPointsCollecteFailure({
+              PointsCollecteActions.updatePointCollecteFailure({
                 error: error.message,
               })
             )
@@ -71,6 +83,9 @@ export class PointCollecteEffects {
     )
   );
 
+  /**
+   * Supprimer un point de collecte
+   */
   deletePointCollecte$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PointsCollecteActions.deletePointCollecte),
@@ -79,7 +94,7 @@ export class PointCollecteEffects {
           map(() => PointsCollecteActions.deletePointCollecteSuccess({ id })),
           catchError((error) =>
             of(
-              PointsCollecteActions.loadPointsCollecteFailure({
+              PointsCollecteActions.deletePointCollecteFailure({
                 error: error.message,
               })
             )
@@ -100,7 +115,13 @@ export class PointCollecteEffects {
           map((points) =>
             PointsCollecteActions.refreshPointsCollecteSuccess({ points })
           ),
-          catchError(() => of({ type: 'NO_ACTION' }))
+          catchError((error) =>
+            of(
+              PointsCollecteActions.refreshPointsCollecteFailure({
+                error: error.message,
+              })
+            )
+          )
         )
       )
     )
