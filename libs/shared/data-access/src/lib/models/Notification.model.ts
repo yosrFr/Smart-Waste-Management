@@ -23,7 +23,7 @@ export interface NotificationConteneurPleinDetails {
   // Type de dechet du conteneur plein
   typeConteneur: TypeDechet;
   // État actuel du conteneur (plein, endommagé, normal, supprimé)
-  etat: EtatConteneur;
+  etatConteneur: EtatConteneur;
 }
 
 /**
@@ -62,7 +62,7 @@ export interface NotificationVehiculeEnPanneDetails {
  * Notification de véhicule en panne
  */
 export interface NotificationVehiculeEnPanne extends NotificationBase {
-  type: TypeNotif.PANNE;
+  type: TypeNotif.PANNE_VEHICULE;
   details: NotificationVehiculeEnPanneDetails;
 }
 
@@ -113,18 +113,3 @@ export type AppNotification =
   | NotificationVehiculeEnPanne
   | NotificationIncident
   | NotificationNouvelleTache;
-
-/**
- * DTO pour créer une notification
- */
-export interface CreateNotificationDto {
-  type: TypeNotif;
-  date: string;
-  description?: string;
-  details:
-    | NotificationConteneurPleinDetails
-    | NotificationConteneurEndommageDetails
-    | NotificationVehiculeEnPanneDetails
-    | NotificationIncidentDetails
-    | NotificationNouvelleTacheDetails;
-}

@@ -42,6 +42,8 @@ export interface Employe extends Utilisateur {
   disponibilite: Disponibilite;
   /** Numéro de permis de conduire */
   numPermis: string;
+
+  tourneeIds?: string[];
 }
 
 /**

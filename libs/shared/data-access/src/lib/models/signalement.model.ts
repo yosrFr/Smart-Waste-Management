@@ -5,8 +5,8 @@ import { GeoPoint } from '../interfaces';
  * DTO pour signaler un conteneur endommagé
  */
 export interface SignalerEndommageDto {
-  localisation: GeoPoint;
-  typeDechet: TypeDechet;
+  localisation?: GeoPoint;
+  typeDechet?: TypeDechet;
 }
 
 /**

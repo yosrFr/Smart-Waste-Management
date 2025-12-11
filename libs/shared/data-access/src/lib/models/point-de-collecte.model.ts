@@ -9,9 +9,11 @@ export interface PointDeCollecte {
   /** Niveau de remplissage de conteneur en pourcent (0-100%) */
   niveauRemplissage: number;
   /** Etat actuel du conteneur */
-  etat: EtatConteneur;
+  etatConteneur: EtatConteneur;
   /** Capacité d'un conteneur en Kg */
-  capacite: number;
+  CAPACITE: number;
+
+  tourneesIds: string[];
 }
 /**
  * DTO pour la création d'un point de collecte
@@ -20,7 +22,7 @@ export interface CreatePointCollecteDto {
   localisation: GeoPoint;
   typeDechet: TypeDechet;
   /** État initial (par défaut NORMAL) */
-  etat?: EtatConteneur;
+  etatConteneur?: EtatConteneur;
   /** Niveau initial (par défaut 0) */
   niveauRemplissage?: number;
   capacite: number;
