@@ -54,7 +54,7 @@ export class EnumLabelPipe implements PipeTransform {
     TypeNotif: {
       [TypeNotif.PLEIN]: 'Conteneur plein',
       [TypeNotif.ENDOMMAGE]: 'Conteneur endommagé',
-      [TypeNotif.PANNE]: 'Véhicule en panne',
+      [TypeNotif.PANNE_VEHICULE]: 'Véhicule en panne',
       [TypeNotif.INCIDENT]: 'Incident sur le trajet',
       [TypeNotif.NOUVELLE_TACHE]: 'Nouvelle tâche',
     },

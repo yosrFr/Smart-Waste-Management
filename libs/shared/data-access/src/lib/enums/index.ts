@@ -15,7 +15,7 @@ export enum StatutVehicule {
   // Véhicule n'existe plus dans le garage
   INACTIF = 'INACTIF',
   // Véhicule en cours de réparation
-  EN_REPARATION = 'EN_REPARTION',
+  EN_REPARATION = 'EN_REPARATION',
   // Véhicule actuellement en mission
   EN_MISSION = 'EN_MISSION',
 }
@@ -74,7 +74,7 @@ export enum TypeNotif {
   // Un conteneur est endommagé
   ENDOMMAGE = 'ENDOMMAGE',
   // Une véhicule est en panne
-  PANNE = 'PANNE',
+  PANNE_VEHICULE = 'PANNE_VEHICULE',
   // Un incident a été signalé
   INCIDENT = 'INCIDENT',
   // Un conteneur est plein
