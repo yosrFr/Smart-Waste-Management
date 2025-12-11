@@ -1,13 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   SignalerEndommageDto,
   SignalerVehiculePanneDto,
   SignalerIncidentDto,
 } from '../models';
 import { NotificationService } from './notification.service';
-import { TypeNotif } from '../enums';
+import { HttpClient } from '@angular/common/http';
 
 /**
  * Service pour gérer les signalements des employés
@@ -17,69 +17,47 @@ import { TypeNotif } from '../enums';
   providedIn: 'root',
 })
 export class SignalementService {
+  private apiUrl = '/api/notifications';
+
+  constructor(private http: HttpClient) {}
+
   private notificationService = inject(NotificationService);
 
   /**
    * Signale un conteneur endommagé
    * @param dto Données du signalement
-   * @returns Observable vide
+   * @returns Observable émettant la notification créée par le backend
    */
-  signalerConteneur(dto: SignalerEndommageDto): Observable<void> {
-    // Crée une notification pour l'admin
-    this.notificationService
-      .create({
-        type: TypeNotif.ENDOMMAGE,
-        date: new Date().toISOString(),
-        description: `Conteneur endommagé signalé: ${dto.typeDechet}`,
-        details: {
-          localisation: dto.localisation,
-          typeConteneur: dto.typeDechet,
-        },
-      })
-      .subscribe();
-
-    return of(undefined);
+  signalerConteneur(dto: SignalerEndommageDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/endommage`, {
+      localisation: dto.localisation,
+      typeConteneur: dto.typeDechet,
+      date: new Date().toISOString(),
+    });
   }
 
   /**
    * Signale un véhicule en panne
    * @param dto Données du signalement
-   * @returns Observable vide
+   * @returns Observable émettant la notification créée par le backend
    */
-  signalerVehicule(dto: SignalerVehiculePanneDto): Observable<void> {
-    // Crée une notification pour l'admin
-    this.notificationService
-      .create({
-        type: TypeNotif.PANNE,
-        date: new Date().toISOString(),
-        description: `Véhicule en panne: ${dto.matricule}`,
-        details: {
-          matricule: dto.matricule,
-          typeDechet: dto.typeDechet,
-        },
-      })
-      .subscribe();
-
-    return of(undefined);
+  signalerVehicule(dto: SignalerVehiculePanneDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/panne-vehicule`, {
+      matricule: dto.matricule,
+      typeDechet: dto.typeDechet,
+      date: new Date().toISOString(),
+    });
   }
 
   /**
    * Signale un incident sur le trajet
    * @param dto Données du signalement
-   * @returns Observable vide
+   * @returns Observable émettant la notification créée par le backend
    */
-  signalerIncident(dto: SignalerIncidentDto): Observable<void> {
-    // Crée une notification pour l'admin
-    this.notificationService
-      .create({
-        type: TypeNotif.INCIDENT,
-        date: new Date().toISOString(),
-        details: {
-          localisation: dto.localisation,
-        },
-      })
-      .subscribe();
-
-    return of(undefined);
+  signalerIncident(dto: SignalerIncidentDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/incident`, {
+      localisation: dto.localisation,
+      date: new Date().toISOString(),
+    });
   }
 }

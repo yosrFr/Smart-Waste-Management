@@ -1,13 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   PointDeCollecte,
   CreatePointCollecteDto,
   UpdatePointCollecteDto,
 } from '../models';
-import { EtatConteneur, TypeDechet } from '../enums';
-import { generateNextId } from '@smart-waste-management/shared/utils';
+import { HttpClient } from '@angular/common/http';
 
 /**
  * Service pour gérer les points de collecte
@@ -16,51 +15,9 @@ import { generateNextId } from '@smart-waste-management/shared/utils';
   providedIn: 'root',
 })
 export class PointCollecteService {
-  /**
-   * Points de collecte mockés
-   */
-  private mockPoints: PointDeCollecte[] = [
-    {
-      id: '1',
-      localisation: { latitude: 34.7065, longitude: 10.7487 },
-      typeDechet: TypeDechet.PLASTIQUE,
-      etat: EtatConteneur.NORMAL,
-      niveauRemplissage: 45,
-      capacite: 50,
-    },
-    {
-      id: '2',
-      localisation: { latitude: 34.7189, longitude: 10.1658 },
-      typeDechet: TypeDechet.ALIMENTAIRE,
-      etat: EtatConteneur.PLEIN,
-      niveauRemplissage: 95,
-      capacite: 50,
-    },
-    {
-      id: '3',
-      localisation: { latitude: 36.7987, longitude: 10.1897 },
-      typeDechet: TypeDechet.VERRE,
-      etat: EtatConteneur.NORMAL,
-      niveauRemplissage: 30,
-      capacite: 50,
-    },
-    {
-      id: '4',
-      localisation: { latitude: 34.7312, longitude: 10.1542 },
-      typeDechet: TypeDechet.PLASTIQUE,
-      etat: EtatConteneur.ENDOMMAGE,
-      niveauRemplissage: 60,
-      capacite: 50,
-    },
-    {
-      id: '5',
-      localisation: { latitude: 34.7156, longitude: 10.1723 },
-      typeDechet: TypeDechet.METAUX,
-      etat: EtatConteneur.NORMAL,
-      niveauRemplissage: 20,
-      capacite: 50,
-    },
-  ];
+  private apiUrl = '/api/points';
+
+  constructor(private http: HttpClient) {}
 
   /**
    * Récupère tous les points de collecte
@@ -68,10 +25,7 @@ export class PointCollecteService {
    * @returns Observable avec la liste des points
    */
   getAll(): Observable<PointDeCollecte[]> {
-    // Simule la mise à jour des niveaux (backend fait ça en réalité)
-    this.simulateNiveauUpdate();
-
-    return of([...this.mockPoints]);
+    return this.http.get<PointDeCollecte[]>(`${this.apiUrl}/all`);
   }
 
   /**
@@ -80,17 +34,7 @@ export class PointCollecteService {
    * @returns Observable avec le point créé
    */
   create(dto: CreatePointCollecteDto): Observable<PointDeCollecte> {
-    const point: PointDeCollecte = {
-      id: generateNextId(this.mockPoints),
-      localisation: dto.localisation,
-      typeDechet: dto.typeDechet,
-      etat: EtatConteneur.NORMAL,
-      niveauRemplissage: 0,
-      capacite: dto.capacite,
-    };
-
-    this.mockPoints.push(point);
-    return of(point);
+    return this.http.post<PointDeCollecte>(`${this.apiUrl}/add`, dto);
   }
 
   /**
@@ -100,17 +44,7 @@ export class PointCollecteService {
    * @returns Observable avec le point mis à jour
    */
   update(id: string, dto: UpdatePointCollecteDto): Observable<PointDeCollecte> {
-    const index = this.mockPoints.findIndex((p) => p.id === id);
-    if (index === -1) {
-      throw new Error('Point de collecte introuvable');
-    }
-
-    this.mockPoints[index] = {
-      ...this.mockPoints[index],
-      ...dto,
-    };
-
-    return of(this.mockPoints[index]);
+    return this.http.put<PointDeCollecte>(`${this.apiUrl}/update/${id}`, dto);
   }
 
   /**
@@ -119,25 +53,6 @@ export class PointCollecteService {
    * @returns Observable vide
    */
   delete(id: string): Observable<void> {
-    this.mockPoints = this.mockPoints.filter((p) => p.id !== id);
-    return of(undefined);
-  }
-
-  /**
-   * Simule la mise à jour aléatoire des niveaux de remplissage
-   * En réalité, c'est le backend qui fait ça avec les capteurs IoT
-   */
-  private simulateNiveauUpdate(): void {
-    this.mockPoints = this.mockPoints.map((point) => {
-      // Augmente aléatoirement le niveau (0 à 5%)
-      const increase = Math.random() * 5;
-      const newNiveau = Math.min(100, point.niveauRemplissage + increase);
-      const newEtat = newNiveau >= 80 ? EtatConteneur.PLEIN : point.etat;
-      return {
-        ...point,
-        niveauRemplissage: newNiveau,
-        etat: newEtat,
-      };
-    });
+    return this.http.put<void>(`${this.apiUrl}/delete/${id}`, {});
   }
 }
