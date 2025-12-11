@@ -103,27 +103,4 @@ export class PointCollecteEffects {
       )
     )
   );
-
-  /**
-   * Rafraîchit les niveaux toutes les 5 secondes
-   */
-  refreshPointsCollecte$ = createEffect(() =>
-    interval(5000).pipe(
-      startWith(0),
-      switchMap(() =>
-        this.pointCollecteService.getAll().pipe(
-          map((points) =>
-            PointsCollecteActions.refreshPointsCollecteSuccess({ points })
-          ),
-          catchError((error) =>
-            of(
-              PointsCollecteActions.refreshPointsCollecteFailure({
-                error: error.message,
-              })
-            )
-          )
-        )
-      )
-    )
-  );
 }

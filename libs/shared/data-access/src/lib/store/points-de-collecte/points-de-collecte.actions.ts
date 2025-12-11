@@ -102,26 +102,3 @@ export const deletePointCollecteFailure = createAction(
   '[Points Collecte] Delete Failure',
   props<{ error: string }>()
 );
-
-/**
- * Rafraîchir les niveaux de remplissage des points de collecte
- */
-export const refreshPointsCollecte = createAction(
-  '[Points Collecte] Refresh Levels'
-);
-
-/**
- * Niveaux de remplissage rafraîchis avec succès
- */
-export const refreshPointsCollecteSuccess = createAction(
-  '[Points Collecte] Refresh Levels Success',
-  props<{ points: PointDeCollecte[] }>()
-);
-
-/**
- * Échec du rafraîchissement des niveaux de remplissage
- */
-export const refreshPointsCollecteFailure = createAction(
-  '[Points Collecte] Refresh Levels Failure',
-  props<{ error: string }>()
-);

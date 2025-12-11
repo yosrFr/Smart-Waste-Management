@@ -54,15 +54,12 @@ export const notificationReducer = createReducer(
     loading: false,
     error,
   })),
-  // Création d'une notification
-  on(
-    NotificationActions.createNotificationSuccess,
-    (state, { notification }) => ({
-      ...state,
-      notifications: [notification, ...state.notifications],
-    })
-  ),
-  on(NotificationActions.createNotificationFailure, (state, { error }) => ({
+  // Signalements qui créent des notifications
+  on(NotificationActions.signalementSuccess, (state, { notification }) => ({
+    ...state,
+    notifications: [notification, ...state.notifications],
+  })),
+  on(NotificationActions.signalementFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,

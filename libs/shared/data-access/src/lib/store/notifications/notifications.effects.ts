@@ -4,7 +4,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import * as NotificationActions from './notifications.actions';
-import { NotificationService } from '../../services';
+import { NotificationService, SignalementService } from '../../services';
+import { AppNotification } from '../../models';
 
 /**
  * Effects pour les notifications
@@ -13,6 +14,7 @@ import { NotificationService } from '../../services';
 export class NotificationEffects {
   private actions$ = inject(Actions);
   private notificationService = inject(NotificationService);
+  private signalementService = inject(SignalementService);
 
   /**
    * Charge toutes les notifications
@@ -38,22 +40,56 @@ export class NotificationEffects {
   );
 
   /**
-   * Crée une nouvelle notification
+   * Signaler un conteneur endommagé
    */
-  createNotification$ = createEffect(() =>
+  signalerConteneur$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(NotificationActions.createNotification),
+      ofType(NotificationActions.signalerConteneur),
       switchMap(({ dto }) =>
-        this.notificationService.create(dto).pipe(
-          map((notification) =>
-            NotificationActions.createNotificationSuccess({ notification })
+        this.signalementService.signalerConteneur(dto).pipe(
+          map((notification: AppNotification) =>
+            NotificationActions.signalementSuccess({ notification })
           ),
           catchError((error) =>
-            of(
-              NotificationActions.createNotificationFailure({
-                error: error.message,
-              })
-            )
+            of(NotificationActions.signalementFailure({ error: error.message }))
+          )
+        )
+      )
+    )
+  );
+
+  /**
+   * Signaler un véhicule en panne
+   */
+  signalerVehicule$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(NotificationActions.signalerVehicule),
+      switchMap(({ dto }) =>
+        this.signalementService.signalerVehicule(dto).pipe(
+          map((notification: AppNotification) =>
+            NotificationActions.signalementSuccess({ notification })
+          ),
+          catchError((error) =>
+            of(NotificationActions.signalementFailure({ error: error.message }))
+          )
+        )
+      )
+    )
+  );
+
+  /**
+   * Signaler un incident
+   */
+  signalerIncident$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(NotificationActions.signalerIncident),
+      switchMap(({ dto }) =>
+        this.signalementService.signalerIncident(dto).pipe(
+          map((notification: AppNotification) =>
+            NotificationActions.signalementSuccess({ notification })
+          ),
+          catchError((error) =>
+            of(NotificationActions.signalementFailure({ error: error.message }))
           )
         )
       )

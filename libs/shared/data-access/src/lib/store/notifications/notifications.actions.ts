@@ -1,6 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { createAction, props } from '@ngrx/store';
-import { CreateNotificationDto, AppNotification } from '../../models';
+import {
+  AppNotification,
+  SignalerEndommageDto,
+  SignalerIncidentDto,
+  SignalerVehiculePanneDto,
+} from '../../models';
 
 /**
  * Actions pour les notifications
@@ -30,26 +35,42 @@ export const loadNotificationsFailure = createAction(
 );
 
 /**
- * Créer une notification
+ * Signaler un conteneur endommagé
  */
-export const createNotification = createAction(
-  '[Notifications] Create Notification',
-  props<{ dto: CreateNotificationDto }>()
+export const signalerConteneur = createAction(
+  '[Signalement] Signaler Conteneur',
+  props<{ dto: SignalerEndommageDto }>()
 );
 
 /**
- * Notification créée avec succès
+ * Signaler un véhicule en panne
  */
-export const createNotificationSuccess = createAction(
-  '[Notifications] Create Notification Success',
+export const signalerVehicule = createAction(
+  '[Signalement] Signaler Véhicule',
+  props<{ dto: SignalerVehiculePanneDto }>()
+);
+
+/**
+ * Signaler un incident sur le trajet
+ */
+export const signalerIncident = createAction(
+  '[Signalement] Signaler Incident',
+  props<{ dto: SignalerIncidentDto }>()
+);
+
+/**
+ * Signalements réussis
+ */
+export const signalementSuccess = createAction(
+  '[Signalement] Signalement Success',
   props<{ notification: AppNotification }>()
 );
 
 /**
- * Action de création de notification échouée
+ * Echec de signalement
  */
-export const createNotificationFailure = createAction(
-  '[Notifications] Create Notification Failure',
+export const signalementFailure = createAction(
+  '[Signalement] Signalement Failure',
   props<{ error: string }>()
 );
 

@@ -43,7 +43,7 @@ export const selectTourneeById = (id: string) =>
 const filterByToday = (tournees: any[]) => {
   if (!tournees) return [];
   const today = new Date().toISOString().split('T')[0];
-  return tournees.filter((t) => t.dateDeb.startsWith(today));
+  return tournees.filter((t) => t.dateDebut.startsWith(today));
 };
 
 /**

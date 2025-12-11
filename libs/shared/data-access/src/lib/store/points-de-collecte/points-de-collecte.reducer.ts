@@ -70,21 +70,5 @@ export const pointCollecteReducer = createReducer(
     ...state,
     error,
     loading: false,
-  })),
-  // Mettre à jour le niveau de remplisaage d'un point de collecte
-  on(
-    PointsCollecteActions.refreshPointsCollecteSuccess,
-    (state, { points }) => ({
-      ...state,
-      points,
-    })
-  ),
-  on(
-    PointsCollecteActions.refreshPointsCollecteFailure,
-    (state, { error }) => ({
-      ...state,
-      error,
-      loading: false,
-    })
-  )
+  }))
 );

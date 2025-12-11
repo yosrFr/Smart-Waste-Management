@@ -37,12 +37,12 @@ export const selectPointsCollecteById = (id: string) =>
 
 /**
  * Selectionne les points de collecte par état
- * @param etat etat du conteneur
+ * @param etatConteneur etatConteneur du conteneur
  * @returns liste des points avec cet état
  */
-export const selectPointsCollecteByEtat = (etat: EtatConteneur) =>
+export const selectPointsCollecteByEtat = (etatConteneur: EtatConteneur) =>
   createSelector(selectAllPointsCollecte, (points) =>
-    points.filter((p) => p.etat === etat)
+    points.filter((p) => p.etatConteneur === etatConteneur)
   );
 
 /**
@@ -57,10 +57,10 @@ export const selectPointsByTypeDechet = (typeDechet: TypeDechet) =>
 
 // export const selectPointsPleins = createSelector(
 //   selectAllPointsCollecte,
-//   (points) => points.filter((p) => p.etat === EtatConteneur.PLEIN)
+//   (points) => points.filter((p) => p.etatConteneur === EtatConteneur.PLEIN)
 // );
 
 // export const selectPointsEndommages = createSelector(
 //   selectAllPointsCollecte,
-//   (points) => points.filter((p) => p.etat === EtatConteneur.ENDOMMAGE)
+//   (points) => points.filter((p) => p.etatConteneur === EtatConteneur.ENDOMMAGE)
 // );
