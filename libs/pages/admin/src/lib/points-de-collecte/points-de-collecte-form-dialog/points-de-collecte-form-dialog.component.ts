@@ -75,7 +75,7 @@ export class PointCollecteFormDialogComponent {
         [Validators.required],
       ],
       typeDechet: [this.data?.typeDechet || '', [Validators.required]],
-      etat: [this.data?.etat || EtatConteneur.NORMAL],
+      etatConteneur: [this.data?.etatConteneur || EtatConteneur.NORMAL],
       niveauRemplissage: [
         this.data?.niveauRemplissage || 0,
         [Validators.min(0), Validators.max(100)],

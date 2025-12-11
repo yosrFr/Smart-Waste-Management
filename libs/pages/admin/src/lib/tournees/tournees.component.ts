@@ -23,7 +23,7 @@ import {
   Tab,
   LoadingSpinnerComponent,
 } from '@smart-waste-management/shared/ui';
-import { TourneeMapDialogComponent } from './tournee-map-dialog.component';
+import { TourneeMapDialogComponent } from './tournee-map-dialog/tournee-map-dialog.component';
 
 /**
  * Composant page Tournées Admin
@@ -67,7 +67,7 @@ export class TourneesComponent implements OnInit, OnDestroy {
       key: 'dateDebut',
       label: 'Date début',
       sortable: true,
-      customTemplate: (t) => new Date(t.dateDeb).toLocaleString('fr-FR'),
+      customTemplate: (t) => new Date(t.dateDebut).toLocaleString('fr-FR'),
     },
     {
       key: 'dateFin',

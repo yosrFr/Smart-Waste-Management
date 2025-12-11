@@ -150,7 +150,7 @@ export class HeaderComponent implements OnInit {
     const icons: Record<string, string> = {
       PLEIN: 'delete',
       ENDOMMAGE: 'warning',
-      PANNE: 'build_circle',
+      PANNE_VEHICULE: 'build_circle',
       INCIDENT: 'error',
       NOUVELLE_TACHE: 'assignment',
     };

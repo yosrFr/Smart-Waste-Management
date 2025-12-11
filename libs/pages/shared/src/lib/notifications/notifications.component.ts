@@ -113,7 +113,7 @@ export class NotificationsComponent implements OnInit {
     const icons: Record<TypeNotif, string> = {
       PLEIN: 'delete',
       ENDOMMAGE: 'warning',
-      PANNE: 'build_circle',
+      PANNE_VEHICULE: 'build_circle',
       INCIDENT: 'error',
       NOUVELLE_TACHE: 'assignment',
     };
@@ -142,7 +142,7 @@ export class NotificationsComponent implements OnInit {
       case TypeNotif.ENDOMMAGE:
         return (notification as unknown as NotificationConteneurEndommage)
           .details;
-      case TypeNotif.PANNE:
+      case TypeNotif.PANNE_VEHICULE:
         return (notification as unknown as NotificationVehiculeEnPanne).details;
       case TypeNotif.INCIDENT:
         return (notification as unknown as NotificationIncident).details;
@@ -177,7 +177,7 @@ export class NotificationsComponent implements OnInit {
   isVehicule(
     notification: AppNotification
   ): notification is NotificationVehiculeEnPanne {
-    return notification.type === TypeNotif.PANNE;
+    return notification.type === TypeNotif.PANNE_VEHICULE;
   }
 
   /**

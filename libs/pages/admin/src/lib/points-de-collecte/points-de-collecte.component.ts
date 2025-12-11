@@ -27,7 +27,7 @@ import {
   LoadingSpinnerComponent,
   ConfirmDialogService,
 } from '@smart-waste-management/shared/ui';
-import { PointCollecteFormDialogComponent } from './points-de-collecte-form-dialog.component';
+import { PointCollecteFormDialogComponent } from './points-de-collecte-form-dialog/points-de-collecte-form-dialog.component';
 import * as L from 'leaflet';
 
 /**
@@ -88,7 +88,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
       customTemplate: (point) => `${point.niveauRemplissage.toFixed(0)}%`,
     },
     {
-      key: 'etat',
+      key: 'etatConteneur',
       label: 'État',
       sortable: true,
     },
@@ -163,7 +163,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
     return `
       Type: ${point.typeDechet}
       Niveau: ${point.niveauRemplissage.toFixed(0)}%
-      État: ${point.etat}
+      État: ${point.etatConteneur}
     `;
   }
 
@@ -196,9 +196,9 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
     let color = base;
 
     // Adjust by state intensity
-    if (point.etat === EtatConteneur.ENDOMMAGE) {
+    if (point.etatConteneur === EtatConteneur.ENDOMMAGE) {
       color = '#000';
-    } else if (point.etat === EtatConteneur.PLEIN) {
+    } else if (point.etatConteneur === EtatConteneur.PLEIN) {
       color = darker;
     } else {
       color = base;

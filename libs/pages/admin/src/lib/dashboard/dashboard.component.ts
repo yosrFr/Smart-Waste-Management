@@ -11,20 +11,17 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   selectAllPointsCollecte,
-  selectPointsPleins,
-  selectPointsEndommages,
-  selectVehiculesActifs,
-  selectVehiculesEnReparation,
-  selectVehiculesEnMission,
-  selectTourneesAujourdhui,
-  selectTourneesEnCours,
-  selectTourneesTerminees,
-  selectTourneesNonCommencees,
   loadPointsCollecte,
   loadVehicules,
   loadTournees,
   Tournee,
   StatutTournee,
+  selectPointsCollecteByEtat,
+  EtatConteneur,
+  selectVehiculesByStatut,
+  StatutVehicule,
+  selectTourneesAujourdhui,
+  selectTourneesAujourdhuiByStatut,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -32,7 +29,7 @@ import {
   StatusBadgeComponent,
   EnumLabelPipe,
 } from '@smart-waste-management/shared/ui';
-import { TourneeMapDialogComponent } from '../tournees/tournee-map-dialog.component';
+import { TourneeMapDialogComponent } from '../tournees/tournee-map-dialog/tournee-map-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 /**
@@ -59,8 +56,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private router = inject(Router);
   private dialog = inject(MatDialog);
-
-  @Output() pageTitle = 'Dashboard';
 
   // Statistiques
   totalPoints = 0;
@@ -94,35 +89,35 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
 
     this.store
-      .select(selectPointsPleins)
+      .select(selectPointsCollecteByEtat(EtatConteneur.PLEIN))
       .pipe(takeUntil(this.destroy$))
       .subscribe((points) => {
         this.pointsPleins = points.length;
       });
 
     this.store
-      .select(selectPointsEndommages)
+      .select(selectPointsCollecteByEtat(EtatConteneur.ENDOMMAGE))
       .pipe(takeUntil(this.destroy$))
       .subscribe((points) => {
         this.pointsEndommages = points.length;
       });
 
     this.store
-      .select(selectVehiculesActifs)
+      .select(selectVehiculesByStatut(StatutVehicule.ACTIF))
       .pipe(takeUntil(this.destroy$))
       .subscribe((vehicules) => {
         this.vehiculesDisponibles = vehicules.length;
       });
 
     this.store
-      .select(selectVehiculesEnReparation)
+      .select(selectVehiculesByStatut(StatutVehicule.EN_REPARATION))
       .pipe(takeUntil(this.destroy$))
       .subscribe((vehicules) => {
         this.vehiculesEnReparation = vehicules.length;
       });
 
     this.store
-      .select(selectVehiculesEnMission)
+      .select(selectVehiculesByStatut(StatutVehicule.EN_MISSION))
       .pipe(takeUntil(this.destroy$))
       .subscribe((vehicules) => {
         this.vehiculesEnMission = vehicules.length;
@@ -136,33 +131,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
 
     this.store
-      .select(selectTourneesEnCours)
+      .select(selectTourneesAujourdhuiByStatut(StatutTournee.EN_COURS))
       .pipe(takeUntil(this.destroy$))
       .subscribe((tournees) => {
-        const today = new Date().toISOString().split('T')[0];
-        this.tourneesEnCours = tournees.filter((t) =>
-          t.dateDeb.startsWith(today)
-        ).length;
+        this.tourneesEnCours = tournees.length;
       });
 
     this.store
-      .select(selectTourneesTerminees)
+      .select(selectTourneesAujourdhuiByStatut(StatutTournee.TERMINEE))
       .pipe(takeUntil(this.destroy$))
       .subscribe((tournees) => {
-        const today = new Date().toISOString().split('T')[0];
-        this.tourneesTerminees = tournees.filter((t) =>
-          t.dateDeb.startsWith(today)
-        ).length;
+        this.tourneesTerminees = tournees.length;
       });
 
     this.store
-      .select(selectTourneesNonCommencees)
+      .select(selectTourneesAujourdhuiByStatut(StatutTournee.NON_COMMENCEE))
       .pipe(takeUntil(this.destroy$))
       .subscribe((tournees) => {
-        const today = new Date().toISOString().split('T')[0];
-        this.tourneesNonCommencees = tournees.filter((t) =>
-          t.dateDeb.startsWith(today)
-        ).length;
+        this.tourneesNonCommencees = tournees.length;
       });
   }
 

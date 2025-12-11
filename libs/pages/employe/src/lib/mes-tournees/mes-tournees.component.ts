@@ -75,7 +75,7 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
       key: 'dateDebut',
       label: 'Date début',
       sortable: true,
-      customTemplate: (t) => new Date(t.dateDeb).toLocaleString('fr-FR'),
+      customTemplate: (t) => new Date(t.dateDebut).toLocaleString('fr-FR'),
     },
     {
       key: 'dateFin',

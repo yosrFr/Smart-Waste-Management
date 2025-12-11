@@ -26,7 +26,7 @@ import {
   LoadingSpinnerComponent,
   ConfirmDialogService,
 } from '@smart-waste-management/shared/ui';
-import { VehiculeFormDialogComponent } from './vehicule-form-dialog.component';
+import { VehiculeFormDialogComponent } from './vehicule-form-dialog/vehicule-form-dialog.component';
 
 /**
  * Composant page Véhicules

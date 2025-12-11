@@ -29,7 +29,7 @@ import {
   LoadingSpinnerComponent,
   ConfirmDialogService,
 } from '@smart-waste-management/shared/ui';
-import { EmployeFormDialogComponent } from './employe-form-dialog.component';
+import { EmployeFormDialogComponent } from './employe-form-dialog/employe-form-dialog.component';
 
 /**
  * Composant page Employés
