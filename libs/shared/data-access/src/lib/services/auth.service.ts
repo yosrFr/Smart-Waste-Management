@@ -33,7 +33,7 @@ export class AuthService {
       tel: '+216 20 123 456',
       dateNais: '1985-05-15',
       role: Role.ADMIN,
-      actif: true,
+      active: true,
     },
     {
       id: '2',
@@ -44,7 +44,7 @@ export class AuthService {
       tel: '+216 20 234 567',
       dateNais: '1990-03-20',
       role: Role.EMPLOYE,
-      actif: true,
+      active: true,
       disponibilite: Disponibilite.DISPONIBLE,
       numPermis: 'B123456',
     },
@@ -57,7 +57,7 @@ export class AuthService {
       tel: '+216 20 345 678',
       dateNais: '1988-07-10',
       role: Role.EMPLOYE,
-      actif: true,
+      active: true,
       disponibilite: Disponibilite.EN_MISSION,
       numPermis: 'B234567',
     },
@@ -81,7 +81,7 @@ export class AuthService {
           throw new Error('Email ou mot de passe incorrect');
         }
 
-        if (!user.actif) {
+        if (!user.active) {
           throw new Error('Compte désactivé');
         }
 

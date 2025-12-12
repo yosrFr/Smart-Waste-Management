@@ -116,11 +116,11 @@ export class EmployesComponent implements OnInit, OnDestroy {
         // Filtre par disponibilité et actif === true
         this.employesDisponibles = employes.filter(
           (e) =>
-            e.disponibilite === Disponibilite.DISPONIBLE && e.actif === true
+            e.disponibilite === Disponibilite.DISPONIBLE && e.active === true
         );
         this.employesEnMission = employes.filter(
           (e) =>
-            e.disponibilite === Disponibilite.EN_MISSION && e.actif === true
+            e.disponibilite === Disponibilite.EN_MISSION && e.active === true
         );
       });
 
@@ -129,7 +129,7 @@ export class EmployesComponent implements OnInit, OnDestroy {
       .select(selectAllEmployes)
       .pipe(takeUntil(this.destroy$))
       .subscribe((allUsers) => {
-        this.employesInactifs = allUsers.filter((u) => u.actif === false);
+        this.employesInactifs = allUsers.filter((u) => u.active === false);
       });
 
     this.store
@@ -137,8 +137,8 @@ export class EmployesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((admins) => {
         // Only show active admins in the Admin tab; inactive admins appear in the INACTIF tab
-        this.totalAdmins = admins.filter((a) => a.actif === true).length;
-        this.admin = admins.filter((a) => a.actif === true);
+        this.totalAdmins = admins.filter((a) => a.active === true).length;
+        this.admin = admins.filter((a) => a.active === true);
       });
   }
 

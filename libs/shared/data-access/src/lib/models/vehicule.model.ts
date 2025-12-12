@@ -4,26 +4,26 @@ import { StatutVehicule, TypeDechet } from '../enums';
  * Modèle pour un véhicule de collecte
  */
 export interface Vehicule {
-  id?: string;
-  matricule?: string;
-  marque?: string;
+  id: string;
+  matricule: string;
+  marque: string;
   /** Capacité maximale en kg */
-  capaciteMax?: number;
+  capacite: number;
   /** Poids à vide en kg */
-  poidsVide?: number;
+  poidsVide: number;
   /** Statut actuel de véhicule */
-  statut?: StatutVehicule;
+  statutVehicule: StatutVehicule;
   /** Type de déchet aue le véhicule collecte */
-  typeDechet?: TypeDechet;
+  typeDechet: TypeDechet;
 
-  tourneesIds?: string[];
+  tourneesIds: string[];
 }
 
 /**
  * DTO pour la création/modification d'un véhicule
  */
 export interface CreateVehiculeDto {
-  capaciteMax: number;
+  capacite: number;
   marque: string;
   matricule: string;
   poidsVide: number;

@@ -109,7 +109,7 @@ export class EmployeFormDialogComponent implements OnInit {
           ? employe.disponibilite
           : Disponibilite.DISPONIBLE,
       ],
-      actif: [employe?.actif ?? true],
+      actif: [employe?.active ?? true],
       numPermis: [
         isEmploye && employe && 'numPermis' in employe ? employe.numPermis : '',
       ],

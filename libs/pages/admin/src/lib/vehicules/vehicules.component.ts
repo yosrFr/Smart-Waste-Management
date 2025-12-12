@@ -74,16 +74,16 @@ export class VehiculesComponent implements OnInit, OnDestroy {
     { key: 'matricule', label: 'Matricule', sortable: true },
     { key: 'marque', label: 'Marque', sortable: true },
     {
-      key: 'capaciteMax',
+      key: 'capacite',
       label: 'Capacité max (kg)',
       sortable: true,
-      customTemplate: (v) => v.capaciteMax.toLocaleString(),
+      customTemplate: (v) => v.capacite?.toString() || '',
     },
     {
       key: 'poidsVide',
       label: 'Poids vide (kg)',
       sortable: true,
-      customTemplate: (v) => v.poidsVide.toLocaleString(),
+      customTemplate: (v) => v.poidsVide?.toString() || '',
     },
     { key: 'typeDechet', label: 'Type de déchet', sortable: true },
   ];
@@ -116,18 +116,20 @@ export class VehiculesComponent implements OnInit, OnDestroy {
 
         // Filtre par statut
         this.vehiculesActifs = vehicules.filter(
-          (v) => v.statut === StatutVehicule.ACTIF
+          (v) => v.statutVehicule === StatutVehicule.ACTIF
         );
         this.vehiculesInactifs = vehicules.filter(
-          (v) => v.statut === StatutVehicule.INACTIF
+          (v) => v.statutVehicule === StatutVehicule.INACTIF
         );
         this.vehiculesEnReparation = vehicules.filter(
-          (v) => v.statut === StatutVehicule.EN_REPARATION
+          (v) => v.statutVehicule === StatutVehicule.EN_REPARATION
         );
         this.vehiculesEnMission = vehicules.filter(
-          (v) => v.statut === StatutVehicule.EN_MISSION
+          (v) => v.statutVehicule === StatutVehicule.EN_MISSION
         );
       });
+
+    console.log(this.totalVehicules);
   }
 
   ngOnDestroy(): void {

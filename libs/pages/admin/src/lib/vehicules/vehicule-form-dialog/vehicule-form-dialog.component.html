@@ -20,11 +20,11 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Capacité maximale (kg)</mat-label>
-      <input matInput type="number" formControlName="capaciteMax" />
-      <mat-error *ngIf="form.get('capaciteMax')?.hasError('required')">
+      <input matInput type="number" formControlName="capacite" />
+      <mat-error *ngIf="form.get('capacite')?.hasError('required')">
         La capacité est requise
       </mat-error>
-      <mat-error *ngIf="form.get('capaciteMax')?.hasError('min')">
+      <mat-error *ngIf="form.get('capacite')?.hasError('min')">
         La capacité doit être positive
       </mat-error>
     </mat-form-field>

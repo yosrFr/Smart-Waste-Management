@@ -55,8 +55,8 @@ export class VehiculeFormDialogComponent {
     this.form = this.fb.group({
       matricule: [this.data?.matricule || '', [Validators.required]],
       marque: [this.data?.marque || '', [Validators.required]],
-      capaciteMax: [
-        this.data?.capaciteMax || '',
+      capacite: [
+        this.data?.capacite || '',
         [Validators.required, Validators.min(1)],
       ],
       poidsVide: [

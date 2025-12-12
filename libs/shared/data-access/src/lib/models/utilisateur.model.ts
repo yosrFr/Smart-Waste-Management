@@ -14,7 +14,7 @@ export interface Utilisateur {
   /** Date de naissance */
   dateNais: string;
   /** Indique si l'emplyé travaille encore dans le société */
-  actif: boolean;
+  active: boolean;
   /** Mot de passe hashé */
   motDePasse: string;
   /**
