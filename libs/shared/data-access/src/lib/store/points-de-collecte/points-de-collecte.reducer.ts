@@ -2,6 +2,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { PointDeCollecte } from '../../models';
 import * as PointsCollecteActions from './points-de-collecte.actions';
+import { EtatConteneur } from '../../enums';
 
 /**
  * Etat des points de collecte
@@ -64,7 +65,9 @@ export const pointCollecteReducer = createReducer(
   // Suppression d'un point de collecte
   on(PointsCollecteActions.deletePointCollecteSuccess, (state, { id }) => ({
     ...state,
-    points: state.points.filter((p) => p.id !== id),
+    points: state.points.map((p) =>
+      p.id === id ? { ...p, etatConteneur: EtatConteneur.SUPPRIME } : p
+    ),
   })),
   on(PointsCollecteActions.deletePointCollecteFailure, (state, { error }) => ({
     ...state,

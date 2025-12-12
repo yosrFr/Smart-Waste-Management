@@ -1,10 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   PointDeCollecte,
   CreatePointCollecteDto,
   UpdatePointCollecteDto,
+  Vehicule,
 } from '../models';
 import { HttpClient } from '@angular/common/http';
 
@@ -17,7 +18,7 @@ import { HttpClient } from '@angular/common/http';
 export class PointCollecteService {
   private apiUrl = '/api/points';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   /**
    * Récupère tous les points de collecte
@@ -52,7 +53,7 @@ export class PointCollecteService {
    * @param id ID du point à supprimer
    * @returns Observable vide
    */
-  delete(id: string): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/delete/${id}`, {});
+  delete(id: string): Observable<Vehicule> {
+    return this.http.put<Vehicule>(`${this.apiUrl}/delete/${id}`, {});
   }
 }
