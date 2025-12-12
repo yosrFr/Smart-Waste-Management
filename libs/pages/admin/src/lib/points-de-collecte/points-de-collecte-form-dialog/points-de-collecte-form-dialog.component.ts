@@ -75,11 +75,6 @@ export class PointCollecteFormDialogComponent {
         [Validators.required],
       ],
       typeDechet: [this.data?.typeDechet || '', [Validators.required]],
-      etatConteneur: [this.data?.etatConteneur || EtatConteneur.NORMAL],
-      niveauRemplissage: [
-        this.data?.niveauRemplissage || 0,
-        [Validators.min(0), Validators.max(100)],
-      ],
     });
   }
 
@@ -131,7 +126,10 @@ export class PointCollecteFormDialogComponent {
             dto: {
               localisation,
               typeDechet: this.form.value.typeDechet,
-              capacite: 50,
+              capacite: 500,
+              niveauRemplissage: 0,
+              etatConteneur: EtatConteneur.NORMAL,
+              tourneeIds: [],
             },
           })
         );

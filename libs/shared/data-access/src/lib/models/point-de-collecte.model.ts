@@ -21,11 +21,10 @@ export interface PointDeCollecte {
 export interface CreatePointCollecteDto {
   localisation: GeoPoint;
   typeDechet: TypeDechet;
-  /** État initial (par défaut NORMAL) */
-  etatConteneur?: EtatConteneur;
-  /** Niveau initial (par défaut 0) */
-  niveauRemplissage?: number;
+  niveauRemplissage: number;
+  etatConteneur: EtatConteneur;
   capacite: number;
+  tourneeIds: [];
 }
 
 /**
