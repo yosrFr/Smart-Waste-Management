@@ -23,8 +23,7 @@ export class EmployeService {
   private apiUrlAdmins = '/api/administrateurs';
 
   private authService = inject(AuthService);
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   /**
    * Récupère tous les utilisateurs (employés + admins)
@@ -74,7 +73,7 @@ export class EmployeService {
    * @param id ID de l'utilisateur à supprimer
    * @returns Observable vide
    */
-  delete(id: string): Observable<void> {
-    return this.http.put<void>(`${this.apiUrlUser}/${id}`, {});
+  delete(id: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrlUser}/${id}`, {});
   }
 }

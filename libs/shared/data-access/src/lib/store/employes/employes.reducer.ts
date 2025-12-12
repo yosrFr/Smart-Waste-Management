@@ -74,7 +74,9 @@ export const employeReducer = createReducer(
   // Suppression d'un utilisateur
   on(EmployesActions.deleteEmployeSuccess, (state, { id }) => ({
     ...state,
-    employes: state.employes.filter((e) => e.id !== id),
+    employes: state.employes.map((e) =>
+      e.id === id ? { ...e, active: false } : e
+    ),
   })),
   on(EmployesActions.deleteEmployeFailure, (state, { error }) => ({
     ...state,
