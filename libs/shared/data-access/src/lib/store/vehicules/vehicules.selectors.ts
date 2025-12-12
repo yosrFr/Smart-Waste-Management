@@ -42,7 +42,7 @@ export const selectVehiculeById = (id: string) =>
  */
 export const selectVehiculesByStatut = (statut: StatutVehicule) =>
   createSelector(selectAllVehicules, (vehicules) =>
-    vehicules.filter((v) => v.statut === statut)
+    vehicules.filter((v) => v.statutVehicule === statut)
   );
 
 /**

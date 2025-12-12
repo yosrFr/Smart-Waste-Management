@@ -2,6 +2,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { Vehicule } from '../../models';
 import * as VehiculesActions from './vehicules.actions';
+import { StatutVehicule } from '../../enums';
 
 /**
  * État des véhicules
@@ -66,7 +67,9 @@ export const vehiculeReducer = createReducer(
   // Suppression d'un véhicule
   on(VehiculesActions.deleteVehiculeSuccess, (state, { id }) => ({
     ...state,
-    vehicules: state.vehicules.filter((v) => v.id !== id),
+    vehicules: state.vehicules.map((v) =>
+      v.id === id ? { ...v, statutVehicule: StatutVehicule.INACTIF } : v
+    ),
   })),
   on(VehiculesActions.deleteVehiculeFailure, (state, { error }) => ({
     ...state,
