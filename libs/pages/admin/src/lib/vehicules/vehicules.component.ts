@@ -128,8 +128,6 @@ export class VehiculesComponent implements OnInit, OnDestroy {
           (v) => v.statutVehicule === StatutVehicule.EN_MISSION
         );
       });
-
-    console.log(this.totalVehicules);
   }
 
   ngOnDestroy(): void {

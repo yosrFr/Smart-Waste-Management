@@ -20,6 +20,7 @@ import {
   Administrateur,
   Utilisateur,
   selectCurrentUser,
+  updateProfilEmploye,
 } from '@smart-waste-management/shared/data-access';
 
 /**
@@ -71,11 +72,11 @@ export class ProfilFormDialogComponent {
     const employe = this.data.employe;
     /** Initialise le formulaire avec les valeurs de l'utilisateur passé ou du courant */
     this.form = this.fb.group({
-      nom: [employe?.nom || this.currentUser?.nom],
-      prenom: [employe?.prenom || this.currentUser?.prenom],
-      email: [employe?.email || this.currentUser?.email],
-      tel: [employe?.tel || this.currentUser?.tel],
-      dateNaissance: [employe?.dateNais || this.currentUser?.dateNais],
+      nom: [employe?.nom || this.currentUser?.nom || ''],
+      prenom: [employe?.prenom || this.currentUser?.prenom || ''],
+      email: [employe?.email || this.currentUser?.email || ''],
+      tel: [employe?.tel || this.currentUser?.tel || ''],
+      dateNaissance: [employe?.dateNais || this.currentUser?.dateNais || ''],
     });
   }
 
@@ -87,6 +88,9 @@ export class ProfilFormDialogComponent {
 
     const formValue = this.form.value;
 
+    // Vérifie si `this.data.employe` est défini avant d'envoyer l'action
+    if (!this.data.employe) return;
+
     // Edition d'un employé existant
     const dto: any = {
       nom: formValue.nom,
@@ -95,6 +99,8 @@ export class ProfilFormDialogComponent {
       tel: formValue.tel,
       dateNais: formValue.dateNaissance,
     };
+
+    this.store.dispatch(updateProfilEmploye({ id: this.data.employe.id, dto }));
 
     this.dialogRef.close(true);
   }
