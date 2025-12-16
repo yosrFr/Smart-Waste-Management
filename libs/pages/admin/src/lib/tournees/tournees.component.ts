@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   selectAllTournees,
@@ -13,6 +13,8 @@ import {
   loadTournees,
   Tournee,
   StatutTournee,
+  selectTourneesByStatut,
+  loadEmployes,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -50,11 +52,11 @@ export class TourneesComponent implements OnInit, OnDestroy {
 
   totalTournees = 0;
   loading$ = this.store.select(selectTourneesLoading);
-  selectedTabIndex = 0;
 
-  tourneesNonCommencees: Tournee[] = [];
-  tourneesEnCours: Tournee[] = [];
-  tourneesTerminees: Tournee[] = [];
+  tourneesNonCommencees$!: Observable<Tournee[]>;
+  tourneesEnCours$!: Observable<Tournee[]>;
+  tourneesTerminees$!: Observable<Tournee[]>;
+  selectedTabIndex = 0;
 
   tabs: Tab[] = [
     { label: 'Non commencées', value: 'NON_COMMENCEE' },
@@ -67,31 +69,32 @@ export class TourneesComponent implements OnInit, OnDestroy {
       key: 'dateDebut',
       label: 'Date début',
       sortable: true,
-      customTemplate: (t) => new Date(t.dateDebut).toLocaleString('fr-FR'),
+      customTemplate: (t) => t.dateDebut.toLocaleString('fr-FR'),
     },
     {
       key: 'dateFin',
       label: 'Date fin',
       sortable: true,
-      customTemplate: (t) => new Date(t.dateFin).toLocaleString('fr-FR'),
+      customTemplate: (t) => t.dateFin.toLocaleString('fr-FR'),
     },
     {
       key: 'vehicule',
       label: 'Véhicule',
-      customTemplate: (t) => t.vehicule.matricule,
+      customTemplate: (t) => t.vehicule?.matricule || 'N/A',
     },
     {
       key: 'employe',
       label: 'Employé',
-      customTemplate: (t) => `${t.employe.prenom} ${t.employe.nom}`,
+      customTemplate: (t) => `${t.employe?.prenom} ${t.employe?.nom}`,
     },
     {
       key: 'pointsDeCollecte',
       label: 'Points',
-      customTemplate: (t) => `${t.pointsDeCollecte.length} points`,
+      customTemplate: (t) => `${t.pointsDeCollecteIds.length} points`,
     },
   ];
 
+  /** Actions disponibles sur chaque ligne de tableau */
   tableActions: TableAction<Tournee>[] = [
     {
       icon: 'map',
@@ -101,6 +104,7 @@ export class TourneesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.dispatch(loadTournees());
+    this.store.dispatch(loadEmployes());
 
     this.store
       .select(selectAllTournees)
@@ -108,14 +112,14 @@ export class TourneesComponent implements OnInit, OnDestroy {
       .subscribe((tournees) => {
         this.totalTournees = tournees.length;
 
-        this.tourneesNonCommencees = tournees.filter(
-          (t) => t.statut === StatutTournee.NON_COMMENCEE
+        this.tourneesNonCommencees$ = this.store.select(
+          selectTourneesByStatut(StatutTournee.NON_COMMENCEE)
         );
-        this.tourneesEnCours = tournees.filter(
-          (t) => t.statut === StatutTournee.EN_COURS
+        this.tourneesEnCours$ = this.store.select(
+          selectTourneesByStatut(StatutTournee.EN_COURS)
         );
-        this.tourneesTerminees = tournees.filter(
-          (t) => t.statut === StatutTournee.TERMINEE
+        this.tourneesTerminees$ = this.store.select(
+          selectTourneesByStatut(StatutTournee.TERMINEE)
         );
       });
   }
@@ -130,7 +134,7 @@ export class TourneesComponent implements OnInit, OnDestroy {
       width: '90vw',
       height: '80vh',
       maxWidth: '1200px',
-      data: tournee,
+      data: { tournee },
     });
   }
 }
