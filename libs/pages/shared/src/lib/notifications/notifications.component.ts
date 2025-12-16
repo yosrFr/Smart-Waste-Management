@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,10 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { filter, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import {
   selectPaginatedNotifications,
-  selectAllNotifications,
   selectNotificationPageIndex,
   selectNotificationTotalPages,
   setPageIndex,
@@ -18,11 +17,17 @@ import {
   TypeNotif,
   selectNotificationsLoading,
   loadNotifications,
-  NotificationConteneurPlein,
-  NotificationConteneurEndommage,
-  NotificationVehiculeEnPanne,
-  NotificationIncident,
-  NotificationNouvelleTache,
+  selectAppNotifications,
+  selectPointsCollecteEntities,
+  loadPointsCollecte,
+  selectAllPointsCollecte,
+  PointDeCollecte,
+  loadTournees,
+  selectAllTournees,
+  Tournee,
+  selectAllVehicules,
+  loadVehicules,
+  Vehicule,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -59,14 +64,16 @@ import {
  * Page Liste des notifications
  * Affiche toutes les notifications avec pagination, icônes et détails contextuels selon leur type.
  */
-export class NotificationsComponent implements OnInit {
+export class NotificationsComponent implements OnDestroy {
   private store = inject(Store);
+
+  /** Toutes les notifications */
+  allNotifications$: Observable<AppNotification[]> = this.store.select(
+    selectAppNotifications
+  );
 
   /** Notifications paginées */
   paginatedNotifications$: Observable<AppNotification[]>;
-
-  /** Toutes les notifications */
-  allNotifications$: Observable<AppNotification[]>;
 
   /** Index de page actuel */
   pageIndex$: Observable<number>;
@@ -76,27 +83,27 @@ export class NotificationsComponent implements OnInit {
 
   /** Indique si les notifications sont en cours de chargement */
   loading$: Observable<boolean>;
+  private destroy$: Subject<void> = new Subject<void>();
 
   TypeNotif = TypeNotif;
 
   /** Taille fixe d'une page */
   pageSize = 10;
 
+  points: PointDeCollecte[] = [];
+  tournees: Tournee[] = [];
+  vehicules: Vehicule[] = [];
+  totalPoints = 0;
+
   constructor() {
+    // Sélectionner les notifications depuis le store
     this.paginatedNotifications$ = this.store.select(
       selectPaginatedNotifications
     );
-    this.allNotifications$ = this.store.select(selectAllNotifications);
     this.pageIndex$ = this.store.select(selectNotificationPageIndex);
     this.totalPages$ = this.store.select(selectNotificationTotalPages);
     this.loading$ = this.store.select(selectNotificationsLoading);
   }
-
-  /** Charge les notifications au loading du composant */
-  ngOnInit(): void {
-    this.store.dispatch(loadNotifications());
-  }
-
   /**
    * Gère le changement de page
    * @param event Evénement du paginator Material
@@ -105,6 +112,10 @@ export class NotificationsComponent implements OnInit {
     this.store.dispatch(setPageIndex({ pageIndex: event.pageIndex }));
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   /**
    * Retourne l'icône pour un type de notification
    * @param type Type de notification
@@ -128,77 +139,38 @@ export class NotificationsComponent implements OnInit {
     return type.toLowerCase().replace(/_/g, '-');
   }
 
-  /**
-   * Prend une notification de type inconnu
-   * Cherche le type de notification
-   * Retourne les détails de cette notification selon son type
-   * @param notification une notification reçue qu'on ne connait pas son type
-   * @returns Les détails d'un type spécifique de notification
-   */
-  getNotificationDetails(notification: AppNotification) {
-    switch (notification.type) {
-      case TypeNotif.PLEIN:
-        return (notification as unknown as NotificationConteneurPlein).details;
-      case TypeNotif.ENDOMMAGE:
-        return (notification as unknown as NotificationConteneurEndommage)
-          .details;
-      case TypeNotif.PANNE_VEHICULE:
-        return (notification as unknown as NotificationVehiculeEnPanne).details;
-      case TypeNotif.INCIDENT:
-        return (notification as unknown as NotificationIncident).details;
-      case TypeNotif.NOUVELLE_TACHE:
-        return (notification as unknown as NotificationNouvelleTache).details;
-      default:
-        return null;
-    }
+  isPlein(
+    n: AppNotification
+  ): n is Extract<AppNotification, { type: TypeNotif.PLEIN }> {
+    // console.log('isPlein check:', n);
+    return n.type === TypeNotif.PLEIN;
   }
 
-  /**
-   * Type guard : vérifie si la notification concerne un conteneur
-   * @param notification notification reçue qu'on ne connait pas son type
-   * @returns True si la notification de type plein ou endommagé, sinon retourne 0
-   */
-  isConteneur(
-    notification: AppNotification
-  ): notification is
-    | NotificationConteneurPlein
-    | NotificationConteneurEndommage {
-    return (
-      notification.type === TypeNotif.PLEIN ||
-      notification.type === TypeNotif.ENDOMMAGE
-    );
+  isEndommage(
+    n: AppNotification
+  ): n is Extract<AppNotification, { type: TypeNotif.ENDOMMAGE }> {
+    // console.log('isEndommage check:', n);
+    return n.type === TypeNotif.ENDOMMAGE;
   }
 
-  /**
-   * Type guard : notification liée à un véhicule
-   * @param notification notification reçue qu'on ne connait pas son type
-   * @returns True si la notification de type panne, sinon retourne 0
-   */
-  isVehicule(
-    notification: AppNotification
-  ): notification is NotificationVehiculeEnPanne {
-    return notification.type === TypeNotif.PANNE_VEHICULE;
+  isPanneVehicule(
+    n: AppNotification
+  ): n is Extract<AppNotification, { type: TypeNotif.PANNE_VEHICULE }> {
+    // console.log('isPanneVehicule check:', n);
+    return n.type === TypeNotif.PANNE_VEHICULE;
   }
 
-  /**
-   * Type guard : notification liée à un Incident
-   * @param notification notification reçue qu'on ne connait pas son type
-   * @returns True si la notification de type incident, sinon retourne 0
-   */
   isIncident(
-    notification: AppNotification
-  ): notification is NotificationIncident {
-    return notification.type === TypeNotif.INCIDENT;
+    n: AppNotification
+  ): n is Extract<AppNotification, { type: TypeNotif.INCIDENT }> {
+    // console.log('isIncident check:', n);
+    return n.type === TypeNotif.INCIDENT;
   }
 
-  /**
-   * Type guard : notification liée à une tâche
-   * @param notification notification reçue qu'on ne connait pas son type
-   * @returns True si la notification de type nouvelle tâche, sinon retourne 0
-   */
   isNouvelleTache(
-    notification: AppNotification
-  ): notification is NotificationNouvelleTache {
-    return notification.type === TypeNotif.NOUVELLE_TACHE;
+    n: AppNotification
+  ): n is Extract<AppNotification, { type: TypeNotif.NOUVELLE_TACHE }> {
+    // console.log('isNouvelleTache check:', n);
+    return n.type === TypeNotif.NOUVELLE_TACHE;
   }
 }

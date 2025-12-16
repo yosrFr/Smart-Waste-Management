@@ -58,114 +58,107 @@
 
           <!-- Détails spécifiques -->
           <div class="notification-details">
-            <ng-container
-              *ngIf="getNotificationDetails(notification) as details"
-              [ngSwitch]="notification.type"
-            >
-              <!-- Conteneur plein -->
-              <div *ngIf="isConteneur(notification)" class="details-grid">
-                <div class="detail-item">
-                  <mat-icon>location_on</mat-icon>
-                  <span>
-                    {{
-                      notification.details.localisation.latitude
-                        | number : '1.4-4'
-                    }},
-                    {{
-                      notification.details.localisation.longitude
-                        | number : '1.4-4'
-                    }}
-                  </span>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>delete</mat-icon>
-                  <span>{{
-                    notification.details.typeConteneur
-                      | enumLabel : 'TypeDechet'
-                  }}</span>
-                </div>
-                <div
-                  class="detail-item"
-                  *ngIf="notification.type === TypeNotif.PLEIN"
-                >
-                  <mat-icon>show_chart</mat-icon>
-                  <span>{{ notification.details.etatConteneur }}</span>
-                </div>
+            <!-- Conteneur plein -->
+            <div *ngIf="isPlein(notification)" class="details-grid">
+              <div class="detail-item">
+                <mat-icon>location_on</mat-icon>
+                <span>
+                  {{
+                    notification.details.localisation.latitude
+                      | number : '1.4-4'
+                  }},
+                  {{
+                    notification.details.localisation.longitude
+                      | number : '1.4-4'
+                  }}
+                </span>
               </div>
+              <div class="detail-item">
+                <mat-icon>delete</mat-icon>
+                <span>{{
+                  notification.details.typeConteneur | enumLabel : 'TypeDechet'
+                }}</span>
+              </div>
+              <div
+                class="detail-item"
+                *ngIf="notification.type === TypeNotif.PLEIN"
+              >
+                <mat-icon>show_chart</mat-icon>
+                <span>{{ notification.details.niveauRemplissage }}</span>
+              </div>
+            </div>
 
-              <!-- Conteneur endommagé -->
-              <div *ngIf="isConteneur(notification)" class="details-grid">
-                <div class="detail-item">
-                  <mat-icon>location_on</mat-icon>
-                  <span>
-                    {{
-                      notification.details.localisation.latitude
-                        | number : '1.4-4'
-                    }},
-                    {{
-                      notification.details.localisation.longitude
-                        | number : '1.4-4'
-                    }}
-                  </span>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>delete</mat-icon>
-                  <span>{{
-                    notification.details.typeConteneur
-                      | enumLabel : 'TypeDechet'
-                  }}</span>
-                </div>
+            <!-- Conteneur endommagé -->
+            <div *ngIf="isEndommage(notification)" class="details-grid">
+              <div class="detail-item">
+                <mat-icon>location_on</mat-icon>
+                <span>
+                  {{
+                    notification.details.localisation.latitude
+                      | number : '1.4-4'
+                  }},
+                  {{
+                    notification.details.localisation.longitude
+                      | number : '1.4-4'
+                  }}
+                </span>
               </div>
+              <div class="detail-item">
+                <mat-icon>delete</mat-icon>
+                <span>{{
+                  notification.details.typeConteneur | enumLabel : 'TypeDechet'
+                }}</span>
+              </div>
+            </div>
 
-              <!-- Véhicule en panne -->
-              <div *ngIf="isVehicule(notification)" class="details-grid">
-                <div class="detail-item">
-                  <mat-icon>local_shipping</mat-icon>
-                  <span>{{ notification.details.matricule }}</span>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>delete</mat-icon>
-                  <span>{{
-                    notification.details.typeDechet | enumLabel : 'TypeDechet'
-                  }}</span>
-                </div>
+            <!-- Véhicule en panne -->
+            <div *ngIf="isPanneVehicule(notification)" class="details-grid">
+              <div class="detail-item">
+                <mat-icon>local_shipping</mat-icon>
+                <span>{{ notification.details.matricule }}</span>
               </div>
+              <div class="detail-item">
+                <mat-icon>delete</mat-icon>
+                <span>{{
+                  notification.details.typeDechet | enumLabel : 'TypeDechet'
+                }}</span>
+              </div>
+            </div>
 
-              <!-- Incident trajet -->
-              <div *ngIf="isIncident(notification)" class="details-grid">
-                <div class="detail-item">
-                  <mat-icon>location_on</mat-icon>
-                  <span>
-                    {{
-                      notification.details.localisation.latitude
-                        | number : '1.4-4'
-                    }},
-                    {{
-                      notification.details.localisation.longitude
-                        | number : '1.4-4'
-                    }}
-                  </span>
-                </div>
+            <!-- Incident trajet -->
+            <div *ngIf="isIncident(notification)" class="details-grid">
+              <div class="detail-item">
+                <mat-icon>location_on</mat-icon>
+                <span>
+                  {{
+                    notification.details.localisation.latitude
+                      | number : '1.4-4'
+                  }},
+                  {{
+                    notification.details.localisation.longitude
+                      | number : '1.4-4'
+                  }}
+                </span>
               </div>
+            </div>
 
-              <!-- Nouvelle tâche -->
-              <div *ngIf="isNouvelleTache(notification)" class="details-grid">
-                <div class="detail-item">
-                  <mat-icon>event</mat-icon>
-                  <span>{{
-                    notification.details.dateDebut | date : 'dd/MM/yyyy HH:mm'
-                  }}</span>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>local_shipping</mat-icon>
-                  <span>{{ notification.details.vehiculeMatricule }}</span>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>location_on</mat-icon>
-                  <span>{{ notification.details.nombrePoints }} points</span>
-                </div>
+            <!-- Nouvelle tâche -->
+            <div *ngIf="isNouvelleTache(notification)" class="details-grid">
+              <div class="detail-item">
+                <mat-icon>event</mat-icon>
+                <span>{{
+                  notification.details.dateDebut | date : 'dd/MM/yyyy HH:mm'
+                }}</span>
               </div>
-            </ng-container>
+              <div class="detail-item">
+                <mat-icon>local_shipping</mat-icon>
+                <span>{{ notification.details.vehiculeMatricule }}</span>
+              </div>
+              <div class="detail-item">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ notification.details.nbPointCollecte }} points</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
