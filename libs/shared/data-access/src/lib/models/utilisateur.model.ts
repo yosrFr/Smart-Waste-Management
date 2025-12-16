@@ -55,19 +55,22 @@ export interface CreateUtilisateurDto {
   email: string;
   motDePasse: string;
   tel: string;
-  dateNaissance: string;
+  dateNais: string;
   role: Role;
+  active: boolean;
+  // Pour employés seulement
+  disponibilite?: Disponibilite;
   numPermis?: string;
+  tourneesIds?: string[];
 }
 
 /**
  * DTO pour la modification d'un utilisateur
  */
 export interface UpdateUtilisateurDto {
-  role?: Role;
-  email?: string;
-  tel?: string;
-  actif?: boolean;
+  role: Role;
+  email: string;
+  tel: string;
   // Pour employés seulement
   numPermis?: string;
 }
@@ -76,9 +79,9 @@ export interface UpdateUtilisateurDto {
  * DTO pour la modification du profil
  */
 export interface UpdateProfilEmployeDto {
-  nom?: string;
-  prenom?: string;
-  email?: string;
-  tel?: string;
-  dateNaissance?: string;
+  nom: string;
+  prenom: string;
+  email: string;
+  tel: string;
+  dateNaissance: string;
 }

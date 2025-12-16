@@ -10,18 +10,20 @@ import { Vehicule } from './vehicule.model';
 export interface Tournee {
   id: string;
   /** Date et heure de début estimées */
-  dateDebut: string;
+  dateDebut: Date;
   /** Date et heure de fin estimées */
-  dateFin: string;
+  dateFin: Date;
   /** Statut actuel de la tournée */
   statut: StatutTournee;
   /** Véhicule assignée à la tournée */
-  vehicule: Vehicule;
+  vehiculeId: string;
+  vehicule?: Vehicule;
   /** Employé assigné à la tournée */
-  employe: Employe;
+  employeId: string;
+  employe?: Employe;
   /** Liste des points de collecte à visiter */
-  pointsDeCollecte: PointDeCollecte[];
-  pointsDeCollecteIds?: string[];
+  pointsDeCollecte?: PointDeCollecte[];
+  pointsDeCollecteIds: string[];
   /** Position GPS actuelle de véhicule mise à jours en temps réel */
   positionActuelle?: GeoPoint;
 }

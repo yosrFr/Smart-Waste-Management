@@ -1,37 +1,55 @@
-import { EtatConteneur, TypeDechet, TypeNotif } from '../enums';
+import { TypeDechet, TypeNotif } from '../enums';
 import { GeoPoint } from '../interfaces';
 
-/**
- * Modèle de base d'une notification
- */
 export interface NotificationBase {
   id: string;
-  /** Date et heure de création */
   date: string;
-  /** Description de la notification */
   description: string;
-  /** Type de notification */
   type: TypeNotif;
 }
+
+export interface NotificationConteneurPlein extends NotificationBase {
+  type: TypeNotif.PLEIN;
+  pointDeCollecteId: string;
+}
+
+export interface NotificationIncident extends NotificationBase {
+  type: TypeNotif.INCIDENT;
+  localisation: GeoPoint;
+}
+
+export interface NotificationNouvelleTache extends NotificationBase {
+  type: TypeNotif.NOUVELLE_TACHE;
+  tourneeId: string;
+  employeId: string;
+  vehiculeId: string;
+}
+
+export interface NotificationPanneVehicule extends NotificationBase {
+  type: TypeNotif.PANNE_VEHICULE;
+  vehiculeId: string;
+  localisation: GeoPoint;
+}
+
+export interface NotificationConteneurEndommage extends NotificationBase {
+  type: TypeNotif.ENDOMMAGE;
+  pointDeCollecteId: string;
+}
+
+export type ApiNotification =
+  | NotificationConteneurPlein
+  | NotificationConteneurEndommage
+  | NotificationIncident
+  | NotificationPanneVehicule
+  | NotificationNouvelleTache;
 
 /**
  * Détails spécifiques pour une notification de conteneur plein
  */
 export interface NotificationConteneurPleinDetails {
-  // Localisation du conteneur plein
   localisation: GeoPoint;
-  // Type de dechet du conteneur plein
   typeConteneur: TypeDechet;
-  // État actuel du conteneur (plein, endommagé, normal, supprimé)
-  etatConteneur: EtatConteneur;
-}
-
-/**
- * Notification de conteneur plein
- */
-export interface NotificationConteneurPlein extends NotificationBase {
-  type: TypeNotif.PLEIN;
-  details: NotificationConteneurPleinDetails;
+  niveauRemplissage: number;
 }
 
 /**
@@ -43,27 +61,11 @@ export interface NotificationConteneurEndommageDetails {
 }
 
 /**
- * Notification de conteneur endommagé
- */
-export interface NotificationConteneurEndommage extends NotificationBase {
-  type: TypeNotif.ENDOMMAGE;
-  details: NotificationConteneurEndommageDetails;
-}
-
-/**
  * Détails spécifiques pour une notification de véhicule en panne
  */
 export interface NotificationVehiculeEnPanneDetails {
   matricule: string;
   typeDechet: TypeDechet;
-}
-
-/**
- * Notification de véhicule en panne
- */
-export interface NotificationVehiculeEnPanne extends NotificationBase {
-  type: TypeNotif.PANNE_VEHICULE;
-  details: NotificationVehiculeEnPanneDetails;
 }
 
 /**
@@ -74,42 +76,28 @@ export interface NotificationIncidentDetails {
 }
 
 /**
- * Notification d'incident sur le trajet
- */
-export interface NotificationIncident extends NotificationBase {
-  type: TypeNotif.INCIDENT;
-  details: NotificationIncidentDetails;
-}
-
-/**
  * Détails spécifiques pour une notification de nouvelle tâche
  */
 export interface NotificationNouvelleTacheDetails {
-  tourneeId: string;
-  // Date de début estimée de la tournée
-  dateDebut: string;
-  // Date de fin estimée de la tournée
-  dateFin: string;
-  // Matricule du véhicule assigné
+  nbPointCollecte: number;
+  dateDebut: Date;
+  dateFin: Date;
   vehiculeMatricule: string;
-  // Nombre de points de collecte dans la tournée
-  nombrePoints: number;
 }
 
-/**
- * Notification de nouvelle tâche/tournée
- */
-export interface NotificationNouvelleTache extends NotificationBase {
-  type: TypeNotif.NOUVELLE_TACHE;
-  details: NotificationNouvelleTacheDetails;
-}
-
-/**
- * Union type pour toutes les notifications
- */
 export type AppNotification =
-  | NotificationConteneurPlein
-  | NotificationConteneurEndommage
-  | NotificationVehiculeEnPanne
-  | NotificationIncident
-  | NotificationNouvelleTache;
+  | (NotificationConteneurPlein & {
+      details: NotificationConteneurPleinDetails;
+    })
+  | (NotificationConteneurEndommage & {
+      details: NotificationConteneurEndommageDetails;
+    })
+  | (NotificationPanneVehicule & {
+      details: NotificationVehiculeEnPanneDetails;
+    })
+  | (NotificationIncident & {
+      details: NotificationIncidentDetails;
+    })
+  | (NotificationNouvelleTache & {
+      details: NotificationNouvelleTacheDetails;
+    });
