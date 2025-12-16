@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AppNotification } from '../models';
+import { inject, Injectable } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+import { ApiNotification } from '../models';
 import { HttpClient } from '@angular/common/http';
 
 /**
@@ -13,13 +13,17 @@ import { HttpClient } from '@angular/common/http';
 export class NotificationService {
   private apiUrl = '/api/notifications';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   /**
    * Récupère toutes les notifications
    * @returns Observable avec la liste des notifications triées par date
    */
-  getAll(): Observable<AppNotification[]> {
-    return this.http.get<AppNotification[]>(`${this.apiUrl}/all`);
+  getAll(): Observable<ApiNotification[]> {
+    return this.http.get<ApiNotification[]>(`${this.apiUrl}/all`).pipe(
+      tap((response) => {
+        // console.log("Réponse de l'API:", response);
+      })
+    );
   }
 }

@@ -6,8 +6,8 @@ import {
   SignalerVehiculePanneDto,
   SignalerIncidentDto,
 } from '../models';
-import { NotificationService } from './notification.service';
 import { HttpClient } from '@angular/common/http';
+import { TypeNotif } from '../enums';
 
 /**
  * Service pour gérer les signalements des employés
@@ -19,9 +19,7 @@ import { HttpClient } from '@angular/common/http';
 export class SignalementService {
   private apiUrl = '/api/notifications';
 
-  constructor(private http: HttpClient) {}
-
-  private notificationService = inject(NotificationService);
+  private http = inject(HttpClient);
 
   /**
    * Signale un conteneur endommagé
@@ -30,9 +28,10 @@ export class SignalementService {
    */
   signalerConteneur(dto: SignalerEndommageDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/endommage`, {
-      localisation: dto.localisation,
-      typeConteneur: dto.typeDechet,
+      pointDeCollecteId: dto.pointDeCollecteId,
       date: new Date().toISOString(),
+      type: TypeNotif.ENDOMMAGE,
+      description: dto.description,
     });
   }
 
@@ -43,9 +42,11 @@ export class SignalementService {
    */
   signalerVehicule(dto: SignalerVehiculePanneDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/panne-vehicule`, {
-      matricule: dto.matricule,
-      typeDechet: dto.typeDechet,
+      vehiculeId: dto.vehiculeId,
+      localisation: dto.localisation,
       date: new Date().toISOString(),
+      type: TypeNotif.PANNE_VEHICULE,
+      description: dto.description,
     });
   }
 
@@ -58,6 +59,8 @@ export class SignalementService {
     return this.http.post(`${this.apiUrl}/incident`, {
       localisation: dto.localisation,
       date: new Date().toISOString(),
+      type: TypeNotif.INCIDENT,
+      description: dto.description,
     });
   }
 }

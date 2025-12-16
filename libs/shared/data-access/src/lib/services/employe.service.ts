@@ -52,7 +52,10 @@ export class EmployeService {
    * @returns Observable avec l'utilisateur mis à jour
    */
   updateByAdmin(id: string, dto: UpdateUtilisateurDto): Observable<any> {
-    return this.http.put(`${this.apiUrlEmployes}/updateByAdmin/${id}`, dto);
+    if (dto.role === 'EMPLOYE') {
+      return this.http.put(`${this.apiUrlEmployes}/updateByAdmin/${id}`, dto);
+    }
+    return this.http.put(`${this.apiUrlAdmins}/updateByAdmin/${id}`, dto);
   }
 
   /**
