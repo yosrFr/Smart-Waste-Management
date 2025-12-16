@@ -140,6 +140,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
    */
   private updateMapMarkers(points: PointDeCollecte[]): void {
     // Filter out points without valid coordinates
+    console.log('Points:', points);
     const valid = points.filter(
       (p) =>
         p &&
@@ -148,12 +149,16 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
         Number.isFinite(p.localisation.longitude)
     );
 
+    console.log(valid);
+
     this.mapMarkers = valid.map((point) => ({
       position: point.localisation,
       tooltip: this.getPointTooltip(point),
       icon: this.getMarkerIcon(point),
       data: point,
     }));
+
+    console.log('Map Markers:', this.mapMarkers);
   }
 
   /**
@@ -177,7 +182,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
       METAUX: '#ef5350',
       ALIMENTAIRE: '#ffcc55ff',
       VERRE: '#66bb6a',
-      AUTRE: '#757575',
+      AUTRE: '#cccacaff',
       ENDOMMAGE: '#000',
     };
 
@@ -186,7 +191,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
       METAUX: '#b71c1c',
       ALIMENTAIRE: '#FFB300',
       VERRE: '#2e7d32',
-      AUTRE: '#424242',
+      AUTRE: '#838383ff',
     };
 
     const typeKey = point.typeDechet as unknown as string;
