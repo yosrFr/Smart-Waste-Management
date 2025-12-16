@@ -16,7 +16,7 @@
     <!-- Non commencées -->
     <div tab="NON_COMMENCEE">
       <lib-data-table
-        [data]="tourneesNonCommencees"
+        [data]="(tourneesNonCommencees$ | async) ?? []"
         [columns]="tableColumns"
         [actions]="tableActions"
         [paginated]="true"
@@ -28,7 +28,7 @@
     <!-- En cours -->
     <div tab="EN_COURS">
       <lib-data-table
-        [data]="tourneesEnCours"
+        [data]="(tourneesEnCours$ | async) ?? []"
         [columns]="tableColumns"
         [actions]="tableActions"
         [paginated]="true"
@@ -40,7 +40,7 @@
     <!-- Terminées -->
     <div tab="TERMINEE">
       <lib-data-table
-        [data]="tourneesTerminees"
+        [data]="(tourneesTerminees$ | async) ?? []"
         [columns]="tableColumns"
         [actions]="tableActions"
         [paginated]="true"
