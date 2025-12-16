@@ -27,7 +27,7 @@ export const initialNotifState: NotificationState = {
   loading: false,
   error: null,
   pageIndex: 0,
-  pageSize: 20,
+  pageSize: 10,
 };
 
 /**
@@ -43,11 +43,14 @@ export const notificationReducer = createReducer(
   })),
   on(
     NotificationActions.loadNotificationsSuccess,
-    (state, { notifications }) => ({
-      ...state,
-      notifications,
-      loading: false,
-    })
+    (state, { notifications }) => {
+      // console.log('Notifications mises à jour dans le store:', notifications);
+      return {
+        ...state,
+        notifications,
+        loading: false,
+      };
+    }
   ),
   on(NotificationActions.loadNotificationsFailure, (state, { error }) => ({
     ...state,
