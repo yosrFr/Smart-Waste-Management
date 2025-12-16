@@ -80,9 +80,9 @@
       </mat-form-field>
     </div>
 
-    <!-- Rôle et statut -->
-    <div class="form-section">
-      <h3>Rôle et statut</h3>
+    <!-- Rôle -->
+    <div *ngIf="data.mode === 'create'" class="form-section">
+      <h3>Rôle</h3>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Rôle</mat-label>
@@ -94,11 +94,6 @@
           Le rôle est requis
         </mat-error>
       </mat-form-field>
-      <div *ngIf="data.mode === 'edit'" class="form-section">
-        <mat-checkbox formControlName="actif" class="checkbox">
-          Compte actif
-        </mat-checkbox>
-      </div>
     </div>
 
     <!-- Permis (employé uniquement) -->

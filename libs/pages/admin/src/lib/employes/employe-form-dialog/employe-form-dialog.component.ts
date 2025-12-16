@@ -29,7 +29,6 @@ import {
   Utilisateur,
   selectCurrentUser,
   updateEmployeByAdmin,
-  updateProfilEmploye,
 } from '@smart-waste-management/shared/data-access';
 
 /**
@@ -103,15 +102,19 @@ export class EmployeFormDialogComponent implements OnInit {
         employe?.dateNais || '',
         this.data.mode === 'create' ? [Validators.required] : [],
       ],
-      role: [employe?.role || Role.EMPLOYE, [Validators.required]],
+      role: [
+        employe?.role || Role.EMPLOYE,
+        this.data.mode === 'create' ? [Validators.required] : [],
+      ],
       disponibilite: [
         isEmploye && employe && 'disponibilite' in employe
           ? employe.disponibilite
           : Disponibilite.DISPONIBLE,
+        this.data.mode === 'create' ? [Validators.required] : [],
       ],
-      actif: [employe?.active ?? true],
       numPermis: [
         isEmploye && employe && 'numPermis' in employe ? employe.numPermis : '',
+        isEmploye && this.data.mode === 'create' ? [Validators.required] : [],
       ],
     });
 
@@ -150,47 +153,33 @@ export class EmployeFormDialogComponent implements OnInit {
         email: formValue.email,
         motDePasse: formValue.motDePasse,
         tel: formValue.tel,
-        dateNaissance: new Date(formValue.dateNaissance)
-          .toISOString()
-          .split('T')[0],
+        dateNais: new Date(formValue.dateNaissance).toISOString().split('T')[0],
         role: formValue.role,
-        actif: formValue.actif,
+        active: true,
       };
 
       if (formValue.role === Role.EMPLOYE) {
-        dto.disponibilite = formValue.disponibilite;
+        dto.disponibilite = Disponibilite.DISPONIBLE;
         dto.numPermis = formValue.numPermis;
+        dto.tourneesIds = [];
       }
 
       this.store.dispatch(createEmploye({ dto }));
     } else if (this.data.mode === 'edit' && this.data.employe) {
       // Edition d'un employé existant
       const dto: any = {
+        role: this.data.employe.role,
         email: formValue.email,
         tel: formValue.tel,
-        role: formValue.role,
-        actif: formValue.actif,
       };
 
       if (formValue.role === Role.EMPLOYE) {
-        dto.disponibilite = formValue.disponibilite;
         dto.numPermis = formValue.numPermis;
       }
 
-      const isAdminEditingOther =
-        this.data.employe.role !== Role.EMPLOYE &&
-        formValue.role !== Role.EMPLOYE;
-
-      if (isAdminEditingOther) {
-        this.store.dispatch(
-          updateEmployeByAdmin({ id: this.data.employe.id, dto })
-        );
-      } else {
-        // Modification de son propre profil (employé ou admin)
-        this.store.dispatch(
-          updateProfilEmploye({ id: this.data.employe.id, dto })
-        );
-      }
+      this.store.dispatch(
+        updateEmployeByAdmin({ id: this.data.employe.id, dto })
+      );
     }
 
     this.dialogRef.close(true);
