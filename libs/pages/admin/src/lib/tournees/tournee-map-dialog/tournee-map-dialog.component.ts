@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MatDialogModule,
@@ -13,12 +13,14 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   Tournee,
+  StatutTournee,
   selectTourneeById,
 } from '@smart-waste-management/shared/data-access';
 import {
   LeafletMapComponent,
   MapMarker,
   MapPolyline,
+  EnumLabelPipe,
 } from '@smart-waste-management/shared/ui';
 import { GpsSimulatorService } from '@smart-waste-management/shared/utils';
 import * as L from 'leaflet';
@@ -35,30 +37,51 @@ import * as L from 'leaflet';
     MatButtonModule,
     MatIconModule,
     LeafletMapComponent,
+    EnumLabelPipe,
   ],
   templateUrl: './tournee-map-dialog.component.html',
   styleUrl: './tournee-map-dialog.component.css',
 })
 export class TourneeMapDialogComponent implements OnInit, OnDestroy {
   readonly dialogRef = inject(MatDialogRef<TourneeMapDialogComponent>);
-  readonly data = inject(MAT_DIALOG_DATA) as Tournee;
   private store = inject(Store);
   private gpsSimulator = inject(GpsSimulatorService);
+  private data = inject<{ tournee: Tournee }>(MAT_DIALOG_DATA);
 
-  tournee: Tournee;
+  tournee!: Tournee;
+
   markers: MapMarker[] = [];
   polylines: MapPolyline[] = [];
   mapCenter = { latitude: 34.7065, longitude: 10.7487 };
 
   private destroy$ = new Subject<void>();
 
-  constructor() {
-    this.tournee = this.data;
-  }
+  private simulationStarted = false;
 
   ngOnInit(): void {
+    this.store
+      .select(selectTourneeById(this.data.tournee.id))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((tournee) => {
+        if (!tournee) return;
+
+        this.tournee = tournee;
+        this.updateMap(tournee);
+        this.startGpsSimulation(tournee);
+      });
+    console.log(this.tournee);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private updateMap(tournee: Tournee): void {
+    const points = tournee.pointsDeCollecte ?? [];
+
     // Configure les marqueurs pour les points de collecte
-    this.markers = this.tournee.pointsDeCollecte.map((point, index) => ({
+    this.markers = points.map((point, index) => ({
       position: point.localisation,
       tooltip: `Point ${index + 1}: ${
         point.typeDechet
@@ -68,62 +91,44 @@ export class TourneeMapDialogComponent implements OnInit, OnDestroy {
     }));
 
     // Ajoute le marqueur du véhicule si position actuelle disponible
-    if (this.tournee.positionActuelle) {
+    if (tournee.positionActuelle) {
       this.markers.push({
-        position: this.tournee.positionActuelle,
-        tooltip: `Véhicule ${this.tournee.vehicule.matricule}`,
-        icon: this.getVehicleIcon(),
-        data: null,
+        position: tournee.positionActuelle,
+        tooltip: `Véhicule ${tournee.vehicule?.matricule ?? 'N/A'}`,
+        icon: this.getVehiculeIcon(),
+        data: { type: 'vehicule' },
       });
     }
 
     // Configure le circuit
     this.polylines = [
       {
-        points: this.tournee.pointsDeCollecte.map((p) => p.localisation),
+        points: points.map((p) => p.localisation),
         color: '#2e7d32',
       },
     ];
 
     // Centre la carte sur le premier point
-    if (this.tournee.pointsDeCollecte.length > 0) {
-      this.mapCenter = this.tournee.pointsDeCollecte[0].localisation;
+    if (points.length > 0) {
+      this.mapCenter = points[0].localisation;
     }
-
-    // Démarre la simulation GPS si la tournée est en cours
-    if (
-      this.tournee.statut === 'EN_COURS' &&
-      !this.gpsSimulator.isSimulationActive(this.tournee.id)
-    ) {
-      this.gpsSimulator
-        .startSimulation({
-          tourneeId: this.tournee.id,
-          waypoints: this.tournee.pointsDeCollecte.map((p) => p.localisation),
-          speed: 30,
-          updateInterval: 5000,
-        })
-        .pipe(takeUntil(this.destroy$))
-        .subscribe();
-    }
-
-    // Écoute les mises à jour de position
-    this.store
-      .select(selectTourneeById(this.tournee.id))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((tournee) => {
-        if (tournee?.positionActuelle) {
-          // Met à jour la position du véhicule
-          const vehicleMarker = this.markers.find((m) => m.data === null);
-          if (vehicleMarker) {
-            vehicleMarker.position = tournee.positionActuelle;
-          }
-        }
-      });
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  private startGpsSimulation(tournee: Tournee): void {
+    if (this.simulationStarted) return;
+    if (tournee.statut !== StatutTournee.EN_COURS) return;
+
+    this.simulationStarted = true;
+
+    this.gpsSimulator
+      .startSimulation({
+        tourneeId: tournee.id,
+        waypoints: tournee.pointsDeCollecte?.map((p) => p.localisation) ?? [],
+        speed: 30,
+        updateInterval: 5000,
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   private getPointIcon(number: number): L.DivIcon {
@@ -149,7 +154,7 @@ export class TourneeMapDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getVehicleIcon(): L.DivIcon {
+  private getVehiculeIcon(): L.DivIcon {
     return L.divIcon({
       html: `
         <div style="
