@@ -16,7 +16,11 @@
 
 <!-- Tabs par disponibilité -->
 <div *ngIf="(loading$ | async) === false">
-  <lib-tabs [tabs]="tabs" [selectedIndex]="selectedTabIndex">
+  <lib-tabs
+    [tabs]="tabs"
+    [selectedIndex]="selectedTabIndex"
+    (tabChange)="onTabChange($event)"
+  >
     <!-- Disponibles -->
     <div tab="DISPONIBLE">
       <lib-data-table
@@ -58,7 +62,6 @@
       <lib-data-table
         [data]="employesInactifs"
         [columns]="tableColumns"
-        [actions]="tableActions"
         [paginated]="true"
         [searchable]="true"
         [pageSize]="10"

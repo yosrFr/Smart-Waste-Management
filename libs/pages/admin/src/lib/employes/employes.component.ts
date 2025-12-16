@@ -88,16 +88,7 @@ export class EmployesComponent implements OnInit, OnDestroy {
     },
   ];
 
-  tableActions: TableAction<Employe | Administrateur>[] = [
-    {
-      icon: 'edit',
-      action: (employe) => this.editEmploye(employe),
-    },
-    {
-      icon: 'delete',
-      action: (employe) => this.deleteEmploye(employe),
-    },
-  ];
+  tableActions: TableAction<Employe | Administrateur>[] = [];
 
   constructor() {
     this.loading$ = this.store.select(selectEmployesLoading);
@@ -140,6 +131,33 @@ export class EmployesComponent implements OnInit, OnDestroy {
         this.totalAdmins = admins.filter((a) => a.active === true).length;
         this.admin = admins.filter((a) => a.active === true);
       });
+
+    this.setupTableActions();
+  }
+
+  // Méthode qui configure les actions de la table en fonction de l'onglet sélectionné
+  setupTableActions(): void {
+    const selectedTab = this.tabs[this.selectedTabIndex].value;
+
+    this.tableActions = [];
+    this.tableActions.push({
+      icon: 'edit',
+      action: (employe) => this.editEmploye(employe),
+    });
+
+    // Ajouter l'action de suppression seulement si l'onglet sélectionné n'est pas "Inactif" ou "En mission"
+    if (selectedTab !== 'EN_MISSION') {
+      this.tableActions.push({
+        icon: 'delete',
+        action: (employe) => this.deleteEmploye(employe),
+      });
+    }
+  }
+
+  // Cette méthode sera appelée chaque fois qu'un onglet est sélectionné
+  onTabChange(tab: Tab): void {
+    this.selectedTabIndex = this.tabs.findIndex((t) => t.value === tab.value);
+    this.setupTableActions(); // Mettre à jour les actions lorsque l'onglet change
   }
 
   ngOnDestroy(): void {
