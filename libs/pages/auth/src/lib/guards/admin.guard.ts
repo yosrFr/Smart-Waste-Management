@@ -2,8 +2,8 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { AuthService } from '@smart-waste-management/shared/data-access';
 import { map, take } from 'rxjs/operators';
-import { selectUserRole } from '@smart-waste-management/shared/data-access';
 
 /**
  *
@@ -14,16 +14,12 @@ import { selectUserRole } from '@smart-waste-management/shared/data-access';
  * @returns true si l'utilisateur est admin, ou une UrlTree pour rediriger
  */
 export const adminGuard: CanActivateFn = () => {
-  const store = inject(Store);
   const router = inject(Router);
+  const authService = inject(AuthService);
+  const role = authService.getRolesFromToken()[0];
 
-  return store.select(selectUserRole).pipe(
-    take(1),
-    map((role) => {
-      if (role === 'ADMIN') {
-        return true;
-      }
-      return router.createUrlTree(['/employee/dashboard']);
-    })
-  );
+  if (role === 'ROLE_ADMIN') {
+    return true;
+  }
+  return router.createUrlTree(['/employee/dashboard']);
 };

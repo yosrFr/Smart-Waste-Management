@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import {
   selectIsAuthenticated,
   selectAuthLoading,
-  loadCurrentUser,
+  AuthService,
 } from '@smart-waste-management/shared/data-access';
 
 /**
@@ -26,6 +26,7 @@ import {
 export const authGuard: CanActivateFn = () => {
   const store = inject(Store);
   const router = inject(Router);
+  const authService = inject(AuthService);
 
   return store.select(selectIsAuthenticated).pipe(
     take(1),
@@ -41,10 +42,6 @@ export const authGuard: CanActivateFn = () => {
         router.navigate(['/auth/login'], { replaceUrl: true });
         return of(false);
       }
-
-      // Un token existe mais le store n'est pas encore authentifié
-      // On tente de recharger l'utilisateur
-      store.dispatch(loadCurrentUser());
 
       // Attendre la fin du chargement, puis autoriser ou refuser l'accès
       return store.select(selectAuthLoading).pipe(

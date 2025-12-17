@@ -10,3 +10,4 @@ export * from './tournee.service';
 export * from './dashboard.service';
 export * from './signalement.service';
 export * from './auth.interceptor';
+export * from './error.interceptor';
