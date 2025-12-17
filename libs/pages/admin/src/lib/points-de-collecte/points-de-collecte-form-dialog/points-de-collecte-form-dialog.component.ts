@@ -66,16 +66,17 @@ export class PointCollecteFormDialogComponent {
     this.isEditMode = !!this.data;
 
     this.form = this.fb.group({
-      latitude: [
-        this.data?.localisation.latitude || 34.7065,
-        [Validators.required],
-      ],
-      longitude: [
-        this.data?.localisation.longitude || 10.7487,
-        [Validators.required],
-      ],
-      typeDechet: [this.data?.typeDechet || '', [Validators.required]],
+      latitude: [this.data?.localisation.latitude, [Validators.required]],
+      longitude: [this.data?.localisation.longitude, [Validators.required]],
+      typeDechet: [this.data?.typeDechet, [Validators.required]],
     });
+
+    if (!this.isEditMode) {
+      this.form.addControl(
+        'capacite',
+        this.fb.control('', Validators.required)
+      );
+    }
   }
 
   /**
@@ -126,10 +127,7 @@ export class PointCollecteFormDialogComponent {
             dto: {
               localisation,
               typeDechet: this.form.value.typeDechet,
-              capacite: 500,
-              niveauRemplissage: 0,
-              etatConteneur: EtatConteneur.NORMAL,
-              tourneeIds: [],
+              capacite: this.form.value.capacite,
             },
           })
         );

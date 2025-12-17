@@ -1,0 +1,15 @@
+<lib-loading-spinner
+  *ngIf="loading$ | async"
+  [message]="'Chargement des points de collecte...'">
+</lib-loading-spinner>
+
+<div *ngIf="(loading$ | async) === false">
+  <lib-data-table
+    [data]="points"
+    [columns]="tableColumns"
+    [actions]="tableActions"
+    [paginated]="true"
+    [searchable]="true"
+    [pageSize]="10">
+  </lib-data-table>
+</div>

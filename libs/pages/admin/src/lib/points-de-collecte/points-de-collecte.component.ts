@@ -15,20 +15,17 @@ import {
   loadPointsCollecte,
   deletePointCollecte,
   PointDeCollecte,
-  EtatConteneur,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
-  DataTableComponent,
   TableColumn,
   TableAction,
-  LeafletMapComponent,
-  MapMarker,
   LoadingSpinnerComponent,
   ConfirmDialogService,
 } from '@smart-waste-management/shared/ui';
 import { PointCollecteFormDialogComponent } from './points-de-collecte-form-dialog/points-de-collecte-form-dialog.component';
-import * as L from 'leaflet';
+import { PointsCollecteTableComponent } from './points-de-collecte-table/points-de-collecte-table.component';
+import { PointsCollecteMapComponent } from './points-de-collecte-map/points-de-collecte-map.component';
 
 /**
  * Vue possible pour les points de collecte
@@ -47,12 +44,11 @@ type ViewMode = 'table' | 'map';
     MatIconModule,
     MatButtonToggleModule,
     PageHeaderComponent,
-    DataTableComponent,
-    LeafletMapComponent,
     LoadingSpinnerComponent,
+    PointsCollecteTableComponent,
+    PointsCollecteMapComponent,
   ],
   templateUrl: './points-de-collecte.component.html',
-  styleUrl: './points-de-collecte.component.css',
 })
 export class PointsCollecteComponent implements OnInit, OnDestroy {
   private store = inject(Store);
@@ -82,6 +78,11 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
       sortable: true,
     },
     {
+      key: 'capacite',
+      label: 'Capacité',
+      sortable: true,
+    },
+    {
       key: 'niveauRemplissage',
       label: 'Niveau de remplissage (%)',
       sortable: true,
@@ -107,7 +108,6 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
 
   // Configuration de la carte
   mapCenter = { latitude: 34.7442, longitude: 10.7487 };
-  mapMarkers: MapMarker[] = [];
 
   private destroy$ = new Subject<void>();
 
@@ -126,104 +126,12 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
       .subscribe((points) => {
         this.points = points;
         this.totalPoints = points.length;
-        this.updateMapMarkers(points);
       });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  /**
-   * Met à jour les marqueurs sur la carte
-   */
-  private updateMapMarkers(points: PointDeCollecte[]): void {
-    // Filter out points without valid coordinates
-    console.log('Points:', points);
-    const valid = points.filter(
-      (p) =>
-        p &&
-        p.localisation &&
-        Number.isFinite(p.localisation.latitude) &&
-        Number.isFinite(p.localisation.longitude)
-    );
-
-    console.log(valid);
-
-    this.mapMarkers = valid.map((point) => ({
-      position: point.localisation,
-      tooltip: this.getPointTooltip(point),
-      icon: this.getMarkerIcon(point),
-      data: point,
-    }));
-
-    console.log('Map Markers:', this.mapMarkers);
-  }
-
-  /**
-   * Génère le tooltip pour un point
-   */
-  private getPointTooltip(point: PointDeCollecte): string {
-    return `
-      Type: ${point.typeDechet}
-      Niveau: ${point.niveauRemplissage.toFixed(0)}%
-      État: ${point.etatConteneur}
-    `;
-  }
-
-  /**
-   * Retourne l'icône du marqueur selon l'état et le niveau
-   */
-  private getMarkerIcon(point: PointDeCollecte): L.DivIcon {
-    // Base colors by waste type
-    const baseColors: Record<string, string> = {
-      PLASTIQUE: '#29b6f6',
-      METAUX: '#ef5350',
-      ALIMENTAIRE: '#ffcc55ff',
-      VERRE: '#66bb6a',
-      AUTRE: '#cccacaff',
-      ENDOMMAGE: '#000',
-    };
-
-    const darkerColor: Record<string, string> = {
-      PLASTIQUE: '#01579b',
-      METAUX: '#b71c1c',
-      ALIMENTAIRE: '#FFB300',
-      VERRE: '#2e7d32',
-      AUTRE: '#838383ff',
-    };
-
-    const typeKey = point.typeDechet as unknown as string;
-    const base = baseColors[typeKey];
-    const darker = darkerColor[typeKey];
-
-    let color = base;
-
-    // Adjust by state intensity
-    if (point.etatConteneur === EtatConteneur.ENDOMMAGE) {
-      color = '#000';
-    } else if (point.etatConteneur === EtatConteneur.PLEIN) {
-      color = darker;
-    } else {
-      color = base;
-    }
-
-    return L.divIcon({
-      html: `
-        <div style="
-          background-color: ${color};
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          border: 3px solid white;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        "></div>
-      `,
-      iconSize: [24, 24],
-      iconAnchor: [12, 12],
-      className: '',
-    });
   }
 
   /**
@@ -281,8 +189,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
   /**
    * Gère le clic sur un marqueur de la carte
    */
-  onMarkerClick(marker: MapMarker): void {
-    const point = marker.data as PointDeCollecte;
+  onMarkerClick(point: PointDeCollecte): void {
     this.editPoint(point);
   }
 }

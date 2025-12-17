@@ -1,0 +1,46 @@
+<lib-loading-spinner
+  *ngIf="loading$ | async"
+  [message]="'Chargement des points de collecte...'"
+>
+</lib-loading-spinner>
+
+<div *ngIf="(loading$ | async) === false" class="map-container">
+  <lib-leaflet-map
+    [center]="center"
+    [markers]="markers"
+    [height]="600"
+    [zoom]="12"
+    (markerClick)="onMarkerClicked($event)"
+  >
+  </lib-leaflet-map>
+
+  <div class="map-legend">
+    <h4>Légende</h4>
+    <div class="legend-items">
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #29b6f6"></div>
+        <span>Plastique</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #ef5350"></div>
+        <span>Metaux</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #ffcc55"></div>
+        <span>Alimentaire</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #66bb6a"></div>
+        <span>Verre</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #cccaca"></div>
+        <span>Autre</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background-color: #000"></div>
+        <span>Endommagé</span>
+      </div>
+    </div>
+  </div>
+</div>
