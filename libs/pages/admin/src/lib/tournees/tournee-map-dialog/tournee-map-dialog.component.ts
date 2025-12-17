@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy, inject, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MatDialogModule,
@@ -46,9 +46,9 @@ export class TourneeMapDialogComponent implements OnInit, OnDestroy {
   readonly dialogRef = inject(MatDialogRef<TourneeMapDialogComponent>);
   private store = inject(Store);
   private gpsSimulator = inject(GpsSimulatorService);
-  private data = inject<{ tournee: Tournee }>(MAT_DIALOG_DATA);
+  private readonly data = inject(MAT_DIALOG_DATA) as Tournee;
 
-  tournee!: Tournee;
+  tournee: Tournee = this.data;
 
   markers: MapMarker[] = [];
   polylines: MapPolyline[] = [];
@@ -59,17 +59,17 @@ export class TourneeMapDialogComponent implements OnInit, OnDestroy {
   private simulationStarted = false;
 
   ngOnInit(): void {
+    // console.log('var tournee in map dialog', this.tournee);
+    // console.log('var data in map dialog', this.data);
     this.store
-      .select(selectTourneeById(this.data.tournee.id))
+      .select(selectTourneeById(this.data.id))
       .pipe(takeUntil(this.destroy$))
       .subscribe((tournee) => {
         if (!tournee) return;
 
-        this.tournee = tournee;
         this.updateMap(tournee);
         this.startGpsSimulation(tournee);
       });
-    console.log(this.tournee);
   }
 
   ngOnDestroy(): void {

@@ -6,17 +6,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import {
-  selectCurrentUser,
   selectTourneesByEmployeId,
   loadTournees,
   Tournee,
   StatutTournee,
   selectTourneesLoading,
   selectTourneesByEmployeIdAndStatut,
+  AuthService,
+  Utilisateur,
+  selectAllEmployes,
   loadVehicules,
-  loadEmployes,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -55,6 +56,7 @@ import { TourneeMapDialogComponent } from '../../../../admin/src/lib/tournees/to
 export class MesTourneesComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
 
   private destroy$ = new Subject<void>();
 
@@ -65,6 +67,17 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
   tourneesEnCours$!: Observable<Tournee[]>;
   tourneesTerminees$!: Observable<Tournee[]>;
   selectedTabIndex = 0;
+
+  currentUser$: Observable<Utilisateur>;
+
+  constructor() {
+    this.currentUser$ = this.store.select(selectAllEmployes).pipe(
+      map((users) =>
+        users.find((u) => u.email === this.authService.getUserEmailFromToken())
+      ),
+      filter((user): user is NonNullable<typeof user> => !!user)
+    );
+  }
 
   /** Configuration des onglets */
   tabs: Tab[] = [
@@ -117,18 +130,15 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.store.dispatch(loadTournees());
+    this.store.dispatch(loadVehicules());
 
     // Observable de loading
     this.loading$ = this.store.select(selectTourneesLoading);
 
-    this.store
-      .select(selectCurrentUser)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((user) => {
-        if (user) {
-          this.loadEmployeeTournees(user.id);
-        }
-      });
+    this.currentUser$.subscribe((user) => {
+      // Récupère l'utilisateur actuel et charge ses tournées
+      this.loadEmployeeTournees(user.id);
+    });
   }
 
   ngOnDestroy(): void {
@@ -167,11 +177,12 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
    * @param tournee Tournée à visualiser
    */
   viewOnMap(tournee: Tournee): void {
+    console.log(tournee);
     this.dialog.open(TourneeMapDialogComponent, {
       width: '90vw',
       height: '400px',
       maxWidth: '1200px',
-      data: { tournee },
+      data: tournee,
     });
   }
 }

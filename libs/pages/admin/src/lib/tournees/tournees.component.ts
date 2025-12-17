@@ -90,7 +90,7 @@ export class TourneesComponent implements OnInit, OnDestroy {
     {
       key: 'pointsDeCollecte',
       label: 'Points',
-      customTemplate: (t) => `${t.pointsDeCollecteIds.length} points`,
+      customTemplate: (t) => `${t.pointsDeCollecteIds.length - 1} points`,
     },
   ];
 
@@ -130,11 +130,12 @@ export class TourneesComponent implements OnInit, OnDestroy {
   }
 
   viewOnMap(tournee: Tournee): void {
+    // console.log('Viewing tournee on map:', tournee);
     this.dialog.open(TourneeMapDialogComponent, {
       width: '90vw',
       height: '80vh',
       maxWidth: '1200px',
-      data: { tournee },
+      data: tournee,
     });
   }
 }
