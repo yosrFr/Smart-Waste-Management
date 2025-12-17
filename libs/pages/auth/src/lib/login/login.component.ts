@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -14,8 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { map, Observable, Subject } from 'rxjs';
 import {
   login,
   selectAuthLoading,
@@ -44,7 +43,7 @@ import {
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnDestroy {
   /** FormBuilder injecté pour créer les formulaires réactifs */
   private fb = inject(FormBuilder);
 
@@ -69,21 +68,16 @@ export class LoginComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor() {
-    // INitialisation du formulaire de login avec validation
+    // Initialisation du formulaire de login avec validation
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      motDePasse: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
 
     // Sélection des observables depuis le store
     this.loading$ = this.store.select(selectAuthLoading);
     this.error$ = this.store.select(selectAuthError);
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
-  }
-
-  ngOnInit(): void {
-    // Si l'utilisateur est déjà authentifié, la redirection est gérée par l'effet loginSuccess$
-    this.isAuthenticated$.pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -100,7 +94,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         login({
           credentials: {
             email: this.loginForm.value.email,
-            motDePasse: this.loginForm.value.motDePasse,
+            password: this.loginForm.value.password,
           },
         })
       );

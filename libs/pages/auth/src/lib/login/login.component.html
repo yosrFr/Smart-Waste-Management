@@ -37,7 +37,7 @@
           <input
             matInput
             [type]="hidePassword ? 'password' : 'text'"
-            formControlName="motDePasse"
+            formControlName="password"
             autocomplete="current-password"
           />
           <mat-icon matPrefix>lock</mat-icon>
@@ -46,13 +46,13 @@
             matSuffix
             type="button"
             (click)="hidePassword = !hidePassword"
-            [attr.aria-label]="'Hide password'"
+            [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'"
           >
             <mat-icon>
               {{ hidePassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
           </button>
-          <mat-error *ngIf="loginForm.get('motDePasse')?.hasError('required')">
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
             Le mot de passe est requis
           </mat-error>
         </mat-form-field>
@@ -71,12 +71,13 @@
           class="full-width login-button"
           [disabled]="loginForm.invalid || (loading$ | async)"
         >
-          <span *ngIf="!(loading$ | async)">Se connecter</span>
+          <span *ngIf="(loading$ | async) === false">Se connecter</span>
           <mat-spinner
             *ngIf="loading$ | async"
             diameter="20"
             class="button-spinner"
           ></mat-spinner>
+          <span *ngIf="loading$ | async">Chargement...</span>
         </button>
       </form>
     </mat-card-content>
