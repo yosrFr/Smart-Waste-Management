@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Store } from '@ngrx/store';
-import { filter, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
   selectPaginatedNotifications,
   selectNotificationPageIndex,
@@ -16,18 +16,10 @@ import {
   AppNotification,
   TypeNotif,
   selectNotificationsLoading,
-  loadNotifications,
-  selectAppNotifications,
-  selectPointsCollecteEntities,
-  loadPointsCollecte,
-  selectAllPointsCollecte,
   PointDeCollecte,
-  loadTournees,
-  selectAllTournees,
   Tournee,
-  selectAllVehicules,
-  loadVehicules,
   Vehicule,
+  selectAllNotifications,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -69,7 +61,7 @@ export class NotificationsComponent implements OnDestroy {
 
   /** Toutes les notifications */
   allNotifications$: Observable<AppNotification[]> = this.store.select(
-    selectAppNotifications
+    selectAllNotifications
   );
 
   /** Notifications paginées */
@@ -142,35 +134,35 @@ export class NotificationsComponent implements OnDestroy {
   isPlein(
     n: AppNotification
   ): n is Extract<AppNotification, { type: TypeNotif.PLEIN }> {
-    // console.log('isPlein check:', n);
+    console.log('isPlein check:', n);
     return n.type === TypeNotif.PLEIN;
   }
 
   isEndommage(
     n: AppNotification
   ): n is Extract<AppNotification, { type: TypeNotif.ENDOMMAGE }> {
-    // console.log('isEndommage check:', n);
+    console.log('isEndommage check:', n);
     return n.type === TypeNotif.ENDOMMAGE;
   }
 
   isPanneVehicule(
     n: AppNotification
   ): n is Extract<AppNotification, { type: TypeNotif.PANNE_VEHICULE }> {
-    // console.log('isPanneVehicule check:', n);
+    console.log('isPanneVehicule check:', n);
     return n.type === TypeNotif.PANNE_VEHICULE;
   }
 
   isIncident(
     n: AppNotification
   ): n is Extract<AppNotification, { type: TypeNotif.INCIDENT }> {
-    // console.log('isIncident check:', n);
+    console.log('isIncident check:', n);
     return n.type === TypeNotif.INCIDENT;
   }
 
   isNouvelleTache(
     n: AppNotification
   ): n is Extract<AppNotification, { type: TypeNotif.NOUVELLE_TACHE }> {
-    // console.log('isNouvelleTache check:', n);
+    console.log('isNouvelleTache check:', n);
     return n.type === TypeNotif.NOUVELLE_TACHE;
   }
 }
