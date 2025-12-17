@@ -83,7 +83,14 @@ export class ChangePasswordComponent implements OnInit {
     this.changePasswordForm = this.fb.group(
       {
         ancienMotDePasse: ['', [Validators.required]],
-        nouveauMotDePasse: ['', [Validators.required, Validators.minLength(6)]],
+        nouveauMotDePasse: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(20),
+          ],
+        ],
         confirmerMotDePasse: ['', [Validators.required]],
       },
       { validators: passwordMatchValidator }
@@ -109,6 +116,7 @@ export class ChangePasswordComponent implements OnInit {
             panelClass: ['success-snackbar'],
           }
         );
+        this.resetForm();
         this.goBack();
       });
   }
@@ -121,8 +129,8 @@ export class ChangePasswordComponent implements OnInit {
       this.store.dispatch(
         changePassword({
           dto: {
-            ancienMotDePasse: this.changePasswordForm.value.ancienMotDePasse,
-            nouveauMotDePasse: this.changePasswordForm.value.nouveauMotDePasse,
+            oldPassword: this.changePasswordForm.value.ancienMotDePasse,
+            newPassword: this.changePasswordForm.value.nouveauMotDePasse,
           },
         })
       );
@@ -134,5 +142,15 @@ export class ChangePasswordComponent implements OnInit {
    */
   goBack(): void {
     this.router.navigate(['/shared/profil']);
+  }
+
+  /**
+   * Réinitialise le formulaire en cas de succès
+   */
+  resetForm(): void {
+    this.changePasswordForm.reset();
+    this.changePasswordForm.clearValidators();
+    this.changePasswordForm.markAsPristine();
+    this.changePasswordForm.markAsUntouched();
   }
 }
