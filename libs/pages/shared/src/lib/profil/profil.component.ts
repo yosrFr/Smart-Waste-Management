@@ -8,11 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { Store } from '@ngrx/store';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { filter, map, Observable, Subject, takeUntil } from 'rxjs';
 import {
-  selectCurrentUser,
   Utilisateur,
   Employe,
+  AuthService,
+  selectAllEmployes,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -51,21 +52,28 @@ export class ProfilComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private authService = inject(AuthService);
 
-  currentUser$: Observable<Utilisateur | null>;
   isEmployee = false;
 
   private destroy$ = new Subject<void>();
 
+  currentUser$: Observable<Utilisateur>;
+
   constructor() {
-    this.currentUser$ = this.store.select(selectCurrentUser);
+    this.currentUser$ = this.store.select(selectAllEmployes).pipe(
+      map((users) =>
+        users.find((u) => u.email === this.authService.getUserEmailFromToken())
+      ),
+      filter((user): user is NonNullable<typeof user> => !!user)
+    );
   }
 
   /** Initialise le composant et vérifie si l'utilisateur est employé */
   ngOnInit(): void {
-    this.currentUser$.subscribe((user) => {
-      this.isEmployee = user?.role === 'EMPLOYE';
-    });
+    if (this.authService.getRolesFromToken()[0]) {
+      this.isEmployee = true;
+    }
   }
 
   /**
@@ -97,23 +105,34 @@ export class ProfilComponent implements OnInit, OnDestroy {
 
   /** Ouvre le dialogue pour modifier le profil */
   editProfile(): void {
-    const dialogRef = this.dialog.open(ProfilFormDialogComponent, {
-      width: '700px',
-      data: {
-        employe: this.currentUser$,
-      },
-    });
+    // Récupérer l'utilisateur actuel
+    const currentUser = this.store.select(selectAllEmployes).pipe(
+      map((users) =>
+        users.find((u) => u.email === this.authService.getUserEmailFromToken())
+      ),
+      filter((user): user is NonNullable<typeof user> => !!user)
+    );
 
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((result) => {
-        if (result) {
-          this.snackBar.open('Profil modifié avec succès', 'Fermer', {
-            duration: 3000,
-          });
-        }
+    // Ouvrir le dialogue avec les données utilisateur
+    currentUser.subscribe((user) => {
+      const dialogRef = this.dialog.open(ProfilFormDialogComponent, {
+        width: '700px',
+        data: {
+          employe: user, // Passez directement l'utilisateur, pas un Observable
+        },
       });
+
+      dialogRef
+        .afterClosed()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((result) => {
+          if (result) {
+            this.snackBar.open('Profil modifié avec succès', 'Fermer', {
+              duration: 3000,
+            });
+          }
+        });
+    });
   }
   /** Navigue vers la page de changement de mot de passe */
   changePassword(): void {

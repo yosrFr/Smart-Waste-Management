@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -18,9 +18,8 @@ import { Store } from '@ngrx/store';
 import {
   Employe,
   Administrateur,
-  Utilisateur,
-  selectCurrentUser,
   updateProfilEmploye,
+  AuthService,
 } from '@smart-waste-management/shared/data-access';
 
 /**
@@ -51,33 +50,31 @@ interface EmployeDialogData {
   templateUrl: 'profil-form-dialog.component.html',
   styleUrl: './profil-form-dialog.component.css',
 })
-export class ProfilFormDialogComponent {
+export class ProfilFormDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   private store = inject(Store);
   private dialogRef = inject(MatDialogRef<ProfilFormDialogComponent>);
   /** Données passées au dialog (employé ou administrateur) */
   readonly data = inject(MAT_DIALOG_DATA) as EmployeDialogData;
+  private authService = inject(AuthService);
 
   /** Formulaire réactif pour les informations de l'utilisateur */
-  form: FormGroup;
+  form!: FormGroup;
   isEmployeRole = true;
-  currentUser: Utilisateur | null = null;
 
-  constructor() {
-    /** Récupère l'utilisateur courant depuis le store */
-    this.store.select(selectCurrentUser).subscribe((user) => {
-      this.currentUser = user;
-    });
-
+  ngOnInit(): void {
     const employe = this.data.employe;
-    /** Initialise le formulaire avec les valeurs de l'utilisateur passé ou du courant */
-    this.form = this.fb.group({
-      nom: [employe?.nom || this.currentUser?.nom || ''],
-      prenom: [employe?.prenom || this.currentUser?.prenom || ''],
-      email: [employe?.email || this.currentUser?.email || ''],
-      tel: [employe?.tel || this.currentUser?.tel || ''],
-      dateNaissance: [employe?.dateNais || this.currentUser?.dateNais || ''],
-    });
+
+    if (employe) {
+      // Initialisez le formulaire avec les données de l'employé
+      this.form = this.fb.group({
+        nom: [employe.nom || ''],
+        prenom: [employe.prenom || ''],
+        email: [employe.email || ''],
+        tel: [employe.tel || ''],
+        dateNaissance: [employe.dateNais || ''],
+      });
+    }
   }
 
   /**
@@ -88,6 +85,9 @@ export class ProfilFormDialogComponent {
 
     const formValue = this.form.value;
 
+    console.log('Form Value:', formValue);
+    console.log('Current Employee:', this.data.employe);
+
     // Vérifie si `this.data.employe` est défini avant d'envoyer l'action
     if (!this.data.employe) return;
 
@@ -97,7 +97,7 @@ export class ProfilFormDialogComponent {
       prenom: formValue.prenom,
       email: formValue.email,
       tel: formValue.tel,
-      dateNais: formValue.dateNaissance,
+      dateNais: new Date(formValue.dateNaissance).toISOString().split('T')[0],
     };
 
     this.store.dispatch(updateProfilEmploye({ id: this.data.employe.id, dto }));
