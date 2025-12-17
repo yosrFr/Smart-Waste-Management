@@ -1,11 +1,9 @@
-import { Administrateur, Employe } from './utilisateur.model';
-
 /**
  * DTO pour la connexion
  */
 export interface LoginDto {
   email: string;
-  motDePasse: string;
+  password: string;
 }
 
 /**
@@ -14,8 +12,6 @@ export interface LoginDto {
 export interface LoginResponse {
   /** Token JWT */
   token: string;
-  /** Informations de l'utilisateur connecté */
-  user: Employe | Administrateur;
 }
 
 /**
@@ -23,7 +19,7 @@ export interface LoginResponse {
  */
 export interface ChangePasswordDto {
   /** Ancien mot de passe */
-  ancienMotDePasse: string;
+  oldPassword: string;
   /** Nouveau mot de passe */
-  nouveauMotDePasse: string;
+  newPassword: string;
 }

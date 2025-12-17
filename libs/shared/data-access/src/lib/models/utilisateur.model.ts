@@ -61,7 +61,6 @@ export interface CreateUtilisateurDto {
   // Pour employés seulement
   disponibilite?: Disponibilite;
   numPermis?: string;
-  tourneesIds?: string[];
 }
 
 /**
@@ -83,5 +82,5 @@ export interface UpdateProfilEmployeDto {
   prenom: string;
   email: string;
   tel: string;
-  dateNaissance: string;
+  dateNais: string;
 }

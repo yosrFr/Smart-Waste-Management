@@ -20,12 +20,21 @@ export interface Vehicule {
 }
 
 /**
- * DTO pour la création/modification d'un véhicule
+ * DTO pour la création d'un véhicule
  */
 export interface CreateVehiculeDto {
   capacite: number;
   marque: string;
   matricule: string;
+  poidsVide: number;
+  typeDechet: TypeDechet;
+}
+
+/**
+ * DTO pour la modification d'un véhicule
+ */
+export interface UpdateVehiculeDto {
+  capacite: number;
   poidsVide: number;
   typeDechet: TypeDechet;
 }
