@@ -1,19 +1,29 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { map, catchError, switchMap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import {
+  map,
+  catchError,
+  switchMap,
+  withLatestFrom,
+  mergeMap,
+  take,
+} from 'rxjs/operators';
 import * as NotificationActions from './notifications.actions';
 import { NotificationService, SignalementService } from '../../services';
 import { ApiNotification, AppNotification } from '../../models';
-import { Store } from '@ngrx/store';
-import { mapNotificationToApp } from '../../mapper/notification.mapper';
-import {
-  selectPointsCollecteEntities,
-  selectTourneesEntities,
-  selectVehiculesEntities,
-} from './notifications.selectors';
-import { TypeNotif } from '../../enums';
+import { select, Store } from '@ngrx/store';
+import { selectAllTournees } from '../tournees';
+import { selectAllVehicules } from '../vehicules';
+import { selectAllPointsCollecte } from '../points-de-collecte';
+// import { mapNotificationToApp } from '../../mapper/notification.mapper';
+// import {
+//   selectPointsCollecteEntities,
+//   selectTourneesEntities,
+//   selectVehiculesEntities,
+// } from './notifications.selectors';
+// import { TypeNotif } from '../../enums';
 
 /**
  * Effects pour les notifications
@@ -31,76 +41,89 @@ export class NotificationEffects {
   loadNotifications$ = createEffect(() =>
     this.actions$.pipe(
       ofType(NotificationActions.loadNotifications),
-      switchMap(() =>
-        this.notificationService.getAll().pipe(
-          withLatestFrom(
-            this.store.select(selectVehiculesEntities),
-            this.store.select(selectPointsCollecteEntities),
-            this.store.select(selectTourneesEntities)
-          ),
-          map(([apiNotifications, vehicules, pointsCollecte, tournees]) => {
-            // Vérification si les entités sont vides
-            if (!vehicules || !pointsCollecte || !tournees) {
-              // console.log('Entités nécessaires non chargées dans le store');
-              return NotificationActions.loadNotificationsFailure({
-                error: 'Données nécessaires non disponibles',
-              });
-            }
-            // console.log("Notifications reçues de l'API:", apiNotifications);
-            const appNotifications: AppNotification[] = apiNotifications
-              .map((n) => {
-                // Vérification du contexte en fonction du type de notification
-                if (n.type === TypeNotif.PLEIN && !pointsCollecte) return null;
-                if (n.type === TypeNotif.ENDOMMAGE && !pointsCollecte)
-                  return null;
-                if (n.type === TypeNotif.PANNE_VEHICULE && !vehicules)
-                  return null;
-                if (
-                  n.type === TypeNotif.NOUVELLE_TACHE &&
-                  (!tournees || !vehicules)
+      mergeMap(() =>
+        combineLatest([
+          this.store.pipe(select(selectAllTournees)),
+          this.store.pipe(select(selectAllVehicules)),
+          this.store.pipe(select(selectAllPointsCollecte)),
+        ]).pipe(
+          mergeMap(([tournees, vehicules, points]) =>
+            this.notificationService.getAll().pipe(
+              map((notifications) =>
+                notifications.map((notif) =>
+                  this.notificationService.enrichNotifications(
+                    notif,
+                    tournees,
+                    vehicules,
+                    points
+                  )
                 )
-                  return null;
-
-                // Choisir le contexte approprié
-                let context: any;
-                switch (n.type) {
-                  case TypeNotif.PLEIN:
-                  case TypeNotif.ENDOMMAGE:
-                    context = { pointsCollecte };
-                    break;
-                  case TypeNotif.PANNE_VEHICULE:
-                    context = { vehicules };
-                    break;
-                  case TypeNotif.NOUVELLE_TACHE:
-                    context = { tournees, vehicules };
-                    break;
-                  default:
-                    context = {};
-                }
-
-                return mapNotificationToApp(n, context);
-              })
-              .filter((n): n is AppNotification => n !== null);
-
-            // console.log('Notifications après mapping:', appNotifications);
-
-            return NotificationActions.loadNotificationsSuccess({
-              notifications: appNotifications,
-            });
-          }),
-          catchError((error) =>
-            of(
-              NotificationActions.loadNotificationsFailure({
-                error:
-                  error.message ||
-                  'Erreur lors du chargement des notifications',
-              })
+              ),
+              map((notifications) =>
+                NotificationActions.loadNotificationsSuccess({
+                  notifications,
+                })
+              ),
+              catchError((error) =>
+                of(
+                  NotificationActions.loadNotificationsFailure({
+                    error: error.message,
+                  })
+                )
+              )
             )
           )
         )
       )
     )
   );
+
+  // loadNotifications$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(NotificationActions.loadNotifications),
+  //     withLatestFrom(
+  //       this.store.select(selectVehiculesEntities),
+  //       this.store.select(selectPointsCollecteEntities),
+  //       this.store.select(selectTourneesEntities)
+  //     ),
+  //     switchMap(([_, vehicules, pointsCollecte, tournees]) => {
+  //       // Vérifier si toutes les entités sont disponibles
+  //       if (!vehicules || !tournees || !pointsCollecte) {
+  //         console.log(
+  //           'Les entités nécessaires (tournées ou véhicules) ne sont pas disponibles.'
+  //         );
+  //         return of(
+  //           NotificationActions.loadNotificationsFailure({
+  //             error: 'Les entités nécessaires ne sont pas disponibles.',
+  //           })
+  //         );
+  //       }
+
+  //       return this.notificationService.getAll().pipe(
+  //         map((apiNotifications) => {
+  //           const appNotifications: AppNotification[] = apiNotifications
+  //             .map((n) =>
+  //               mapNotificationToApp(n, { vehicules, pointsCollecte, tournees })
+  //             )
+  //             .filter((n): n is AppNotification => n !== null);
+
+  //           return NotificationActions.loadNotificationsSuccess({
+  //             notifications: appNotifications,
+  //           });
+  //         }),
+  //         catchError((error) =>
+  //           of(
+  //             NotificationActions.loadNotificationsFailure({
+  //               error:
+  //                 error.message ||
+  //                 'Erreur lors du chargement des notifications',
+  //             })
+  //           )
+  //         )
+  //       );
+  //     })
+  //   )
+  // );
 
   /**
    * Signaler un conteneur endommagé

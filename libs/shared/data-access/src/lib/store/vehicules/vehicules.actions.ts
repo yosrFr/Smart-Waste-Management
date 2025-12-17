@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { createAction, props } from '@ngrx/store';
-import { Vehicule, CreateVehiculeDto } from '../../models';
+import { Vehicule, CreateVehiculeDto, UpdateVehiculeDto } from '../../models';
 
 /**
  * Actions pour la gestion des véhicules
@@ -56,7 +56,7 @@ export const createVehiculeFailure = createAction(
  */
 export const updateVehicule = createAction(
   '[Vehicules] Update',
-  props<{ id: string; dto: Partial<CreateVehiculeDto> }>()
+  props<{ id: string; dto: UpdateVehiculeDto }>()
 );
 
 /**
