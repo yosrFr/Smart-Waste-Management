@@ -54,7 +54,6 @@ export class VehiculeFormDialogComponent {
 
     this.form = this.fb.group({
       matricule: [this.data?.matricule || '', [Validators.required]],
-      marque: [this.data?.marque || '', [Validators.required]],
       capacite: [
         this.data?.capacite || '',
         [Validators.required, Validators.min(1)],
@@ -64,20 +63,44 @@ export class VehiculeFormDialogComponent {
         [Validators.required, Validators.min(1)],
       ],
       typeDechet: [this.data?.typeDechet || '', [Validators.required]],
+      marque: [this.data?.marque || '', [Validators.required]],
     });
+
+    // if (!this.isEditMode) {
+    //   this.form.addControl(
+    //     'matricule',
+    //     this.fb.control('', Validators.required)
+    //   );
+    // }
   }
 
   onSubmit(): void {
     if (this.form.valid) {
+      // console.log(this.form.value);
+
       if (this.isEditMode && this.data) {
         this.store.dispatch(
           updateVehicule({
             id: this.data.id,
-            dto: this.form.value,
+            dto: {
+              typeDechet: this.form.value.typeDechet,
+              capacite: this.form.value.capacite,
+              poidsVide: this.form.value.poidsVide,
+            },
           })
         );
       } else {
-        this.store.dispatch(createVehicule({ dto: this.form.value }));
+        this.store.dispatch(
+          createVehicule({
+            dto: {
+              typeDechet: this.form.value.typeDechet,
+              capacite: this.form.value.capacite,
+              poidsVide: this.form.value.poidsVide,
+              marque: this.form.value.marque,
+              matricule: this.form.value.matricule,
+            },
+          })
+        );
       }
       this.dialogRef.close(true);
     }

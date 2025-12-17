@@ -2,7 +2,7 @@
 
 <mat-dialog-content>
   <form [formGroup]="form" class="form">
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field *ngIf="!isEditMode" appearance="outline" class="full-width">
       <mat-label>Matricule</mat-label>
       <input matInput formControlName="matricule" />
       <mat-error *ngIf="form.get('matricule')?.hasError('required')">
@@ -10,7 +10,7 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field *ngIf="!isEditMode" appearance="outline" class="full-width">
       <mat-label>Marque</mat-label>
       <input matInput formControlName="marque" />
       <mat-error *ngIf="form.get('marque')?.hasError('required')">

@@ -11,7 +11,7 @@ export interface PointDeCollecte {
   /** Etat actuel du conteneur */
   etatConteneur: EtatConteneur;
   /** Capacité d'un conteneur en Kg */
-  CAPACITE: number;
+  capacite: number;
 
   tourneesIds: string[];
 }
@@ -21,10 +21,7 @@ export interface PointDeCollecte {
 export interface CreatePointCollecteDto {
   localisation: GeoPoint;
   typeDechet: TypeDechet;
-  niveauRemplissage: number;
-  etatConteneur: EtatConteneur;
   capacite: number;
-  tourneeIds: [];
 }
 
 /**

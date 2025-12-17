@@ -75,11 +75,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    // Charge les données
-    this.store.dispatch(loadPointsCollecte());
-    this.store.dispatch(loadVehicules());
-    this.store.dispatch(loadTournees());
-
     // Souscrit aux statistiques
     this.store
       .select(selectAllPointsCollecte)

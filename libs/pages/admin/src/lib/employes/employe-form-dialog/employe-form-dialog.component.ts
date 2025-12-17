@@ -26,8 +26,6 @@ import {
   Disponibilite,
   createEmploye,
   Administrateur,
-  Utilisateur,
-  selectCurrentUser,
   updateEmployeByAdmin,
 } from '@smart-waste-management/shared/data-access';
 
@@ -68,16 +66,11 @@ export class EmployeFormDialogComponent implements OnInit {
 
   form: FormGroup;
   isEmployeRole = true;
-  currentUser: Utilisateur | null = null;
 
   Role = Role;
   Disponibilite = Disponibilite;
 
   constructor() {
-    this.store.select(selectCurrentUser).subscribe((user) => {
-      this.currentUser = user;
-    });
-
     const employe = this.data.employe;
     const isEmploye = employe ? 'disponibilite' in employe : true;
 
@@ -155,7 +148,6 @@ export class EmployeFormDialogComponent implements OnInit {
         tel: formValue.tel,
         dateNais: new Date(formValue.dateNaissance).toISOString().split('T')[0],
         role: formValue.role,
-        active: true,
       };
 
       if (formValue.role === Role.EMPLOYE) {
@@ -168,13 +160,15 @@ export class EmployeFormDialogComponent implements OnInit {
     } else if (this.data.mode === 'edit' && this.data.employe) {
       // Edition d'un employé existant
       const dto: any = {
-        role: this.data.employe.role,
         email: formValue.email,
         tel: formValue.tel,
       };
 
       if (formValue.role === Role.EMPLOYE) {
         dto.numPermis = formValue.numPermis;
+        dto.role = Role.EMPLOYE;
+      } else {
+        dto.role = Role.ADMIN;
       }
 
       this.store.dispatch(
