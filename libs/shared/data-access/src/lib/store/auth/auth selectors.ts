@@ -8,22 +8,6 @@ import { AuthState } from './auth.reducer';
 export const selectAuthState = createFeatureSelector<AuthState>('auth');
 
 /**
- * Sélectionne l'utilisateur actuel
- */
-export const selectCurrentUser = createSelector(
-  selectAuthState,
-  (state) => state.user
-);
-
-/**
- * Sélectionne le token
- */
-export const selectToken = createSelector(
-  selectAuthState,
-  (state) => state.token
-);
-
-/**
  * Sélectionne si l'utilisateur est authentifié
  */
 export const selectIsAuthenticated = createSelector(
@@ -31,28 +15,19 @@ export const selectIsAuthenticated = createSelector(
   (state) => state.isAuthenticated
 );
 
-/**
- * Sélectionne le rôle de l'utilisateur
- */
-export const selectUserRole = createSelector(
-  selectCurrentUser,
-  (user) => user?.role
+export const selectSub = createSelector(selectAuthState, (state) => state.sub);
+
+export const selectRoles = createSelector(
+  selectAuthState,
+  (state) => state.roles
 );
 
-/**
- * Vérifie si l'utilisateur est admin
- */
-export const selectIsAdmin = createSelector(
-  selectUserRole,
-  (role) => role === 'ADMIN'
+export const selectIsAdmin = createSelector(selectRoles, (roles) =>
+  roles.includes('ROLE_ADMIN')
 );
 
-/**
- * Vérifie si l'utilisateur est employé
- */
-export const selectIsEmployee = createSelector(
-  selectUserRole,
-  (role) => role === 'EMPLOYE'
+export const selectIsEmployee = createSelector(selectRoles, (roles) =>
+  roles.includes('ROLE_EMPLOYE')
 );
 
 /**

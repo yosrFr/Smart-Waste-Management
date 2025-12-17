@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { map, catchError, switchMap, tap } from 'rxjs/operators';
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../services/auth.service';
+import { jwtDecode } from 'jwt-decode';
 
 /**
  * Effects pour l'authentification
@@ -25,7 +26,15 @@ export class AuthEffects {
       ofType(AuthActions.login),
       switchMap(({ credentials }) =>
         this.authService.login(credentials).pipe(
-          map((response) => AuthActions.loginSuccess({ response })),
+          map((res) => {
+            const decodedToken = jwtDecode<any>(res.token); // Decode the token
+            return AuthActions.loginSuccess({
+              jwt: res.token,
+              roles: decodedToken.roles, // Extract roles from decoded token
+              sub: decodedToken.sub, // Extract sub (user identifier) from decoded token
+            });
+          }),
+
           catchError((error) =>
             of(AuthActions.loginFailure({ error: error.message }))
           )
@@ -41,17 +50,12 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
-        tap(({ response }) => {
-          // Sauvegarde le token
-          localStorage.setItem('token', response.token);
-          // Sauvegarde l'utilisateur
-          localStorage.setItem('currentUser', JSON.stringify(response.user));
-          // Redirige selon le rôle
-          const route =
-            response.user.role === 'ADMIN'
-              ? '/admin/dashboard'
-              : '/employee/dashboard';
-          this.router.navigate([route]);
+        tap(({ roles }) => {
+          if (roles.includes('ROLE_ADMIN')) {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigate(['/employee/dashboard']);
+          }
         })
       ),
     { dispatch: false }
@@ -67,37 +71,11 @@ export class AuthEffects {
         tap(() => {
           // Supprime le token et l'utilisateur
           localStorage.removeItem('token');
-          localStorage.removeItem('currentUser');
           // Redirige vers login
           this.router.navigate(['/auth/login']);
         })
       ),
     { dispatch: false }
-  );
-
-  /**
-   * Effect pour charger l'utilisateur au démarrage
-   */
-  loadCurrentUser$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.loadCurrentUser),
-      map(() => {
-        const userStr = localStorage.getItem('currentUser');
-        const token = localStorage.getItem('token');
-
-        if (userStr && token) {
-          try {
-            const user = JSON.parse(userStr);
-            return AuthActions.loadCurrentUserSuccess({ user });
-          } catch (e) {
-            return AuthActions.loadCurrentUserFailure({
-              error: 'Erreur de session',
-            });
-          }
-        }
-        return AuthActions.loadCurrentUserFailure({ error: 'Pas de session' });
-      })
-    )
   );
 
   /**

@@ -1,11 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { createAction, props } from '@ngrx/store';
-import {
-  LoginDto,
-  LoginResponse,
-  ChangePasswordDto,
-  Utilisateur,
-} from '../../models';
+import { ChangePasswordDto, LoginDto } from '../../models';
 
 /**
  * Actions pour l'authentification
@@ -24,7 +19,7 @@ export const login = createAction(
  */
 export const loginSuccess = createAction(
   '[Auth] Login Success',
-  props<{ response: LoginResponse }>()
+  props<{ jwt: string; roles: string[]; sub: string }>()
 );
 
 /**
@@ -60,26 +55,5 @@ export const changePasswordSuccess = createAction(
  */
 export const changePasswordFailure = createAction(
   '[Auth] Change Password Failure',
-  props<{ error: string }>()
-);
-
-/**
- * Action de chargement de l'utilisateur courant
- */
-export const loadCurrentUser = createAction('[Auth] Load Current User');
-
-/**
- * Action de chargement de l'utilisateur courant réussi
- */
-export const loadCurrentUserSuccess = createAction(
-  '[Auth] Load Current User Success',
-  props<{ user: Utilisateur }>()
-);
-
-/**
- * Action de chargement de l'utilisateur courant échoué
- */
-export const loadCurrentUserFailure = createAction(
-  '[Auth] Load Current User Failure',
   props<{ error: string }>()
 );

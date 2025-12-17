@@ -1,14 +1,15 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { createReducer, on } from '@ngrx/store';
-import { Utilisateur } from '../../models';
 import * as AuthActions from './auth.actions';
+import { AUTH_STORAGE_KEYS } from '../../auth-constants/auth.constants';
 
 /**
  * État de l'authentification
  */
 export interface AuthState {
   /** Utilisateur actuellement connecté */
-  user: Utilisateur | null;
+  roles: string[];
+  sub: string;
   /** Token JWT */
   token: string | null;
   /** Indique si une opération est en cours */
@@ -23,11 +24,12 @@ export interface AuthState {
  * État initial de l'authentification
  */
 export const initialAuthState: AuthState = {
-  user: null,
-  token: null,
+  roles: [],
+  sub: '',
+  token: localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN),
   loading: false,
   error: null,
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN),
 };
 
 /**
@@ -41,10 +43,11 @@ export const authReducer = createReducer(
     loading: true,
     error: null,
   })),
-  on(AuthActions.loginSuccess, (state, { response }) => ({
+  on(AuthActions.loginSuccess, (state, { jwt, roles, sub }) => ({
     ...state,
-    user: response.user,
-    token: response.token,
+    token: jwt,
+    roles,
+    sub,
     loading: false,
     isAuthenticated: true,
     error: null,
@@ -72,28 +75,5 @@ export const authReducer = createReducer(
     ...state,
     loading: false,
     error,
-  })),
-  // Load Current User
-  on(AuthActions.loadCurrentUser, (state) => ({
-    ...state,
-    loading: true,
-    error: null,
-  })),
-  on(AuthActions.loadCurrentUserSuccess, (state, { user }) => {
-    const token = localStorage.getItem('token');
-    return {
-      ...state,
-      user,
-      token,
-      loading: false,
-      isAuthenticated: true,
-      error: null,
-    };
-  }),
-  on(AuthActions.loadCurrentUserFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-    isAuthenticated: false,
   }))
 );
