@@ -3,6 +3,7 @@ import {
   ApplicationConfig,
   provideZoneChangeDetection,
   isDevMode,
+  APP_INITIALIZER,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -12,12 +13,15 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { appRoutes } from './app.routes';
 import {
-  authReducer,
-  AuthEffects,
   reducers,
   effects,
+  AuthService,
 } from '@smart-waste-management/shared/data-access';
 import { authInterceptor } from '@smart-waste-management/shared/data-access';
+
+export function initAuth(authService: AuthService) {
+  return () => authService.restoreSession();
+}
 
 /**
  * Configuration globale de l'application
@@ -42,5 +46,11 @@ export const appConfig: ApplicationConfig = {
       trace: false,
       traceLimit: 75,
     }),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initAuth,
+      deps: [AuthService],
+      multi: true,
+    },
   ],
 };
