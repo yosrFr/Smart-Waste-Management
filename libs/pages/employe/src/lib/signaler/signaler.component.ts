@@ -22,11 +22,10 @@ import {
 import {
   TypeDechet,
   SignalementService,
-  TypeNotif,
   PointDeCollecte,
   Vehicule,
-  selectPointsCollecteEntities,
-  selectVehiculesEntities,
+  selectAllPointsCollecte,
+  selectAllVehicules,
 } from '@smart-waste-management/shared/data-access';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -82,11 +81,12 @@ export class SignalerComponent {
 
   constructor() {
     // Récupération des entités depuis le store
-    this.store.select(selectPointsCollecteEntities).subscribe((entities) => {
-      this.pointsCollecte = Object.values(entities);
+    this.store.select(selectAllPointsCollecte).subscribe((points) => {
+      this.pointsCollecte = points;
     });
-    this.store.select(selectVehiculesEntities).subscribe((entities) => {
-      this.vehicules = Object.values(entities);
+
+    this.store.select(selectAllVehicules).subscribe((vehicules) => {
+      this.vehicules = vehicules;
     });
 
     // Formulaire conteneur endommagé
@@ -94,21 +94,18 @@ export class SignalerComponent {
       latitude: [34.7065, [Validators.required]],
       longitude: [10.7487, [Validators.required]],
       typeDechet: ['', [Validators.required]],
-      description: ['', Validators.required],
     });
 
     // Formulaire véhicule en panne
     this.vehiculeForm = this.fb.group({
       matricule: ['', [Validators.required]],
       typeDechet: ['', [Validators.required]],
-      description: ['', Validators.required],
     });
 
     // Formulaire incident
     this.incidentForm = this.fb.group({
       latitude: [34.7065, [Validators.required]],
       longitude: [10.7487, [Validators.required]],
-      description: ['', Validators.required],
     });
   }
 
@@ -165,9 +162,6 @@ export class SignalerComponent {
     this.signalementService
       .signalerConteneur({
         pointDeCollecteId: pointId,
-        description: formValue.description,
-        type: TypeNotif.ENDOMMAGE,
-        date: new Date().toISOString(),
       })
       .subscribe({
         next: () => {
@@ -210,9 +204,6 @@ export class SignalerComponent {
       .signalerVehicule({
         vehiculeId,
         localisation: { latitude: 0, longitude: 0 },
-        description: formValue.description,
-        type: TypeNotif.PANNE_VEHICULE,
-        date: new Date().toISOString(),
       })
       .subscribe({
         next: () => {
@@ -247,9 +238,6 @@ export class SignalerComponent {
           latitude: formValue.latitude,
           longitude: formValue.longitude,
         },
-        description: formValue.description,
-        type: TypeNotif.INCIDENT,
-        date: new Date().toISOString(),
       })
       .subscribe({
         next: () => {
@@ -273,27 +261,33 @@ export class SignalerComponent {
     longitude: number;
     typeDechet: TypeDechet;
   }): string | null {
-    if (!this.pointsCollecte.length) return null;
+    if (!data.typeDechet || !this.pointsCollecte?.length) return null;
 
     // Filtrer les points de collecte compatibles avec le type de déchet
     const compatiblePoints = this.pointsCollecte.filter(
-      (p) => p.typeDechet === data.typeDechet
+      (p) =>
+        p &&
+        p.localisation &&
+        (p.typeDechet === data.typeDechet ||
+          p.typeDechet === TypeDechet[data.typeDechet])
     );
     if (!compatiblePoints.length) return null;
 
     // Calculer la distance et retourner l'id le plus proche
     let minDist = Infinity;
     let closestId: string | null = null;
-    compatiblePoints.forEach((p) => {
+
+    for (const p of compatiblePoints) {
       const dist = calculateDistance(
         { latitude: data.latitude, longitude: data.longitude },
         p.localisation
       );
-      if (dist < minDist) {
+
+      if (!isNaN(dist) && dist < minDist) {
         minDist = dist;
         closestId = p.id;
       }
-    });
+    }
 
     return closestId;
   }
@@ -302,10 +296,11 @@ export class SignalerComponent {
     matricule: string,
     typeDechet: TypeDechet
   ): string | null {
-    if (!this.vehicules.length) return null;
+    if (!matricule || !typeDechet || !this.vehicules?.length) return null;
+
     const vehicule = this.vehicules.find(
-      (v) => v.matricule === matricule && v.typeDechet === typeDechet
+      (v) => v && v.matricule === matricule && v.typeDechet === typeDechet
     );
-    return vehicule ? vehicule.id : null;
+    return vehicule?.id ?? null;
   }
 }
