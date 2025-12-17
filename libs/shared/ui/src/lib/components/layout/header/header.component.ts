@@ -19,11 +19,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { Store } from '@ngrx/store';
 import { filter, map, Observable, Subscription } from 'rxjs';
 import {
-  selectCurrentUser,
   selectRecentNotifications,
   logout,
   AppNotification,
   Utilisateur,
+  AuthService,
+  selectAllEmployes,
 } from '@smart-waste-management/shared/data-access';
 import { ThemeService, ThemeMode } from '../../../services/theme.service';
 import { DateRelativePipe, EnumLabelPipe } from '../../../pipes';
@@ -69,6 +70,7 @@ export class HeaderComponent implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
   private themeService = inject(ThemeService);
+  private authService = inject(AuthService);
 
   private routerSubscription?: Subscription;
 
@@ -77,7 +79,13 @@ export class HeaderComponent implements OnInit {
   @ViewChild('userTrigger') userTrigger?: MatMenuTrigger;
 
   constructor() {
-    this.currentUser$ = this.store.select(selectCurrentUser);
+    this.currentUser$ = this.store.select(selectAllEmployes).pipe(
+      map((users) =>
+        users.find((u) => u.email === this.authService.getUserEmailFromToken())
+      ),
+      filter((user): user is NonNullable<typeof user> => !!user)
+    );
+
     this.recentNotifications$ = this.store.select(selectRecentNotifications);
   }
 

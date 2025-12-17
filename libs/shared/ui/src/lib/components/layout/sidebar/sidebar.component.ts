@@ -1,13 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { selectUserRole } from '@smart-waste-management/shared/data-access';
+import { AuthService } from '@smart-waste-management/shared/data-access';
 
 /**
  * Item de menu du sidebar
@@ -36,8 +34,7 @@ interface MenuItem {
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent implements OnInit {
-  private store = inject(Store);
-  private router = inject(Router);
+  private authService = inject(AuthService);
 
   /** Menus pour admin */
   private adminMenuItems: MenuItem[] = [
@@ -78,17 +75,9 @@ export class SidebarComponent implements OnInit {
   /** Items de menu visibles selon le rôle */
   visibleMenuItems: MenuItem[] = [];
 
-  /** Rôle de l'utilisateur */
-  userRole$: Observable<string | undefined>;
-
-  constructor() {
-    this.userRole$ = this.store.select(selectUserRole);
-  }
-
   ngOnInit(): void {
-    this.userRole$.subscribe((role) => {
-      this.visibleMenuItems =
-        role === 'ADMIN' ? this.adminMenuItems : this.employeeMenuItems;
-    });
+    const role = this.authService.getRolesFromToken()[0];
+    this.visibleMenuItems =
+      role === 'ROLE_ADMIN' ? this.adminMenuItems : this.employeeMenuItems;
   }
 }
