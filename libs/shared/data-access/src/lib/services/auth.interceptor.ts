@@ -1,21 +1,18 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { HttpInterceptorFn } from '@angular/common/http';
+import { AUTH_STORAGE_KEYS } from '../auth-constants/auth.constants';
 
-/**
- * Intercepteur HTTP fonctionnel
- * Ajoute le token JWT à chaque requête HTTP
- */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
 
   if (token) {
-    // Clone la requête et ajoute le header Authorization
-    const clonedReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return next(clonedReq);
+    return next(
+      req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    );
   }
 
   return next(req);

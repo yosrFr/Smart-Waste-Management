@@ -7,7 +7,6 @@ import {
   SignalerIncidentDto,
 } from '../models';
 import { HttpClient } from '@angular/common/http';
-import { TypeNotif } from '../enums';
 
 /**
  * Service pour gérer les signalements des employés
@@ -29,9 +28,6 @@ export class SignalementService {
   signalerConteneur(dto: SignalerEndommageDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/endommage`, {
       pointDeCollecteId: dto.pointDeCollecteId,
-      date: new Date().toISOString(),
-      type: TypeNotif.ENDOMMAGE,
-      description: dto.description,
     });
   }
 
@@ -44,9 +40,6 @@ export class SignalementService {
     return this.http.post(`${this.apiUrl}/panne-vehicule`, {
       vehiculeId: dto.vehiculeId,
       localisation: dto.localisation,
-      date: new Date().toISOString(),
-      type: TypeNotif.PANNE_VEHICULE,
-      description: dto.description,
     });
   }
 
@@ -58,9 +51,6 @@ export class SignalementService {
   signalerIncident(dto: SignalerIncidentDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/incident`, {
       localisation: dto.localisation,
-      date: new Date().toISOString(),
-      type: TypeNotif.INCIDENT,
-      description: dto.description,
     });
   }
 }
