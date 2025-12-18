@@ -9,6 +9,7 @@ import {
   withLatestFrom,
   mergeMap,
   take,
+  tap,
 } from 'rxjs/operators';
 import * as NotificationActions from './notifications.actions';
 import { NotificationService, SignalementService } from '../../services';
@@ -47,8 +48,17 @@ export class NotificationEffects {
           this.store.pipe(select(selectAllVehicules)),
           this.store.pipe(select(selectAllPointsCollecte)),
         ]).pipe(
+          tap(([tournees, vehicules, points]) => {
+            // console.log('Données récupérées du store:');
+            // console.log('Tournees:', tournees);
+            // console.log('Vehicules:', vehicules);
+            // console.log('Points de collecte:', points);
+          }),
           mergeMap(([tournees, vehicules, points]) =>
             this.notificationService.getAll().pipe(
+              tap((notifications) => {
+                // console.log('Notifications récupérées:', notifications);
+              }),
               map((notifications) =>
                 notifications.map((notif) =>
                   this.notificationService.enrichNotifications(
@@ -59,6 +69,9 @@ export class NotificationEffects {
                   )
                 )
               ),
+              tap((enrichedNotifications) => {
+                // console.log('Notifications enrichies:', enrichedNotifications);
+              }),
               map((notifications) =>
                 NotificationActions.loadNotificationsSuccess({
                   notifications,

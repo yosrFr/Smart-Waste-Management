@@ -142,7 +142,7 @@ export const selectPaginatedNotifications = createSelector(
   (notifications, pageIndex) => {
     const start = pageIndex * pageSize;
     const end = start + pageSize;
-    console.log('Notifications paginées:', notifications.slice(start, end));
+    // console.log('Notifications paginées:', notifications.slice(start, end));
     return notifications.slice(start, end);
   }
 );
