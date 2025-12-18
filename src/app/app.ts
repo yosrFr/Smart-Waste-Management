@@ -25,13 +25,21 @@ export class App implements OnInit {
   private store = inject(Store);
   private destroy$: Subject<void> = new Subject<void>();
   private authService = inject(AuthService);
+  isAuthenticated$: Observable<boolean>;
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      this.loadData();
-    }
-
-    this.authService.restoreSession();
+    // this.authService.restoreSession();
+    // this.authService.isAuthenticated$.subscribe((isAuth) => {
+    //   if (isAuth) {
+    //     this.loadData();
+    //   }
+    // });
+    this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
+    this.isAuthenticated$.subscribe((isAuth) => {
+      if (isAuth) {
+        this.loadData();
+      }
+    });
   }
 
   private loadData(): void {
