@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { GeoPoint } from '@smart-waste-management/shared/data-access';
 
 /**
