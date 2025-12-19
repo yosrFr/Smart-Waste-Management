@@ -64,7 +64,6 @@ export class ProfilFormDialogComponent implements OnInit {
 
   ngOnInit(): void {
     const employe = this.data.employe;
-    console.log(employe);
 
     if (employe) {
       // Initialisez le formulaire avec les données de l'employé
@@ -85,9 +84,6 @@ export class ProfilFormDialogComponent implements OnInit {
     if (!this.form.valid) return;
 
     const formValue = this.form.value;
-
-    console.log('Form Value:', formValue);
-    console.log('Current Employee:', this.data.employe);
 
     // Vérifie si `this.data.employe` est défini avant d'envoyer l'action
     if (!this.data.employe) return;

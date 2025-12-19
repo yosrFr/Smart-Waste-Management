@@ -118,7 +118,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(ProfilFormDialogComponent, {
         width: '700px',
         data: {
-          employe: user, // Passez directement l'utilisateur, pas un Observable
+          employe: user,
         },
       });
 
