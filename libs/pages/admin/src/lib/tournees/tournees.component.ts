@@ -15,6 +15,9 @@ import {
   StatutTournee,
   selectTourneesByStatut,
   loadEmployes,
+  loadVehicules,
+  loadPointsCollecte,
+  loadNotifications,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -105,6 +108,9 @@ export class TourneesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch(loadTournees());
     this.store.dispatch(loadEmployes());
+    this.store.dispatch(loadVehicules());
+    this.store.dispatch(loadPointsCollecte());
+    this.store.dispatch(loadNotifications());
 
     this.store
       .select(selectAllTournees)
@@ -130,7 +136,6 @@ export class TourneesComponent implements OnInit, OnDestroy {
   }
 
   viewOnMap(tournee: Tournee): void {
-    // console.log('Viewing tournee on map:', tournee);
     this.dialog.open(TourneeMapDialogComponent, {
       width: '90vw',
       height: '80vh',

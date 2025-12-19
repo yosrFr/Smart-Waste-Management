@@ -15,6 +15,7 @@ import {
   deleteVehicule,
   Vehicule,
   StatutVehicule,
+  loadNotifications,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -107,6 +108,7 @@ export class VehiculesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.dispatch(loadVehicules());
+    this.store.dispatch(loadNotifications());
 
     this.store
       .select(selectAllVehicules)

@@ -18,6 +18,7 @@ import {
   Disponibilite,
   Administrateur,
   selectAdminsOnly,
+  loadNotifications,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -96,8 +97,8 @@ export class EmployesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.dispatch(loadEmployes());
+    this.store.dispatch(loadNotifications());
 
-    // Subscribe to employees (only role EMPLOYE) and keep only active ones for Disponibles/En mission
     this.store
       .select(selectEmployesOnly)
       .pipe(takeUntil(this.destroy$))
@@ -115,7 +116,6 @@ export class EmployesComponent implements OnInit, OnDestroy {
         );
       });
 
-    // Subscribe to all users to compute inactifs (both employes and admins)
     this.store
       .select(selectAllEmployes)
       .pipe(takeUntil(this.destroy$))
@@ -127,7 +127,6 @@ export class EmployesComponent implements OnInit, OnDestroy {
       .select(selectAdminsOnly)
       .pipe(takeUntil(this.destroy$))
       .subscribe((admins) => {
-        // Only show active admins in the Admin tab; inactive admins appear in the INACTIF tab
         this.totalAdmins = admins.filter((a) => a.active === true).length;
         this.admin = admins.filter((a) => a.active === true);
       });

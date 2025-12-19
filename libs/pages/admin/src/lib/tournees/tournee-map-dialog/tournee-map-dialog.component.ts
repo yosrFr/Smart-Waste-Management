@@ -59,8 +59,6 @@ export class TourneeMapDialogComponent implements OnInit, OnDestroy {
   private simulationStarted = false;
 
   ngOnInit(): void {
-    // console.log('var tournee in map dialog', this.tournee);
-    // console.log('var data in map dialog', this.data);
     this.store
       .select(selectTourneeById(this.data.id))
       .pipe(takeUntil(this.destroy$))

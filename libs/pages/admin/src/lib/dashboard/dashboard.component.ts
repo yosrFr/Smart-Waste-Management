@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy, inject, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,8 @@ import {
   StatutVehicule,
   selectTourneesAujourdhui,
   selectTourneesAujourdhuiByStatut,
+  loadEmployes,
+  loadNotifications,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -70,11 +72,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Tournées du jour
   tourneesAujourdhui: Tournee[] = [];
+
   displayedColumns = ['vehicule', 'typeDechet', 'statut', 'actions'];
 
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    this.store.dispatch(loadEmployes());
+    this.store.dispatch(loadVehicules());
+    this.store.dispatch(loadPointsCollecte());
+    this.store.dispatch(loadTournees());
+    this.store.dispatch(loadNotifications());
     // Souscrit aux statistiques
     this.store
       .select(selectAllPointsCollecte)

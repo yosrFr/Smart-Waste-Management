@@ -65,19 +65,10 @@ export class VehiculeFormDialogComponent {
       typeDechet: [this.data?.typeDechet || '', [Validators.required]],
       marque: [this.data?.marque || '', [Validators.required]],
     });
-
-    // if (!this.isEditMode) {
-    //   this.form.addControl(
-    //     'matricule',
-    //     this.fb.control('', Validators.required)
-    //   );
-    // }
   }
 
   onSubmit(): void {
     if (this.form.valid) {
-      // console.log(this.form.value);
-
       if (this.isEditMode && this.data) {
         this.store.dispatch(
           updateVehicule({

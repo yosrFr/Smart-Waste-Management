@@ -15,6 +15,7 @@ import {
   loadPointsCollecte,
   deletePointCollecte,
   PointDeCollecte,
+  loadNotifications,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -118,6 +119,7 @@ export class PointsCollecteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Charge les points de collecte
     this.store.dispatch(loadPointsCollecte());
+    this.store.dispatch(loadNotifications());
 
     // Souscrit aux points de collecte
     this.store
