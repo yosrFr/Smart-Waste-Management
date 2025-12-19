@@ -7,7 +7,6 @@ import { of } from 'rxjs';
 import {
   selectIsAuthenticated,
   selectAuthLoading,
-  AuthService,
 } from '@smart-waste-management/shared/data-access';
 
 /**
@@ -26,7 +25,6 @@ import {
 export const authGuard: CanActivateFn = () => {
   const store = inject(Store);
   const router = inject(Router);
-  const authService = inject(AuthService);
 
   return store.select(selectIsAuthenticated).pipe(
     take(1),

@@ -1,9 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { AuthService } from '@smart-waste-management/shared/data-access';
-import { map, take } from 'rxjs/operators';
 
 /**
  *

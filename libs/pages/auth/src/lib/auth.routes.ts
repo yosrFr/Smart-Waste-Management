@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Route } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-// import { ChangePasswordComponent } from './change-password/change-password.component';
 import { authGuard } from './guards/auth.guard';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 
