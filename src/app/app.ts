@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
@@ -18,9 +18,8 @@ import { Observable, Subject } from 'rxjs';
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.html',
-  styleUrl: './app.css',
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   protected title = 'smart-waste-management';
   private store = inject(Store);
   private destroy$: Subject<void> = new Subject<void>();
@@ -28,12 +27,6 @@ export class App implements OnInit {
   isAuthenticated$: Observable<boolean>;
 
   ngOnInit(): void {
-    // this.authService.restoreSession();
-    // this.authService.isAuthenticated$.subscribe((isAuth) => {
-    //   if (isAuth) {
-    //     this.loadData();
-    //   }
-    // });
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
     this.isAuthenticated$.subscribe((isAuth) => {
       if (isAuth) {
