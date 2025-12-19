@@ -64,7 +64,6 @@ export class AuthService {
    * @returns Observable avec le token et les infos utilisateur
    */
   login(credentials: LoginDto): Observable<LoginResponse> {
-    // console.log(credentials);
     return this.http
       .post<LoginResponse>(`${this.apiAuth}/login`, credentials)
       .pipe(
