@@ -8,6 +8,7 @@ import {
   ElementRef,
   OnChanges,
   SimpleChanges,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -46,7 +47,7 @@ export class TabsComponent implements AfterViewInit, OnChanges {
    */
   @Output() tabChange = new EventEmitter<Tab>();
 
-  constructor(private elementRef: ElementRef) {}
+  private elementRef = inject(ElementRef);
 
   ngAfterViewInit(): void {
     // Attendre le rendu complet

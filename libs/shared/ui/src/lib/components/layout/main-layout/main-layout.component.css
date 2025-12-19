@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1001; /* above drawer (default z-index 100) */
+  z-index: 1001;
   height: 64px;
 }
 
@@ -19,7 +19,7 @@
 
 .layout-sidenav {
   width: 260px;
-  z-index: 900; /* below header */
+  z-index: 900;
   height: 100%;
   position: fixed;
   left: 0;

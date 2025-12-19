@@ -1,5 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  OnInit,
+  AfterViewInit,
+  OnChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
@@ -57,7 +64,7 @@ export interface TableAction<T = any> {
   templateUrl: 'data-table.component.html',
   styleUrl: 'data-table.component.css',
 })
-export class DataTableComponent<T> implements OnInit {
+export class DataTableComponent<T> implements OnInit, AfterViewInit, OnChanges {
   /** Données du tableau */
   @Input() data: T[] = [];
 

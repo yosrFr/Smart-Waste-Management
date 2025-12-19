@@ -6,6 +6,7 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
+  OnChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
@@ -20,6 +21,19 @@ export interface MapMarker {
   icon?: L.Icon | L.DivIcon;
   data?: any;
 }
+
+const iconDefault = L.icon({
+  iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+  iconUrl: 'assets/leaflet/marker-icon.png',
+  shadowUrl: 'assets/leaflet/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41],
+});
+
+L.Marker.prototype.options.icon = iconDefault;
 
 /**
  * Configuration d'une polyligne (circuit)
@@ -39,7 +53,9 @@ export interface MapPolyline {
   templateUrl: './leaflet-map.component.html',
   styleUrl: './leaflet-map.component.css',
 })
-export class LeafletMapComponent implements AfterViewInit, OnDestroy {
+export class LeafletMapComponent
+  implements AfterViewInit, OnDestroy, OnChanges
+{
   /** ID unique de la carte */
   @Input() mapId = 'map-' + Math.random().toString(36).substr(2, 9);
 

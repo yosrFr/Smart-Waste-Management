@@ -98,7 +98,7 @@ export class HeaderComponent implements OnInit {
     // Mise à jour initiale du titre au chargement
     this.pageTitle = this.getDeepestTitle(this.router.routerState.root) || '';
 
-    // Ensuite, mise à jour à chaque changement de route
+    // Mise à jour à chaque changement de route
     this.routerSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
