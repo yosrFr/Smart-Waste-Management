@@ -86,7 +86,6 @@ export class SignalerComponent {
     // Récupération des entités depuis le store
     this.store.select(selectAllPointsCollecte).subscribe((points) => {
       this.pointsCollecte = points;
-      console.log('Points de collecte récupérés:', this.pointsCollecte);
     });
 
     this.store.select(selectAllVehicules).subscribe((vehicules) => {
@@ -265,13 +264,7 @@ export class SignalerComponent {
     longitude: number;
     typeDechet: TypeDechet;
   }): string | null {
-    console.log('Signaler Conteneur appelé');
-    console.log('data.typeDechet:', data.typeDechet);
-    console.log('data.latitude:', data.latitude);
-    console.log('data.longitude:', data.longitude);
-    console.log('pointsCollecte:', this.pointsCollecte);
     if (!data.typeDechet || !this.pointsCollecte?.length) return null;
-    console.log('Signaler Conteneur appelé ici');
 
     // Filtrer les points de collecte compatibles avec le type de déchet
     const compatiblePoints = this.pointsCollecte.filter(
@@ -281,7 +274,6 @@ export class SignalerComponent {
         (p.typeDechet === data.typeDechet ||
           p.typeDechet === TypeDechet[data.typeDechet])
     );
-    console.log('Compatible Points:', compatiblePoints);
     if (!compatiblePoints.length) return null;
 
     // Calculer la distance et retourner l'id le plus proche
@@ -294,14 +286,12 @@ export class SignalerComponent {
         p.localisation
       );
 
-      console.log('Distance:', dist, 'Point:', p);
       if (!isNaN(dist) && dist < minDist) {
         minDist = dist;
         closestId = p.id;
       }
     }
 
-    console.log('Closest Point Id:', closestId);
     return closestId;
   }
 

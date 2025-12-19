@@ -85,8 +85,7 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
     this.currentUser$ = this.store.select(selectAllEmployes).pipe(
       map((users) => {
         if (users.length === 0) {
-          console.log('Aucun employé trouvé');
-          return null; // Ou une autre logique si les employés ne sont pas encore chargés
+          return null;
         }
         return users.find(
           (u) => u.email === this.authService.getUserEmailFromToken()
@@ -102,16 +101,8 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
     this.loading$ = this.store.select(selectTourneesLoading);
 
     this.currentUser$.subscribe((user) => {
-      console.log('User:', user); // Ici tu devrais voir l'utilisateur dans la console
       this.loadEmployeeTournees(user.id);
     });
-
-    this.store
-      .select(selectAllEmployes)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users) => {
-        console.log('Employes:', users); // Ici tu vois tous les employés dans la console
-      });
   }
 
   ngOnDestroy(): void {
@@ -133,7 +124,6 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
       .select(selectTourneesAujourdhuiByEmployeId(employeId))
       .pipe(takeUntil(this.destroy$))
       .subscribe((tournees) => {
-        console.log("Tournees aujourd'hui:", tournees);
         this.tourneesAujourdhui = tournees.length;
       });
 
@@ -147,7 +137,6 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe((tourneesTerminees) => {
-        console.log("Tournees aujourd'hui:", tourneesTerminees);
         this.tourneesTerminees = tourneesTerminees.length;
       });
   }
@@ -180,7 +169,6 @@ export class EmployeeDashboardComponent implements OnInit, OnDestroy {
    * @param tournee tournée spécifique
    */
   viewTourneeMap(tournee: Tournee): void {
-    console.log(tournee);
     this.dialog.open(TourneeMapDialogComponent, {
       width: '90vw',
       height: '80vh',

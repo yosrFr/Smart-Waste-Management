@@ -177,7 +177,6 @@ export class MesTourneesComponent implements OnInit, OnDestroy {
    * @param tournee Tournée à visualiser
    */
   viewOnMap(tournee: Tournee): void {
-    console.log(tournee);
     this.dialog.open(TourneeMapDialogComponent, {
       width: '90vw',
       height: '400px',
