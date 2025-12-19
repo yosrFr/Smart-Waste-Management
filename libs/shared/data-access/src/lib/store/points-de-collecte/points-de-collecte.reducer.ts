@@ -42,7 +42,7 @@ export const pointCollecteReducer = createReducer(
     error,
     loading: false,
   })),
-  // Cr"ation d'un point de collecte
+  // Création d'un point de collecte
   on(PointsCollecteActions.createPointCollecteSuccess, (state, { point }) => ({
     ...state,
     points: [...state.points, point],

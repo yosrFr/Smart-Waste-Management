@@ -27,11 +27,11 @@ export class AuthEffects {
       switchMap(({ credentials }) =>
         this.authService.login(credentials).pipe(
           map((res) => {
-            const decodedToken = jwtDecode<any>(res.token); // Decode the token
+            const decodedToken = jwtDecode<any>(res.token);
             return AuthActions.loginSuccess({
               jwt: res.token,
-              roles: decodedToken.roles, // Extract roles from decoded token
-              sub: decodedToken.sub, // Extract sub (user identifier) from decoded token
+              roles: decodedToken.roles,
+              sub: decodedToken.sub,
             });
           }),
 

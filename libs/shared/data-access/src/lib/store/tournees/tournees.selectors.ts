@@ -29,16 +29,6 @@ export const selectAllTournees = createSelector(
   (state) => state.tournees
 );
 
-// /**
-//  * Selectionne une tournée par son ID
-//  * @param id id de la tournée
-//  * @returns tournée correspondante
-//  */
-// export const selectTourneeById = (id: string) =>
-//   createSelector(selectAllTournees, (tournees) =>
-//     tournees.find((t) => t.id === id)
-//   );
-
 /**
  * Filtre les tournées pour ne garder que celles d'aujourd'hui
  * @param tournees liste des tournées
@@ -117,102 +107,6 @@ export const selectTourneesAujourdhuiByEmployeIdAndStatut = (
   createSelector(selectTourneesAujourdhuiByEmployeId(employeId), (tournees) =>
     tournees.filter((t) => t.statut === statut)
   );
-
-// export const selectTourneeById = (tourneeId: string) =>
-//   createSelector(
-//     selectAllTournees,
-//     selectAllPointsCollecte,
-//     selectAllVehicules,
-//     selectAllEmployes,
-//     (tournees, points, vehicules, employes): Tournee | null => {
-//       const t = tournees.find((tournee) => tournee.id === tourneeId);
-//       if (!t) return null;
-
-//       // Enrichir points de collecte
-//       const pointsCollecte = t.pointsDeCollecteIds
-//         .map((id) => points.find((p) => p.id === id))
-//         .filter((p): p is PointDeCollecte => p !== undefined);
-
-//       // Enrichir véhicule
-//       const vehicule = vehicules.find((v) => v.matricule === t.vehiculeId);
-
-//       // Enrichir employé
-//       const employesOnly = employes.filter((e) => e.role === Role.EMPLOYE);
-//       const employe =
-//         employesOnly.find((e) => e.id === t.employeId) ?? undefined;
-//       console.log(employes);
-//       console.log(t.employeId);
-//       console.log(employesOnly);
-//       console.log(employe);
-
-//       return {
-//         ...t,
-//         pointsDeCollecte: pointsCollecte,
-//         vehicule,
-//         employe,
-//       };
-//     }
-//   );
-
-// /**
-//  * Selectionne les tournées non commencées
-//  */
-// export const selectTourneesNonCommencees = createSelector(
-//   selectAllTournees,
-//   (tournees) => tournees.filter((t) => t.statut === StatutTournee.NON_COMMENCEE)
-// );
-
-// /**
-//  * Selectionne les tournées en cours
-//  */
-// export const selectTourneesEnCours = createSelector(
-//   selectAllTournees,
-//   (tournees) => tournees.filter((t) => t.statut === StatutTournee.EN_COURS)
-// );
-
-// /**
-//  * Selectionne les tournées terminées
-//  */
-// export const selectTourneesTerminees = createSelector(
-//   selectAllTournees,
-//   (tournees) => tournees.filter((t) => t.statut === StatutTournee.TERMINEE)
-// );
-
-// /**
-//  * Selectionne les tournées terminées d'aujourd'hui
-//  */
-// export const selectTourneesTermineesAujourdhui = createSelector(
-//   selectAllTournees,
-//   (tournees) => {
-//     const todayTournees = filterByToday(tournees);
-//     return todayTournees.filter((t) => t.statut === StatutTournee.TERMINEE);
-//   }
-// );
-
-// /**
-//  * Selectionne les tournées non commencées d'aujourd'hui
-//  */
-// export const selectTourneesNonCommenceesAujourdhui = createSelector(
-//   selectAllTournees,
-//   (tournees) => {
-//     const todayTournees = filterByToday(tournees);
-//     return todayTournees.filter(
-//       (t) => t.statut === StatutTournee.NON_COMMENCEE
-//     );
-//   }
-// );
-
-// /**
-//  * Selectionne les tournées terminées aujourd'hui pour un employé donné
-//  * @param employeId id de l'employé
-//  * @returns liste des tournées terminées aujourd'hui pour cet employé
-//  */
-// export const selectTourneesTermineesAujourdhuiByEmployeId = (
-//   employeId: string
-// ) =>
-//   createSelector(selectAllTournees, (tournees) =>
-//     filterByToday(tournees).filter((t) => t.employe.id === employeId)
-//   );
 
 export const selectTourneesEnrichies = createSelector(
   selectAllTournees,

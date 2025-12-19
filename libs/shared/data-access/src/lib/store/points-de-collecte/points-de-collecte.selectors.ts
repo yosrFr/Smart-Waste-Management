@@ -54,13 +54,3 @@ export const selectPointsByTypeDechet = (typeDechet: TypeDechet) =>
   createSelector(selectAllPointsCollecte, (points) =>
     points.filter((p) => p.typeDechet === typeDechet)
   );
-
-// export const selectPointsPleins = createSelector(
-//   selectAllPointsCollecte,
-//   (points) => points.filter((p) => p.etatConteneur === EtatConteneur.PLEIN)
-// );
-
-// export const selectPointsEndommages = createSelector(
-//   selectAllPointsCollecte,
-//   (points) => points.filter((p) => p.etatConteneur === EtatConteneur.ENDOMMAGE)
-// );

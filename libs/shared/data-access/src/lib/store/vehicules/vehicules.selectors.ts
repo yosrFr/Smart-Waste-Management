@@ -54,19 +54,3 @@ export const selectVehiculesByTypeDechet = (typeDechet: TypeDechet) =>
   createSelector(selectAllVehicules, (vehicules) =>
     vehicules.filter((v) => v.typeDechet === typeDechet)
   );
-
-// export const selectVehiculesActifs = createSelector(
-//   selectAllVehicules,
-//   (vehicules) => vehicules.filter((v) => v.statut === StatutVehicule.ACTIF)
-// );
-
-// export const selectVehiculesEnMission = createSelector(
-//   selectAllVehicules,
-//   (vehicules) => vehicules.filter((v) => v.statut === StatutVehicule.EN_MISSION)
-// );
-
-// export const selectVehiculesEnReparation = createSelector(
-//   selectAllVehicules,
-//   (vehicules) =>
-//     vehicules.filter((v) => v.statut === StatutVehicule.EN_REPARATION)
-// );

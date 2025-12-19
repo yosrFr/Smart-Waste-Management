@@ -41,25 +41,6 @@ export const notificationReducer = createReducer(
     loading: true,
     error: null,
   })),
-  // on(
-  //   NotificationActions.loadNotificationsSuccess,
-  //   (state, { notifications }) => {
-  //     if (!Array.isArray(notifications)) {
-  //       console.error('Notifications incorrectes :', notifications);
-  //       return {
-  //         ...state,
-  //         loading: false,
-  //         error: 'Données des notifications invalides',
-  //       };
-  //     }
-  //     console.log('Notifications mises à jour dans le store:', notifications);
-  //     return {
-  //       ...state,
-  //       notifications: [...notifications],
-  //       loading: false,
-  //     };
-  //   }
-  // ),
   on(
     NotificationActions.loadNotificationsSuccess,
     (state, { notifications }) => ({
@@ -68,11 +49,6 @@ export const notificationReducer = createReducer(
       loading: false,
     })
   ),
-  // on(NotificationActions.loadNotificationsFailure, (state, { error }) => ({
-  //   ...state,
-  //   loading: false,
-  //   error: typeof error === "string" ? error : "Une erreur inconnue est survenue",
-  // })),
   on(NotificationActions.loadNotificationsFailure, (state, { error }) => ({
     ...state,
     loading: false,

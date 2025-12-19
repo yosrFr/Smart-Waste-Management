@@ -1,8 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of, interval } from 'rxjs';
-import { map, catchError, switchMap, startWith } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { map, catchError, switchMap } from 'rxjs/operators';
 import * as PointsCollecteActions from './points-de-collecte.actions';
 import { PointCollecteService } from '../../services/point-de-collecte.service';
 

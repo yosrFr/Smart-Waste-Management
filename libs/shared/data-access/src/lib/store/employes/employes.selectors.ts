@@ -70,37 +70,3 @@ export const selectEmployesInactifs = createSelector(
   selectAllEmployes,
   (employes) => employes.filter((e) => 'actif' in e && e.actif === false)
 );
-
-// /**
-//  * Sélectionne les utilisateurs par role (employé ou admin)
-//  * @param role role de l'utilisateur
-//  * @returns liste des utilisateurs avec le role spécifié
-//  */
-// export const selectEmployesByRole = (role: Role) =>
-//   createSelector(selectAllEmployes, (employes) =>
-//     employes.filter((e) => e.role === role)
-//   );
-
-// /**
-//  * Sélectionne les employés disponibles
-//  */
-// export const selectEmployesDisponibles = createSelector(
-//   selectEmployesOnly,
-//   (employes) =>
-//     employes.filter(
-//       (e) =>
-//         'disponibilite' in e && e.disponibilite === Disponibilite.DISPONIBLE
-//     )
-// );
-
-// /**
-//  * Sélectionne les employés en mission
-//  */
-// export const selectEmployesEnMission = createSelector(
-//   selectEmployesOnly,
-//   (employes) =>
-//     employes.filter(
-//       (e) =>
-//         'disponibilite' in e && e.disponibilite === Disponibilite.EN_MISSION
-//     )
-// );
