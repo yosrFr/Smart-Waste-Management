@@ -66,9 +66,9 @@ export class EmployeService {
    */
   updateProfil(id: string, dto: UpdateProfilEmployeDto): Observable<any> {
     if (this.authService.getRolesFromToken()[0] == 'ROLE_EMPLOYE') {
-      return this.http.put(`${this.apiUrlEmployes}/update/${id}`, dto);
+      return this.http.put(`${this.apiUrlEmployes}/update/`, dto);
     }
-    return this.http.put(`${this.apiUrlAdmins}/update/${id}`, dto);
+    return this.http.put(`${this.apiUrlAdmins}/update`, dto);
   }
 
   /**

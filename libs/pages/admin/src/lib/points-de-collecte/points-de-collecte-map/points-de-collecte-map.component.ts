@@ -5,6 +5,8 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  inject,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
@@ -16,7 +18,9 @@ import {
 import {
   PointDeCollecte,
   EtatConteneur,
+  loadPointsCollecte,
 } from '@smart-waste-management/shared/data-access';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'lib-points-collecte-map',
@@ -25,7 +29,7 @@ import {
   templateUrl: './points-de-collecte-map.component.html',
   styleUrl: './points-de-collecte-map.component.css',
 })
-export class PointsCollecteMapComponent implements OnChanges {
+export class PointsCollecteMapComponent implements OnChanges, OnInit {
   @Input() points: PointDeCollecte[] = [];
   @Input() center = { latitude: 34.7442, longitude: 10.7487 };
   @Input() loading$: any;
@@ -33,6 +37,11 @@ export class PointsCollecteMapComponent implements OnChanges {
   @Output() markerClick = new EventEmitter<PointDeCollecte>();
 
   markers: MapMarker[] = [];
+  private store = inject(Store);
+
+  ngOnInit(): void {
+    this.store.dispatch(loadPointsCollecte());
+  }
 
   ngOnChanges(): void {
     this.updateMarkers();

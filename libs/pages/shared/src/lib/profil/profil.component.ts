@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -8,12 +8,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { Store } from '@ngrx/store';
-import { filter, map, Observable, Subject, takeUntil } from 'rxjs';
+import { filter, map, Observable, Subject, take, takeUntil } from 'rxjs';
 import {
   Utilisateur,
   Employe,
   AuthService,
   selectAllEmployes,
+  loadEmployes,
+  Administrateur,
 } from '@smart-waste-management/shared/data-access';
 import {
   PageHeaderComponent,
@@ -58,7 +60,7 @@ export class ProfilComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  currentUser$: Observable<Utilisateur>;
+  currentUser$: Observable<Employe | Administrateur>;
 
   constructor() {
     this.currentUser$ = this.store.select(selectAllEmployes).pipe(
@@ -105,16 +107,16 @@ export class ProfilComponent implements OnInit, OnDestroy {
 
   /** Ouvre le dialogue pour modifier le profil */
   editProfile(): void {
-    // Récupérer l'utilisateur actuel
-    const currentUser = this.store.select(selectAllEmployes).pipe(
-      map((users) =>
-        users.find((u) => u.email === this.authService.getUserEmailFromToken())
-      ),
-      filter((user): user is NonNullable<typeof user> => !!user)
-    );
+    // // Récupérer l'utilisateur actuel
+    // this.currentUser$ = this.store.select(selectAllEmployes).pipe(
+    //   map((users) =>
+    //     users.find((u) => u.email === this.authService.getUserEmailFromToken())
+    //   ),
+    //   filter((user): user is NonNullable<typeof user> => !!user)
+    // );
 
     // Ouvrir le dialogue avec les données utilisateur
-    currentUser.subscribe((user) => {
+    this.currentUser$.pipe(take(1)).subscribe((user) => {
       const dialogRef = this.dialog.open(ProfilFormDialogComponent, {
         width: '700px',
         data: {

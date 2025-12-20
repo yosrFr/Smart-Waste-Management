@@ -156,6 +156,7 @@ export class EmployesComponent implements OnInit, OnDestroy {
   // Cette méthode sera appelée chaque fois qu'un onglet est sélectionné
   onTabChange(tab: Tab): void {
     this.selectedTabIndex = this.tabs.findIndex((t) => t.value === tab.value);
+    this.store.dispatch(loadEmployes());
     this.setupTableActions(); // Mettre à jour les actions lorsque l'onglet change
   }
 
@@ -211,5 +212,6 @@ export class EmployesComponent implements OnInit, OnDestroy {
           });
         }
       });
+    this.store.dispatch(loadEmployes());
   }
 }

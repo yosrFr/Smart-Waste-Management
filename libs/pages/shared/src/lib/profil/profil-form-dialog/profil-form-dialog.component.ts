@@ -19,7 +19,6 @@ import {
   Employe,
   Administrateur,
   updateProfilEmploye,
-  AuthService,
 } from '@smart-waste-management/shared/data-access';
 
 /**
@@ -56,7 +55,6 @@ export class ProfilFormDialogComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<ProfilFormDialogComponent>);
   /** Données passées au dialog (employé ou administrateur) */
   readonly data = inject(MAT_DIALOG_DATA) as EmployeDialogData;
-  private authService = inject(AuthService);
 
   /** Formulaire réactif pour les informations de l'utilisateur */
   form!: FormGroup;
